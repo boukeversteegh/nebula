@@ -1,0 +1,9 @@
+{
+	"/":					"gui/player.html",
+	"/js/jquery.js":		"gui/js/jquery-1.8.3.min.js",
+	"/js/dropfile.js": 		"gui/js/dropfile.js",
+	"/js/player.js":		"gui/js/player.js",
+	"/css/player.css":		"gui/css/player.css",
+	"/tpl/browse/files":	"gui/tpl/browse/files.html",
+	"*":					"gui/player.html"
+}

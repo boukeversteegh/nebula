@@ -1,0 +1,21 @@
+<div id="dropbox">
+	<h1>
+	{{data.folder}}
+	{{^data.folder}}
+		ROOT
+	{{/data.folder}}
+	</h1>
+	<a class="showview" href="/browse/files{{data.parent}}">Up</a>
+	{{#data}}
+	<ul>
+		{{#folders}}
+		<li>[ <a class="showview" href="/browse/files{{path}}/{{.}}">{{.}}</a> ]</li>
+		{{/folders}}
+		{{#files}}
+		<li><a href="/api/files{{path}}/{{.}}">{{.}}</a></li>
+		{{/files}}
+		<li id="droplabel"></li>
+	</ul>
+	{{/data}}
+	<script type="text/javascript">dragdrop_init();</script>
+</div>

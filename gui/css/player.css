@@ -1,0 +1,48 @@
+html, body {
+	margin:		0;
+	padding:	0;
+}
+
+body {
+	background:	silver;
+}
+.tabs, .tabs li {
+	float: left;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+.tabs {
+	margin: 0.25em;
+	margin-bottom: 0;
+}
+.tabs a {
+	padding: 0.5em;
+	border-radius: 0.5em 0.5em 0 0;
+	background-color: #ddd;
+	box-shadow: 0 0 2px black;
+	display: block;
+}
+
+.tabs a:hover {
+	background-color: #eee;
+}
+
+#main {
+	clear: both;
+	float: left;
+	width: 100%;
+}
+
+#droplabel {
+	list-style-type: none;
+	font-style: italic;
+}
+
+.filedrag #dropbox {
+	background-color: infoBackground;
+}
+
+#dropbox {
+	min-height: 100%;
+}
