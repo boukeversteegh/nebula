@@ -52,13 +52,14 @@ function handleFiles(files) {
 	
 	var completed = [];
 	var progresses = [];
+	var xhrs = [];
 	for( var i=0; i < files.length; i++ ) {
 		var file = files[i];
 		var xhr = new XMLHttpRequest();
 		progresses.push(0);
 		xhr.upload._index = i;
 		xhr.open('PUT', '/api/files' + window.view.filepath + '/' + file.name);
-
+		xhrs.push(xhr);
 
 		var formData = new FormData();
 		formData.append('upfile', file);
@@ -84,11 +85,17 @@ function handleFiles(files) {
 			if( completed.length == files.length ) {
 				console.log("All files uploaded");
 				view.show(view.path);
+			} else {
+				console.log(this.upload._index);
+				console.log(xhrs);
+				xhrs[this.upload._index+1].send(xhrs[this.upload._index+1].formData);
 			}
 		};
 		
-		xhr.send(formData);
+		xhr.formData = formData;
+		//xhr.send(formData);
 	}
+	xhrs[0].send(xhrs[0].formData);
 }
 
 function handleReaderLoad(evt) {
