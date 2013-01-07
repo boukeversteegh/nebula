@@ -104,6 +104,14 @@ function View() {
 		}
 	}
 	
+	this.xhttp = function(method, url) {
+		$.ajax({
+			"url": url,
+			"type": method,
+			"success": function() { view.show(view.path); }
+		});
+	}
+	
 	this.showFiles = function() {
 		var templateurl = '/tpl/browse/files';
 		var dataurl = '/api/files';

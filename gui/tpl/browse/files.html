@@ -14,11 +14,8 @@
 		{{#files}}
 		<li>
 			<a href="/api/files{{path}}/{{.}}">{{.}}</a>
-			<a class="showview" href="/play{{path}}/{{.}}">Play</a>
-			<form method="post" action="/api/files{{path}}/{{.}}" style="display: inline">
-				<input type="hidden" name="method" value="DELETE"/>
-				<input type="submit" value="delete"/>
-			</form>
+			<button onClick="view.show('/play{{path}}/{{.}}')">Play</button>
+			<button onClick="confirm('Are you sure?') && view.xhttp('DELETE', '/api/files{{path}}/{{.}}')">delete!</button>
 		</li>
 		{{/files}}
 		<li id="droplabel"></li>

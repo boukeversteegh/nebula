@@ -84,6 +84,7 @@ class MyHandler(BaseHTTPRequestHandler):
 			return self.handle_API()
 		
 	def do_DELETE(self):
+		self.path = urllib.unquote(self.path)
 		if self.path.startswith('/api'):
 			return self.handle_API()
 			
@@ -140,7 +141,8 @@ class MyHandler(BaseHTTPRequestHandler):
 					os.unlink(targetpath)
 				else:
 					success = False
-					response['error'] = 'File not found'
+					response['error'] = 'File not found: ' + subdir
+					print "Can't delete", targetpath
 				
 		if self.path.startswith('/api/metadata'):
 			subdir = self.path[len('/api/metadata/'):]
