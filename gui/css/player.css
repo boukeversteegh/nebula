@@ -5,7 +5,7 @@ html, body {
 
 body {
 	background:	silver;
-	font-family: tahoma;
+	font-family: arial, helvetica, sans-serif;
 }
 .tabs, .tabs li {
 	float: left;
