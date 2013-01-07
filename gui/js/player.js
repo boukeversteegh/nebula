@@ -104,11 +104,12 @@ function View() {
 		}
 	}
 	
-	this.xhttp = function(method, url) {
+	this.xhttp = function(method, url, data) {
 		$.ajax({
 			"url": url,
 			"type": method,
-			"success": function() { view.show(view.path); }
+			"success": function() { view.show(view.path); },
+			"data": data
 		});
 	}
 	

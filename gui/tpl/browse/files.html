@@ -13,7 +13,7 @@
 		{{#folders}}
 		<li><a class="showview" href="/browse/files{{path}}/{{.}}">{{.}}</a></li>
 		{{/folders}}
-		
+		<li><button onClick="var name = prompt('Please enter a name'); if( name ) { view.xhttp('POST', '/api/files{{path}}/' + name, {'action':'mkdir'}); }">Create folder</button></li>
 	</ul>
 	
 	<h3>Files</h3>
@@ -21,7 +21,7 @@
 		{{#files}}
 		<li>
 			<a href="/play{{{path}}}/{{{.}}}" class="showview">{{.}}</a>
-			<button onClick="confirm('Are you sure?') && view.xhttp('DELETE', '/api/files{{path}}/{{.}}')">delete!</button>
+			<button onClick="confirm('Are you sure?') && view.xhttp('DELETE', '/api/files{{path}}/{{.}}')" class="delete">delete!</button>
 		</li>
 		{{/files}}
 	</ul>

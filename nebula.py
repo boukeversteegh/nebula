@@ -138,8 +138,6 @@ class MyHandler(BaseHTTPRequestHandler):
 				return self.handle_upload(subdir)
 				
 			if self.command == 'DELETE' or ( self.command == 'POST' and 'method' in self.form and self.form['method'].value == 'DELETE' ):
-				if targetpath[-1] == '?':
-					targetpath = targetpath[0:-1]
 				if path.isfile(targetpath):
 					print "Deleting file:", targetpath
 					os.unlink(targetpath)
@@ -147,7 +145,15 @@ class MyHandler(BaseHTTPRequestHandler):
 					success = False
 					response['error'] = 'File not found: ' + subdir
 					print "Can't delete", targetpath
-				
+			if self.command == 'POST':
+				if not path.exists(targetpath):
+					if 'action' in self.form and self.form['action'].value == 'mkdir':
+						os.mkdir(targetpath)
+					else:
+						success = False
+						response['error'] = "File or folder already exists"
+						print "Can't create folder. Already exists"
+						
 		if self.path.startswith('/api/metadata'):
 			subdir = self.path[len('/api/metadata/'):]
 			targetpath = path.join(libdir, subdir)

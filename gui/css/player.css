@@ -65,7 +65,6 @@ body {
 	padding-bottom: 1em;
 	padding: 0.5em;
 	padding-left: 2em;
-	font-family: sans;
 }
 .playlist li {
 	border-bottom: 1px solid #BBE;
@@ -85,9 +84,13 @@ body {
 
 .playlist li button {
 	line-height: 1em;
+	top: 0.25em;
+	display: inline;
+}
+
+.playlist li button.delete {
 	position: absolute;
 	right: 0;
-	top: 0.25em;
 }
 
 .playlist li:last-child{
