@@ -12,7 +12,14 @@
 		<li>[ <a class="showview" href="/browse/files{{path}}/{{.}}">{{.}}</a> ]</li>
 		{{/folders}}
 		{{#files}}
-		<li><a href="/api/files{{path}}/{{.}}">{{.}}</a> <a class="showview" href="/play{{path}}/{{.}}">Play</a></li>
+		<li>
+			<a href="/api/files{{path}}/{{.}}">{{.}}</a>
+			<a class="showview" href="/play{{path}}/{{.}}">Play</a>
+			<form method="post" action="/api/files{{path}}/{{.}}" style="display: inline">
+				<input type="hidden" name="method" value="DELETE"/>
+				<input type="submit" value="delete"/>
+			</form>
+		</li>
 		{{/files}}
 		<li id="droplabel"></li>
 	</ul>

@@ -65,7 +65,27 @@ class MyHandler(BaseHTTPRequestHandler):
 
 	def do_POST(self):
 		self.path = urllib.unquote(self.path)
-		pass
+		
+		#ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
+		#if ctype == 'multipart/form-data':
+		#self.postquery = cgi.parse_multipart(self.rfile, pdict)
+		self.form = cgi.FieldStorage(
+			fp=self.rfile, 
+			headers=self.headers,
+			environ={
+				'REQUEST_METHOD':'POST',
+				'CONTENT_TYPE':self.headers['Content-Type'],
+		 	}
+		 )
+		print 'FORM DATA:'
+		for key in self.form.keys():
+			print ' ', key, ' => ', self.form[key].value
+		if self.path.startswith('/api'):
+			return self.handle_API()
+		
+	def do_DELETE(self):
+		if self.path.startswith('/api'):
+			return self.handle_API()
 			
 	def do_PUT(self):
 		self.path = urllib.unquote(self.path)
@@ -80,8 +100,10 @@ class MyHandler(BaseHTTPRequestHandler):
 		if self.path.startswith('/api/files'):
 			subdir = self.path[len('/api/files/'):]
 			targetpath = path.join(libdir, subdir)
+			
+			print "API", self.command, targetpath
+			
 			if self.command == 'GET':
-				print targetpath
 				if path.isfile(targetpath):
 					self.send_response(200)
 					self.send_contenttype(targetpath)
@@ -109,6 +131,16 @@ class MyHandler(BaseHTTPRequestHandler):
 					}
 			if self.command == 'PUT':
 				return self.handle_upload(subdir)
+				
+			if self.command == 'DELETE' or ( self.command == 'POST' and 'method' in self.form and self.form['method'].value == 'DELETE' ):
+				if targetpath[-1] == '?':
+					targetpath = targetpath[0:-1]
+				if path.isfile(targetpath):
+					print "Deleting file:", targetpath
+					os.unlink(targetpath)
+				else:
+					success = False
+					response['error'] = 'File not found'
 				
 		if self.path.startswith('/api/metadata'):
 			subdir = self.path[len('/api/metadata/'):]
