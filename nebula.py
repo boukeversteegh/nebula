@@ -24,6 +24,7 @@ class MyHandler(BaseHTTPRequestHandler):
 		self.conf['library_dir'] = sys.argv[1]
 		
 		self.debug = True
+		#self.protocol_version = 'HTTP/1.1'
 		BaseHTTPRequestHandler.setup(self)
 		
 	
@@ -62,7 +63,9 @@ class MyHandler(BaseHTTPRequestHandler):
 			else:
 				targetfile = routes['*']
 			
+			contentlength = path.getsize(targetfile)
 			self.send_response(200)
+			self.send_header('Content-length', contentlength)
 			self.send_contenttype(targetfile)
 				
 			self.end_headers()
@@ -120,15 +123,18 @@ class MyHandler(BaseHTTPRequestHandler):
 					response['error'] = "Path doesn't exist: " + targetpath
 				else:
 					if path.isfile(targetpath):
+						f = open(targetpath, 'rb')
+						contentlength = path.getsize(targetpath)
 						self.send_response(200)
+						self.send_header('Content-length', contentlength)
 						self.send_contenttype(targetpath)
 						self.end_headers()
-						f = open(targetpath)
+						
 						if 'Range' in self.headers:
 							hrange = self.headers['Range']
 							print 'Range request'
 							if hrange[0:len('bytes=')] == 'bytes=':
-								start, end = hranage[len('bytes='):].split('-')
+								start, end = hrange[len('bytes='):].split('-')
 								print start, end
 						self.wfile.write(open(targetpath).read())
 						return
@@ -182,10 +188,11 @@ class MyHandler(BaseHTTPRequestHandler):
 		response['success'] = success
 		if success:
 			self.send_response(200);
-		
+		jsondump = json.dumps(response)
+		self.send_header('Content-length', len(jsondump))
 		self.send_header('Content-type', 'application/json')
 		self.end_headers()
-		self.wfile.write(json.dumps(response));
+		self.wfile.write(jsondump);
 
 
 	def handle_upload(self, filetarget):
