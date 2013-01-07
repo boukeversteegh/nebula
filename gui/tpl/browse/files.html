@@ -17,5 +17,8 @@
 		<li id="droplabel"></li>
 	</ul>
 	{{/data}}
-	<script type="text/javascript">dragdrop_init();</script>
+	<script type="text/javascript">
+		dragdrop_init();
+		window.view.filepath = "{{{data.path}}}";
+	</script>
 </div>

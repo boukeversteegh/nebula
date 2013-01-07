@@ -24,6 +24,9 @@ function init() {
 }
 
 function View() {
+	this.path = '';
+	this.filepath = '/';
+	
 	this.views = {
 		"/browse/files*": [
 			{

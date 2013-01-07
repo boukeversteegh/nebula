@@ -64,8 +64,13 @@ class MyHandler(BaseHTTPRequestHandler):
 			self.send_error(404,'File Not Found: %s' % self.path)
 
 	def do_POST(self):
-		if self.path == "/upload":
-			return self.handle_upload()
+		self.path = urllib.unquote(self.path)
+		pass
+			
+	def do_PUT(self):
+		self.path = urllib.unquote(self.path)
+		if self.path.startswith('/api'):
+			return self.handle_API()
 		
 	def handle_API(self):
 		response = {}
@@ -75,32 +80,36 @@ class MyHandler(BaseHTTPRequestHandler):
 		if self.path.startswith('/api/files'):
 			subdir = self.path[len('/api/files/'):]
 			targetpath = path.join(libdir, subdir)
-			print targetpath
-			if path.isfile(targetpath):
-				self.send_response(200)
-				self.send_contenttype(targetpath)
-				self.end_headers()
-				f = open(targetpath)
-				self.wfile.write(open(targetpath).read())
-				return
-			else:
-				folders = []
-				files = []
-				for item in os.listdir(targetpath):
-					if path.isfile(path.join(targetpath, item)):
-						files.append(item)
-					else:
-						folders.append(item)
-				folders.sort()
-				files.sort()
-				response['data'] = {
-					"folders":	folders,
-					"files":	files,
-					"path":		'/' + subdir if subdir else '',
-					"pathname":	subdir,
-					"folder": subdir.split('/')[-1],
-					"parent":	path.join("/", *subdir.split('/')[0:-1])
-				}
+			if self.command == 'GET':
+				print targetpath
+				if path.isfile(targetpath):
+					self.send_response(200)
+					self.send_contenttype(targetpath)
+					self.end_headers()
+					f = open(targetpath)
+					self.wfile.write(open(targetpath).read())
+					return
+				else:
+					folders = []
+					files = []
+					for item in os.listdir(targetpath):
+						if path.isfile(path.join(targetpath, item)):
+							files.append(item)
+						else:
+							folders.append(item)
+					folders.sort()
+					files.sort()
+					response['data'] = {
+						"folders":	folders,
+						"files":	files,
+						"path":		'/' + subdir if subdir else '',
+						"pathname":	subdir,
+						"folder": subdir.split('/')[-1],
+						"parent":	path.join("/", *subdir.split('/')[0:-1])
+					}
+			if self.command == 'PUT':
+				return self.handle_upload(subdir)
+				
 		if self.path.startswith('/api/metadata'):
 			subdir = self.path[len('/api/metadata/'):]
 			targetpath = path.join(libdir, subdir)
@@ -119,14 +128,14 @@ class MyHandler(BaseHTTPRequestHandler):
 		self.wfile.write(json.dumps(response));
 
 
-	def handle_upload(self):
+	def handle_upload(self, filetarget):
 		ctype, pdict = cgi.parse_header(self.headers.getheader('content-type'))
 		if ctype == 'multipart/form-data':
 			query=cgi.parse_multipart(self.rfile, pdict)
 		
 		
-		print query.get('filename');
-		filename = query.get('filename')[0]
+		filename = filetarget #query.get('filename')[0]
+		print "Getting uploaded file, filename:", filename
 		
 		filecontent = query.get('upfile')
 		
