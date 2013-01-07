@@ -148,8 +148,9 @@ class MyHandler(BaseHTTPRequestHandler):
 		self.wfile.write(json.dumps(response));
 def main():
 	try:
-		server = HTTPServer(('', 8006), MyHandler)
-		print 'started httpserver...'
+		port = int(sys.argv[2])
+		server = HTTPServer(('', port), MyHandler)
+		print 'started httpserver on port', port
 		server.serve_forever()
 	except KeyboardInterrupt:
 		print '^C received, shutting down server'
