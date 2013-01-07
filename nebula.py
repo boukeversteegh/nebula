@@ -33,7 +33,11 @@ class MyHandler(BaseHTTPRequestHandler):
 	def send_contenttype(self, filename):
 		extension = path.splitext(filename)[1]
 		if extension in mimetypes.types_map:
-			self.send_header('Content-type', mimetypes.types_map[extension])
+			mimetype = mimetypes.types_map[extension]
+			contenttype = mimetype
+			if extension == '.css':
+				contenttype += '; charset=UTF-8; '
+			self.send_header('Content-type', contenttype)
 		else:
 			self.send_header('Content-type', 'text/plain')
 	

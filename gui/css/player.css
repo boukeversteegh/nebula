@@ -5,6 +5,7 @@ html, body {
 
 body {
 	background:	silver;
+	font-family: tahoma;
 }
 .tabs, .tabs li {
 	float: left;
@@ -57,4 +58,38 @@ body {
 }
 #player audio {
 	margin: 0.5em;
+}
+
+.playlist {
+	background-color: #EEE;
+	padding-bottom: 1em;
+	padding: 0.5em;
+	padding-left: 2em;
+	font-family: sans;
+}
+.playlist li {
+	border-bottom: 1px solid #BBE;
+	padding: 0.25em;
+	clear: both;
+	position: relative;
+}
+
+.playlist li a {
+	text-decoration: none;
+	display: block;
+}
+
+.playlist li a:hover {
+	font-weight: bold;
+}
+
+.playlist li button {
+	line-height: 1em;
+	position: absolute;
+	right: 0;
+	top: 0.25em;
+}
+
+.playlist li:last-child{
+    border-bottom: none;
 }

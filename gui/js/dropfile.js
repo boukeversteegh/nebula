@@ -72,11 +72,11 @@ function handleFiles(files) {
 				console.log(progresses);
 			}
 			
-			var htmlprogress = [];
+			var htmlprogress = '';
 			for( var j=0; j<progresses.length; j++) {
-				htmlprogress.push(files[j].name + ' ' + progresses[j] + "%");
+				htmlprogress += ('<li>' + files[j].name + ' ' + progresses[j] + "%" + '</li>');
 			}
-			$("#droplabel").html(htmlprogress.join('<br/>'));
+			$("#droplist").html(htmlprogress);
 		}
 				
 		xhr.onload = function(e) {

@@ -7,18 +7,26 @@
 	</h1>
 	<a class="showview" href="/browse/files{{data.parent}}">Up</a>
 	{{#data}}
-	<ul>
+	
+	<h3>Folders</h3>
+	<ul class="playlist">
 		{{#folders}}
-		<li>[ <a class="showview" href="/browse/files{{path}}/{{.}}">{{.}}</a> ]</li>
+		<li><a class="showview" href="/browse/files{{path}}/{{.}}">{{.}}</a></li>
 		{{/folders}}
+		
+	</ul>
+	
+	<h3>Files</h3>
+	<ul class="playlist">
 		{{#files}}
 		<li>
-			<a href="/api/files{{path}}/{{.}}">{{.}}</a>
-			<button onClick="view.show('/play{{path}}/{{.}}')">Play</button>
+			<a href="/play{{{path}}}/{{{.}}}" class="showview">{{.}}</a>
 			<button onClick="confirm('Are you sure?') && view.xhttp('DELETE', '/api/files{{path}}/{{.}}')">delete!</button>
 		</li>
 		{{/files}}
-		<li id="droplabel"></li>
+	</ul>
+
+	<ul class="playlist" id="droplist">
 	</ul>
 	{{/data}}
 	<script type="text/javascript">
