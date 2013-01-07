@@ -9,12 +9,24 @@ body {
 
 }
 /*@media only screen 
-and (min-device-width : 320px) 
 and (max-device-width : 480px) {
 	body {
-		width: 
+		
 	}
 }*/
+
+#top {
+	position: 		fixed;
+	background:		#999;
+	width:			100%;
+	z-index:		1;
+	border-bottom:	1px solid black;
+}
+
+#top .layout td {
+	padding: 0;
+}
+
 
 a:visited {
 	color:	#66B;
@@ -24,28 +36,32 @@ a:link {
 	color:	#66B;
 }
 
-
 .tabs, .tabs li {
 	float: left;
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
 }
+
+.tabs {
+
+}
+
 .tabs {
 	margin: 0.25em;
 	margin-bottom: 0;
 }
 .tabs a {
-	padding: 0.5em 1em;
-	border-radius: 0.5em 0.5em 0 0;
-	background-color: #EEE;
-	border: 1px solid black;
-	border-bottom: 0;
-	display: block;
-	margin-bottom :-1px;
-	position: relative;
-	text-decoration: none;
-	color: black;
+	padding:			0.5em 1em;
+	border-radius:		0.5em 0.5em 0 0;
+	background-color:	#EEE;
+	border:				1px solid black;
+	border-bottom:		0;
+	display:			block;
+	position:			relative;
+	text-decoration:	none;
+	color:				black;
+	margin-bottom:		-1px;
 }
 
 .tabs a:hover {
@@ -54,10 +70,10 @@ a:link {
 
 #main {
 	clear: both;
-	border-top: 1px solid black;
 	background-color: #EEE;
 	padding: 0.5em;
 	min-height: 100%;
+	padding-top: 4em;
 }
 
 #droplabel {
@@ -74,7 +90,6 @@ a:link {
 }
 
 #player {
-	float: left;
 }
 
 #player h3,

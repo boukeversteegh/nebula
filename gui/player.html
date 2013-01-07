@@ -6,15 +6,25 @@
 		<script src="/js/player.js"></script>
 		<script src="/js/dropfile.js"></script>
 		<link href="/css/player.css" rel="stylesheet"/>
-		<meta name='viewport' content='width=device-width; initial-scale=1.0;'/>
+		<meta name='viewport' content="width=device-width; initial-scale=1.0;"/>
 	</head>
 	<body>
-		<ul id="menu_view" class="tabs">
-			<li><a href="/browse/files" id="btn_view_files">Files</a></li>
-			<!--<li><a href="/browse/artists" id="btn_view_artists">Artists</a></li>
-			<li><a href="/browse/albums" id="btn_view_artists">Albums</a></li>-->
-		</ul>
-		<div id="player"></div>
+		<div id="top">
+			<table class="layout" cellspacing="0">
+				<tr>
+					<td valign="bottom">
+						<ul id="menu_view" class="tabs">
+							<li><a href="/browse/files" id="btn_view_files">Files</a></li>
+							<!--<li><a href="/browse/artists" id="btn_view_artists">Artists</a></li>
+							<li><a href="/browse/albums" id="btn_view_artists">Albums</a></li>-->
+						</ul>
+					</td>
+					<td>
+						<div id="player"></div>
+					</td>
+				</tr>
+			</table>
+		</div>
 		<div id="main">
 		
 		</div>
