@@ -21,6 +21,10 @@ function init() {
 	});
 	
 	window.view.show(window.location.pathname, true);
+	
+	window.onbeforeunload(function() {
+	
+	});
 }
 
 function View() {

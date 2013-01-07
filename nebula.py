@@ -112,33 +112,44 @@ class MyHandler(BaseHTTPRequestHandler):
 			targetpath = path.join(libdir, subdir)
 			
 			print "API", self.command, targetpath
+			print self.headers
 			
 			if self.command == 'GET':
-				if path.isfile(targetpath):
-					self.send_response(200)
-					self.send_contenttype(targetpath)
-					self.end_headers()
-					f = open(targetpath)
-					self.wfile.write(open(targetpath).read())
-					return
+				if not path.exists(targetpath):
+					success = False
+					response['error'] = "Path doesn't exist: " + targetpath
 				else:
-					folders = []
-					files = []
-					for item in os.listdir(targetpath):
-						if path.isfile(path.join(targetpath, item)):
-							files.append(item)
-						else:
-							folders.append(item)
-					folders.sort()
-					files.sort()
-					response['data'] = {
-						"folders":	folders,
-						"files":	files,
-						"path":		'/' + subdir if subdir else '',
-						"pathname":	subdir,
-						"folder": subdir.split('/')[-1],
-						"parent":	path.join("/", *subdir.split('/')[0:-1])
-					}
+					if path.isfile(targetpath):
+						self.send_response(200)
+						self.send_contenttype(targetpath)
+						self.end_headers()
+						f = open(targetpath)
+						if 'Range' in self.headers:
+							hrange = self.headers['Range']
+							print 'Range request'
+							if hrange[0:len('bytes=')] == 'bytes=':
+								start, end = hranage[len('bytes='):].split('-')
+								print start, end
+						self.wfile.write(open(targetpath).read())
+						return
+					else:
+						folders = []
+						files = []
+						for item in os.listdir(targetpath):
+							if path.isfile(path.join(targetpath, item)):
+								files.append(item)
+							else:
+								folders.append(item)
+						folders.sort()
+						files.sort()
+						response['data'] = {
+							"folders":	folders,
+							"files":	files,
+							"path":		'/' + subdir if subdir else '',
+							"pathname":	subdir,
+							"folder": subdir.split('/')[-1],
+							"parent":	path.join("/", *subdir.split('/')[0:-1])
+						}
 			if self.command == 'PUT':
 				return self.handle_upload(subdir)
 				
