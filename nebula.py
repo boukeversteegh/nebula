@@ -10,6 +10,11 @@ import simplejson as json
 import mimetypes
 import urllib
 
+import SocketServer
+
+class ThreadingHTTPServer(SocketServer.ThreadingMixIn, HTTPServer):
+    pass
+    
 class MyHandler(BaseHTTPRequestHandler):
 
 			
@@ -202,7 +207,7 @@ class MyHandler(BaseHTTPRequestHandler):
 def main():
 	try:
 		port = int(sys.argv[2])
-		server = HTTPServer(('', port), MyHandler)
+		server = ThreadingHTTPServer(('', port), MyHandler)
 		print 'started httpserver on port', port
 		server.serve_forever()
 	except KeyboardInterrupt:
