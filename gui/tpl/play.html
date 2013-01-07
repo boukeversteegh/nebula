@@ -1,6 +1,8 @@
 <div>
 	{{#data}}
-	<audio id="audio" preload="auto" src="/api/files{{path}}" controls autoplay></audio>
+	<audio id="audio" preload="auto" controls autoplay>
+		<source src="/api/files{{path}}"/>
+	</audio>
 	<h3>{{file}}</h3>
 	
 	{{/data}}

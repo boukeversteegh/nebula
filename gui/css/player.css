@@ -4,7 +4,7 @@ html, body {
 }
 
 body {
-	background:	#666;
+	background:	#999;
 	font-family: arial, helvetica, sans-serif;
 }
 
@@ -49,6 +49,7 @@ a:link {
 	border-top: 1px solid black;
 	background-color: #EEE;
 	padding: 0.5em;
+	min-height: 100%;
 }
 
 #droplabel {
@@ -61,7 +62,7 @@ a:link {
 }
 
 #dropbox {
-	min-height: 100%;
+	
 }
 
 #player {
@@ -75,8 +76,6 @@ a:link {
 #player audio {
 	margin: 0 0.5em;
 	margin-top: 0.25em;
-	background:	#FFF;
-	border-radius: 0;
 	border: 0;
 }
 
