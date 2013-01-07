@@ -5,5 +5,6 @@
 	"/js/player.js":		"gui/js/player.js",
 	"/css/player.css":		"gui/css/player.css",
 	"/tpl/browse/files":	"gui/tpl/browse/files.html",
+	"/tpl/play":			"gui/tpl/play.html",
 	"*":					"gui/player.html"
 }

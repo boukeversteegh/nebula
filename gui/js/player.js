@@ -7,11 +7,20 @@ function init() {
 	$('.tabs a').click(function (e) {
 		if( e.button == 0 ) {
 			e.preventDefault();
-			window.view.show($(this).attr('href'));
+			window.view.show($(this).attr('href'), true);
 		}
 	});
 	
-	window.view.show(window.location.pathname);
+	$(window).bind('popstate', function(event) {
+		// if the event has our history data on it, load the page fragment with AJAX
+		var state = event.originalEvent.state;
+		console.log(event.originalEvent);
+		if (event.originalEvent.state) {
+		    window.view.show(event.originalEvent.state.path, false);
+		}
+	});
+	
+	window.view.show(window.location.pathname, true);
 }
 
 function View() {
@@ -21,18 +30,24 @@ function View() {
 				"cache":	false,
 				"template": "/tpl/browse/files",
 				"data":		function(path, args) { return "/api/files" + args},
-				"target":	"#main"
+				"target":	"#main",
+				"history":	true
+			}
+		],
+		"/play*" : [
+			{
+				"cache":	true,
+				"template":	"/tpl/play",
+				"data":		function (path, args) { return "/api/metadata" + args},
+				"target":	"#player"
 			}
 		]
 	};
 	
 	this.views['/'] = this.views['/browse/files*'];
 	
-	this.show = function(path) {
-		console.log("Showing path: " + path);
-		if( window.history.replaceState ) {
-			window.history.replaceState(null, null, path);
-		}
+	this.show = function(path, pushstate) {
+		console.log(["Showing path: " + path, pushstate]);
 		
 		var view = null;
 		var viewname = null;
@@ -65,6 +80,10 @@ function View() {
 		this.path = path;
 		
 		for( var i=0; i<view.length; i++) {
+			if( pushstate && window.history.pushState && view[i].history ) {
+				console.log("Push history");
+				window.history.pushState({"path": path}, null, path);
+			}
 			cview = {
 				"cache":	view[i].cache,
 				"template":	view[i].template,
@@ -106,7 +125,7 @@ function View() {
 		$(view.target + " a.showview").click(function (e) {
 			if( e.button == 0 ) {
 				e.preventDefault();
-				window.view.show($(this).attr('href'));
+				window.view.show($(this).attr('href'), true);
 			}
 		});
 	}

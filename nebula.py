@@ -101,6 +101,14 @@ class MyHandler(BaseHTTPRequestHandler):
 					"folder": subdir.split('/')[-1],
 					"parent":	path.join("/", *subdir.split('/')[0:-1])
 				}
+		if self.path.startswith('/api/metadata'):
+			subdir = self.path[len('/api/metadata/'):]
+			targetpath = path.join(libdir, subdir)
+			if path.isfile(targetpath):
+				response['data'] = {
+					"path": path.join("/", subdir),
+					"file":	subdir.split('/')[-1]
+				}
 		
 		response['success'] = success
 		if success:

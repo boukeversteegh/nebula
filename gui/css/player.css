@@ -46,3 +46,15 @@ body {
 #dropbox {
 	min-height: 100%;
 }
+
+#player {
+	float: left;
+}
+
+#player h3,
+#player audio {
+	float: left;
+}
+#player audio {
+	margin: 0.5em;
+}
