@@ -80,7 +80,9 @@ function View() {
 			return;
 		}
 		
-		this.path = path;
+		if( pushstate ) {
+			this.path = path;
+		}
 		
 		for( var i=0; i<view.length; i++) {
 			if( pushstate && window.history.pushState && view[i].history ) {

@@ -100,13 +100,15 @@ a:link {
 	margin: 0 0.5em;
 	margin-top: 0.25em;
 	border: 0;
+	float: left;
 }
 
 #player h3 {
 	color: white;
-	margin: 0 0.5em;
-	line-height: 2em;
+	margin: 0.5em 0.5em;
 	text-shadow: black 1px 1px 3px;
+	font-size: 1em;
+	float: right;
 }
 
 .playlist h3 {
@@ -122,7 +124,6 @@ a:link {
 }
 .playlist li {
 	border-bottom: 1px solid #DDE;
-	padding: 0.25em;
 	clear: both;
 	position: relative;
 	list-style-type: none;
@@ -131,6 +132,7 @@ a:link {
 .playlist li a {
 	text-decoration: none;
 	display: block;
+	padding: 0.25em;
 }
 
 .playlist li a:hover {
