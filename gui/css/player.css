@@ -6,7 +6,15 @@ html, body {
 body {
 	background:	#999;
 	font-family: arial, helvetica, sans-serif;
+
 }
+/*@media only screen 
+and (min-device-width : 320px) 
+and (max-device-width : 480px) {
+	body {
+		width: 
+	}
+}*/
 
 a:visited {
 	color:	#66B;
