@@ -1,35 +1,41 @@
 <div id="dropbox">
 	<h1>
-	{{data.folder}}
+	{{data.path}}
 	{{^data.folder}}
-		ROOT
+		/
 	{{/data.folder}}
 	</h1>
-	<a class="showview" href="/browse/files{{data.parent}}">Up</a>
+	
 	{{#data}}
 	
-	<h3>Folders</h3>
-	<ul class="playlist">
-		{{#folders}}
-		<li><a class="showview" href="/browse/files{{path}}/{{.}}">{{.}}</a></li>
-		{{/folders}}
-		<li><button onClick="var name = prompt('Please enter a name'); if( name ) { view.xhttp('POST', '/api/files{{path}}/' + name, {'action':'mkdir'}); }">Create folder</button></li>
-	</ul>
+	<div class="playlist">
+			<h3>Folders</h3>
+		<ul class="playlist">
+			<li><a class="showview" href="/browse/files{{data.parent}}">..</a></li>
+			{{#folders}}
+			<li><a class="showview" href="/browse/files{{path}}/{{.}}">{{.}}</a></li>
+			{{/folders}}
+			<li><button onClick="var name = prompt('Please enter a name'); if( name ) { view.xhttp('POST', '/api/files{{path}}/' + name, {'action':'mkdir'}); }">Create folder</button></li>
+		</ul>
+	</div>
+	<div class="playlist">
+		<h3>Files</h3>
+		<ul>
+			{{#files}}
+			<li>
+				<a href="/play{{{path}}}/{{{.}}}" class="showview">{{.}}</a>
+				<button onClick="confirm('Are you sure?') && view.xhttp('DELETE', '/api/files{{path}}/{{.}}')" class="delete">delete</button>
+			</li>
+			{{/files}}
+		</ul>
+	</div>
 	
-	<h3>Files</h3>
-	<ul class="playlist">
-		{{#files}}
-		<li>
-			<a href="/play{{{path}}}/{{{.}}}" class="showview">{{.}}</a>
-			<button onClick="confirm('Are you sure?') && view.xhttp('DELETE', '/api/files{{path}}/{{.}}')" class="delete">delete!</button>
-		</li>
-		{{/files}}
-	</ul>
-
-	<h3>Uploads</h3>
-	<ul class="playlist" id="droplist">
-	</ul>
-	{{/data}}
+	<div class="playlist">
+		<h3>Uploads</h3>
+		<ul id="droplist">
+		</ul>
+		{{/data}}
+	</div>
 	<script type="text/javascript">
 		dragdrop_init();
 		window.view.filepath = "{{{data.path}}}";

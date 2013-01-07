@@ -4,9 +4,19 @@ html, body {
 }
 
 body {
-	background:	silver;
+	background:	#666;
 	font-family: arial, helvetica, sans-serif;
 }
+
+a:visited {
+	color:	#66B;
+}
+
+a:link {
+	color:	#66B;
+}
+
+
 .tabs, .tabs li {
 	float: left;
 	list-style-type: none;
@@ -18,11 +28,16 @@ body {
 	margin-bottom: 0;
 }
 .tabs a {
-	padding: 0.5em;
+	padding: 0.5em 1em;
 	border-radius: 0.5em 0.5em 0 0;
-	background-color: #ddd;
-	box-shadow: 0 0 2px black;
+	background-color: #EEE;
+	border: 1px solid black;
+	border-bottom: 0;
 	display: block;
+	margin-bottom :-1px;
+	position: relative;
+	text-decoration: none;
+	color: black;
 }
 
 .tabs a:hover {
@@ -31,8 +46,9 @@ body {
 
 #main {
 	clear: both;
-	float: left;
-	width: 100%;
+	border-top: 1px solid black;
+	background-color: #EEE;
+	padding: 0.5em;
 }
 
 #droplabel {
@@ -57,20 +73,36 @@ body {
 	float: left;
 }
 #player audio {
-	margin: 0.5em;
+	margin: 0 0.5em;
+	margin-top: 0.25em;
+	background:	#FFF;
+	border: 0;
 }
 
-.playlist {
-	background-color: #EEE;
+#player h3 {
+	color: white;
+	margin: 0 0.5em;
+	line-height: 2em;
+	text-shadow: black 1px 1px 3px;
+}
+
+.playlist h3 {
+	margin-bottom: 0;
+}
+
+.playlist ul {
+	background-color: #FFF;
 	padding-bottom: 1em;
 	padding: 0.5em;
-	padding-left: 2em;
+	border-radius: 0.25em;
+	margin: 0.5em 0;
 }
 .playlist li {
-	border-bottom: 1px solid #BBE;
+	border-bottom: 1px solid #DDE;
 	padding: 0.25em;
 	clear: both;
 	position: relative;
+	list-style-type: none;
 }
 
 .playlist li a {
