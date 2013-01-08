@@ -24,7 +24,7 @@
 			{{#files}}
 			<li>
 				<a href="/play{{{path}}}/{{{.}}}" class="showview">{{.}}</a>
-				<button onClick="confirm('Are you sure?') && view.xhttp('DELETE', '/api/files{{path}}/{{.}}')" class="delete">delete</button>
+				<button onClick="confirm('Are you sure?') && view.xhttp('DELETE', '/files{{path}}/{{.}}')" class="delete">delete</button>
 			</li>
 			{{/files}}
 		</ul>

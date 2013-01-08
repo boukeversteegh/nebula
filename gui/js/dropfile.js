@@ -58,7 +58,7 @@ function handleFiles(files) {
 		var xhr = new XMLHttpRequest();
 		progresses.push(0);
 		xhr.upload._index = i;
-		xhr.open('PUT', '/api/files' + window.view.filepath + '/' + file.name);
+		xhr.open('PUT', '/files' + window.view.filepath + '/' + file.name);
 		xhrs.push(xhr);
 
 		var formData = new FormData();

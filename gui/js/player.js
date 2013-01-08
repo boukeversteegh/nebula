@@ -22,9 +22,6 @@ function init() {
 	
 	window.view.show(window.location.pathname, true);
 	
-	window.onbeforeunload(function() {
-	
-	});
 }
 
 function View() {
@@ -36,7 +33,7 @@ function View() {
 			{
 				"cache":	false,
 				"template": "/tpl/browse/files",
-				"data":		function(path, args) { return "/api/files" + args},
+				"data":		function(path, args) { return "/files" + args},
 				"target":	"#main",
 				"history":	true
 			}
@@ -45,7 +42,7 @@ function View() {
 			{
 				"cache":	true,
 				"template":	"/tpl/play",
-				"data":		function (path, args) { return "/api/metadata" + args},
+				"data":		function (path, args) { return "/metadata" + args},
 				"target":	"#player"
 			}
 		]
