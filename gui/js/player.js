@@ -111,7 +111,13 @@ function View() {
 		$.ajax({
 			"url": url,
 			"type": method,
-			"success": function() { view.show(view.path); },
+			"success": function(response) {
+				if( response.success ) {
+					view.show(view.path);
+				} else {
+					alert(response);
+				}
+			},
 			"data": data
 		});
 	}

@@ -25,8 +25,7 @@ class Files:
 	exposed = True
 	
 	def GET(self, *trail):
-		path = '/'.join(trail)
-		localpath = os.path.join(librarypath, path)
+		localpath = os.path.join(librarypath, *trail)
 		if not os.path.exists(localpath):
 			return False
 		else:
@@ -45,28 +44,30 @@ class Files:
 						files.append(basename)
 				files.sort()
 				folders.sort()
+				path = "/".join(trail)
 				response['data'] = {
 					"files":	files,
 					"folders":	folders,
-					"path":		"/" + path if len(path) > 0 else path,
+					"path":		"/" + path if len(trail) > 0 else path,
 					"folder":	trail[-1] if len(trail) > 0 else "",
 					"trail":	trail
 				}
 				return json.dumps(response)
 
+	# SEE
+	# http://docs.cherrypy.org/dev/refman/_cpreqbody.html
 	def PUT(self, *trail, **kwargs):
 		response = {}
 		success = True
 		try:
-			content = cherrypy.request.body.read()
-			path = '/'.join(trail)
-			localpath = os.path.join(librarypath, path)
-			f = open(localpath, 'w')
-			f.write(content)
-			f.close()
+			upfile = cherrypy.request.params['upfile']
+			localpath = os.path.join(librarypath, *trail)
+			f = open(localpath, 'w+b')
+			f.write(upfile.fullvalue())
 		except Exception as e:
 			success = False
-			response['error'] = "Error writing file: " + e.strerror
+			response['error'] = "Error writing file: " + repr(e)
+			cherrypy.log("*******ERROR********\n" + repr(e))
 			
 		response["success"] = success
 		return json.dumps(response)
@@ -82,6 +83,28 @@ class Files:
 			response['error'] = 'File not found: ' + localpath
 			
 		response['success'] = success
+		
+	def POST(self, *trail, **params):
+		cherrypy.response.headers['Content-Type'] = "application/json"
+		
+		localpath = os.path.join(librarypath, *trail)
+		response = {}
+		success = True
+		if 'action' not in params:
+			success = False
+			response['error'] = "Missing parameter: action"
+		else:
+			if params['action'] == 'mkdir':
+				try:
+					if os.path.exists(localpath):
+						raise("Path already exists")
+					os.mkdir(localpath)
+				except Exception as e:
+					success = False
+					response['error'] = e.strerror
+					
+		response['success'] = success
+		return json.dumps(response)
 
 if __name__ == '__main__':
 	nebula = Nebula()
@@ -130,5 +153,9 @@ if __name__ == '__main__':
 			'tools.staticfile.filename': os.path.join(os.getcwd(), 'gui/tpl/browse/files.html')
 		},
     }
-						
+    
+	#def put(self):
+	#	cherrypy.request.processRequestBody = True
+    
+	#cherrypy.tools.put = Tool('before_request_body', put)
 	cherrypy.quickstart(nebula, '/', conf)
