@@ -81,7 +81,8 @@ a:link {
 	font-style: italic;
 }
 
-.filedrag #dropbox {
+.filedrag #dropbox #uploads ul,
+.filedrag #dropbox #files ul {
 	background-color: infoBackground;
 }
 

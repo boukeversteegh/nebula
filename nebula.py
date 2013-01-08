@@ -73,16 +73,20 @@ class Files:
 		return json.dumps(response)
 	
 	def DELETE(self, *trail):
+		cherrypy.response.headers['Content-Type'] = "application/json"
 		localpath = os.path.join(librarypath, *trail)
 		response = {}
 		success = True
-		if os.path.isfile(localpath):
+		try:
+			if not os.path.isfile(localpath):
+				raise Exception("Path doesn't exist")
 			os.unlink(localpath)
-		else:
+		except Exception as e:
 			success = False
-			response['error'] = 'File not found: ' + localpath
+			response['error'] = "Can't delete item: " + repr(e)
 			
 		response['success'] = success
+		return json.dumps(response)
 		
 	def POST(self, *trail, **params):
 		cherrypy.response.headers['Content-Type'] = "application/json"

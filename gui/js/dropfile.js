@@ -53,6 +53,7 @@ function handleFiles(files) {
 	var completed = [];
 	var progresses = [];
 	var xhrs = [];
+	var uploadview = window.view.path
 	for( var i=0; i < files.length; i++ ) {
 		var file = files[i];
 		var xhr = new XMLHttpRequest();
@@ -89,6 +90,9 @@ function handleFiles(files) {
 				console.log(this.upload._index);
 				console.log(xhrs);
 				xhrs[this.upload._index+1].send(xhrs[this.upload._index+1].formData);
+				if( view.path == uploadview ) {
+					view.show(view.path)
+				}
 			}
 		};
 		

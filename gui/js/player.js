@@ -115,7 +115,7 @@ function View() {
 				if( response.success ) {
 					view.show(view.path);
 				} else {
-					alert(response);
+					alert(response.error);
 				}
 			},
 			"data": data
