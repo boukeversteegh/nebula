@@ -50,7 +50,8 @@ class Files:
 					"folders":	folders,
 					"path":		"/" + path if len(trail) > 0 else path,
 					"folder":	trail[-1] if len(trail) > 0 else "",
-					"trail":	trail
+					"trail":	trail,
+					"parent":	"/" + "/".join(trail[0:-1])
 				}
 				return json.dumps(response)
 
