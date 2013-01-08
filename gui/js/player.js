@@ -81,7 +81,7 @@ function View() {
 			return;
 		}
 		
-		if( pushstate ) {
+		if( pushstate && view[0].history ) {
 			this.path = path;
 		}
 		
