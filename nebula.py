@@ -15,8 +15,9 @@ class Nebula:
 		response = {'success': True}
 		if os.path.isfile(localpath):
 			response['data'] = {
-				"path": os.path.join("/", *trail),
-				"file":	trail[-1] if len(trail) > 0 else ""
+				"path":   os.path.join("/", *trail),
+				"file":	  trail[-1] if len(trail) > 0 else "",
+				"parent": "/" + "/".join(trail[0:-1]) 
 			}
 		return json.dumps(response)
 	metadata.exposed = True

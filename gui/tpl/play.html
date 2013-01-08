@@ -1,6 +1,6 @@
 <div>
 	{{#data}}
-	<h3>{{file}}</h3>
+	<h3><a class="showview" href="/browse/files{{data.parent}}">{{file}}</a></h3>
 	<audio id="audio" preload="auto" controls autoplay="autoplay">
 		<source src="/files{{path}}"/>
 	</audio>

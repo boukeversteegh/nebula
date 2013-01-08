@@ -112,6 +112,11 @@ a:link {
 	float: right;
 }
 
+#player h3 a {
+	color: white;
+	text-decoration: none;
+}
+
 .playlist h3 {
 	margin-bottom: 0;
 }
