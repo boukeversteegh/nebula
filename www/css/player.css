@@ -29,11 +29,11 @@ and (max-device-width : 480px) {
 
 
 a:visited {
-	color:	#66B;
+	/*color:	#66B;*/
 }
 
 a:link {
-	color:	#66B;
+	/*color:	#66B;*/
 }
 
 .tabs, .tabs li {
@@ -129,21 +129,23 @@ a:link {
 	margin: 0.5em 0;
 }
 .playlist li {
-	border-bottom: 1px solid #DDE;
 	clear: both;
 	position: relative;
 	list-style-type: none;
+	margin: 2px;
 }
+
 
 .playlist li a {
 	text-decoration: none;
 	display: block;
-	padding: 0.25em;
+	text-align: left;
+	/*padding: 0.25em;*/
 }
-
+/*
 .playlist li a:hover {
 	font-weight: bold;
-}
+}*/
 
 .playlist li button {
 	line-height: 1em;
