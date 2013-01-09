@@ -11,9 +11,9 @@
 	<div class="playlist" id="folders">
 		<h3>Folders</h3>
 		<ul class="playlist">
-			<li><a class="showview" href="/view/files{{data.parent}}">..</a></li>
+			<li><a class="folder showview" data-path="{{data.parent}}" href="/view/files{{data.parent}}">..</a></li>
 			{{#folders}}
-			<li class="folder"><a class="showview" href="/view/files{{path}}/{{.}}">{{.}}</a></li>
+			<li class="folder" data-file="{{.}}" data-path="{{path}}/{{.}}"><a class="showview" href="/view/files{{path}}/{{.}}">{{.}}</a></li>
 			{{/folders}}
 			<li><button onClick="var name = prompt('Please enter a name'); if( name ) { view.xhttp('POST', '/files{{path}}/' + name, {'action':'mkdir'}); }">Create folder</button></li>
 		</ul>
@@ -22,7 +22,7 @@
 		<h3>Files</h3>
 		<ul>
 			{{#files}}
-			<li class="file">
+			<li class="file" data-file="{{.}}" data-path="{{path}}/{{.}}">
 				<a href="/view/play{{{path}}}/{{{.}}}" class="showview">{{.}}</a>
 				<button onClick="confirm('Are you sure you want to delete ' + this.dataset.href + '?') && view.xhttp('DELETE', this.dataset.href)" data-href="/files{{path}}/{{.}}" class="delete">delete</button>
 			</li>
@@ -42,5 +42,17 @@
 	<script type="text/javascript">
 		dragdrop_init();
 		window.view.filepath = "{{{data.path}}}";
+		$('#files li.file, #folders li.folder').draggable()
+		$('#folders li').droppable({
+			drop: function( event, ui ) {
+					var sourcepath = ui.draggable[0].dataset.path;
+					var targetpath = this.dataset.path + '/' + ui.draggable[0].dataset.file
+					console.log([sourcepath, targetpath])
+					view.xhttp('POST', '/files' + sourcepath, {'action':'mv', 'target': targetpath})
+					event.preventDefault();
+					event.stopPropagation();
+					return false;
+				}
+			})
 	</script>
 </div>

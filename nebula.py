@@ -111,11 +111,12 @@ class Files:
 					if not 'target' in params:
 						raise Exception("Missing parameter: target")
 					
-					localtarget = os.path.join(librarypath, params['target'])
+					target = params['target'].lstrip("/")
+					localtarget = os.path.join(librarypath, target)
 					
 					if not os.path.exists(localpath):
-						raise Exception("Path doesn't exist: " + "/".join(trail))
-					
+						raise Exception("Path doesn't exist: " + "/".join(trail) + "(" + localpath + ")")
+						
 					os.rename(localpath, localtarget)
 					pass
 						
