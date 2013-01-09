@@ -9,7 +9,6 @@ function dragdrop_init() {
 	dropbox.addEventListener("drop", drop, false);
 	document.body.addEventListener("dragenter", function() { $('body').addClass('filedrag');} , false);
 	document.body.addEventListener("drop", function() { $('body').removeClass('filedrag');} , false);
-	console.log("Loaded");
 }
 
 function dragEnter(evt) {

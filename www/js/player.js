@@ -14,7 +14,6 @@ function init() {
 	$(window).bind('popstate', function(event) {
 		// if the event has our history data on it, load the page fragment with AJAX
 		var state = event.originalEvent.state;
-		console.log(event.originalEvent);
 		if (event.originalEvent.state) {
 		    window.view.show(event.originalEvent.state.path, false);
 		}
@@ -29,29 +28,29 @@ function View() {
 	this.filepath = '/';
 	
 	this.views = {
-		"/browse/files*": [
+		"/view/files*": [
 			{
 				"cache":	false,
-				"template": "/tpl/browse/files",
+				"template": "/www/tpl/files.html",
 				"data":		function(path, args) { return "/files" + args},
 				"target":	"#main",
 				"history":	true
 			}
 		],
-		"/play*" : [
+		"/view/play*" : [
 			{
 				"cache":	true,
-				"template":	"/tpl/play",
+				"template":	"/www/tpl/play.html",
 				"data":		function (path, args) { return "/metadata" + args},
 				"target":	"#player"
 			}
 		]
 	};
 	
-	this.views['/'] = this.views['/browse/files*'];
+	this.views['/'] = this.views['/view/files*'];
 	
 	this.show = function(path, pushstate) {
-		console.log(["Showing path: " + path, pushstate]);
+		//console.log(["Showing path: " + path, pushstate]);
 		
 		var view = null;
 		var viewname = null;
@@ -81,14 +80,12 @@ function View() {
 			return;
 		}
 		
-		if( pushstate && view[0].history ) {
-			this.path = path;
-		}
-		
 		for( var i=0; i<view.length; i++) {
-			if( pushstate && window.history.pushState && view[i].history ) {
-				console.log("Push history");
-				window.history.pushState({"path": path}, null, path);
+			if( pushstate && view[i].history ) {
+				if( window.history.pushState ) {
+					window.history.pushState({"path": path}, null, path);
+				}
+				this.path = path;
 			}
 			cview = {
 				"cache":	view[i].cache,

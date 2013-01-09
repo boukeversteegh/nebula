@@ -100,17 +100,32 @@ class Files:
 			success = False
 			response['error'] = "Missing parameter: action"
 		else:
-			if params['action'] == 'mkdir':
-				try:
+			try:
+				if params['action'] == 'mkdir':
 					if os.path.exists(localpath):
-						raise("Path already exists")
+						raise Exception("Path already exists")
 					os.mkdir(localpath)
-				except Exception as e:
-					success = False
-					response['error'] = e.strerror
+					pass
+
+				if params['action'] == 'mv':
+					if not 'target' in params:
+						raise Exception("Missing parameter: target")
+					
+					localtarget = os.path.join(librarypath, params['target'])
+					
+					if not os.path.exists(localpath):
+						raise Exception("Path doesn't exist: " + "/".join(trail))
+					
+					os.rename(localpath, localtarget)
+					pass
+						
+			except Exception as e:
+				success = False
+				response['error'] = repr(e)
 					
 		response['success'] = success
 		return json.dumps(response)
+
 
 if __name__ == '__main__':
 	nebula = Nebula()
@@ -121,47 +136,22 @@ if __name__ == '__main__':
 	cherrypy.config.update({
 		'server.socket_host': '0.0.0.0', 
 		'server.socket_port': int(sys.argv[2])
-	}) 
+	})
 	conf = {
 		'/index': {
 			'tools.staticfile.on': True,
-			'tools.staticfile.filename': os.path.join(os.getcwd(), 'gui/player.html')
+			'tools.staticfile.filename': os.path.join(os.getcwd(), 'www/index.html')
 		},
-		'/browse': {
+		'/view': {
 			'tools.staticfile.on': True,
-			'tools.staticfile.filename': os.path.join(os.getcwd(), 'gui/player.html')
+			'tools.staticfile.filename': os.path.join(os.getcwd(), 'www/index.html')
 		},
-		'/play': {
-			'tools.staticfile.on': True,
-			'tools.staticfile.filename': os.path.join(os.getcwd(), 'gui/player.html')
-		},
-		'/css': {
+		'/www': {
 			'tools.staticdir.on': True,
-			'tools.staticdir.dir': os.path.join(os.getcwd(), 'gui/css')
-		},
-		'/js': {
-			'tools.staticdir.on': True,
-			'tools.staticdir.dir': os.path.join(os.getcwd(), 'gui/js')
-		},
-		'/js/jquery.js': {
-			'tools.staticfile.on': True,
-			'tools.staticfile.filename': os.path.join(os.getcwd(), 'gui/js/jquery-1.8.3.min.js')
+			'tools.staticdir.dir': os.path.join(os.getcwd(), 'www')
 		},
 		'/files': {
 		    'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
-		},
-		'/tpl/play': {
-			'tools.staticfile.on': True,
-			'tools.staticfile.filename': os.path.join(os.getcwd(), 'gui/tpl/play.html')
-		},
-		'/tpl/browse/files': {
-			'tools.staticfile.on': True,
-			'tools.staticfile.filename': os.path.join(os.getcwd(), 'gui/tpl/browse/files.html')
-		},
+		}
     }
-    
-	#def put(self):
-	#	cherrypy.request.processRequestBody = True
-    
-	#cherrypy.tools.put = Tool('before_request_body', put)
 	cherrypy.quickstart(nebula, '/', conf)
