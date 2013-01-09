@@ -4,11 +4,30 @@ function dragdrop_init() {
 	// init event handlers
 	//dropbox.addEventListener("dragstart", dragStart, false);
 	dropbox.addEventListener("dragenter", dragEnter, false);
-	//dropbox.addEventListener("dragexit", dragExit, false);
+	dropbox.addEventListener("dragexit", dragExit, false);
 	dropbox.addEventListener("dragover", noopHandler, false);
 	dropbox.addEventListener("drop", drop, false);
 	document.body.addEventListener("dragenter", function() { $('body').addClass('filedrag');} , false);
+	
+	
 	document.body.addEventListener("drop", function() { $('body').removeClass('filedrag');} , false);
+	
+	$('#folders .folder a').bind('dragover', function() {
+		$(this).addClass('ui-state-hover');//.removeClass('ui-state-default');
+	});
+	$('#folders .folder a').bind('dragleave', function() {
+		$(this).removeClass('ui-state-hover');//.removeClass('ui-state-default');
+	});
+	
+	$('#folders .folder').each(function() {
+		this.addEventListener('drop', function(evt) {
+			console.log(this);
+			drop(evt, this.dataset.path);
+			evt.stopPropagation();
+			evt.preventDefault();
+			return false;
+		});
+	});
 }
 
 function dragEnter(evt) {
@@ -20,27 +39,30 @@ function dragEnter(evt) {
 	return false;
 }
 
+function dragExit(evt) {
+	//$('body').removeClass('filedrag');
+}
+
 function noopHandler(evt) {
 	evt.stopPropagation();
 	evt.preventDefault();
 	return false;
 }
 
-function drop(evt) {
+function drop(evt, path) {
 	evt.stopPropagation();
 	evt.preventDefault();
-	 
+	
 	$('body').removeClass('filedrag');
 	var files = evt.dataTransfer.files;
 	var count = files.length;
-	console.log(evt.dataTransfer.files);
 	// Only call the handler if 1 or more files was dropped.
 	if (count > 0)
-		handleFiles(files);
+		handleFiles(files, path);
 	return false;
 }
 
-function handleFiles(files) {
+function handleFiles(files, path) {
 	var filenames = [];
 	
 	for( var i=0; i < files.length; i++ ) {
@@ -58,7 +80,14 @@ function handleFiles(files) {
 		var xhr = new XMLHttpRequest();
 		progresses.push(0);
 		xhr.upload._index = i;
-		xhr.open('PUT', '/files' + window.view.filepath + '/' + file.name);
+		
+		if( typeof path == "undefined" ) {
+			var targetpath = '/files' + window.view.filepath + '/' + file.name;
+		} else {
+			var targetpath = '/files' + path + '/' + file.name;
+		}
+		console.log("Uploading file to: " + targetpath);
+		xhr.open('PUT', targetpath);
 		xhrs.push(xhr);
 
 		var formData = new FormData();
@@ -96,7 +125,6 @@ function handleFiles(files) {
 		};
 		
 		xhr.formData = formData;
-		//xhr.send(formData);
 	}
 	xhrs[0].send(xhrs[0].formData);
 }

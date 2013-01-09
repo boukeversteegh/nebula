@@ -7,10 +7,9 @@
 	</h1>
 	
 	{{#data}}
+	<button id="mkdir" class="green" onClick="var name = prompt('Please enter a name'); if( name ) { view.xhttp('POST', '/files{{path}}/' + name, {'action':'mkdir'}); }">Create folder</button>
 	<div class="playlist">
-		<h3>Folders</h3>
 		<div id="folders">
-
 			<ul>
 				<li class="folder"><a class="showview" data-path="{{data.parent}}" href="/view/files{{data.parent}}">..</a></li>
 				{{#folders}}
@@ -18,10 +17,9 @@
 					<a class="showview" href="/view/files{{path}}/{{.}}">{{.}}</a>
 				</li>
 				{{/folders}}
-				<li><button class="green" onClick="var name = prompt('Please enter a name'); if( name ) { view.xhttp('POST', '/files{{path}}/' + name, {'action':'mkdir'}); }">Create folder</button></li>
+				
 			</ul>
 		</div>
-		<h3>Files</h3>
 		<div id="files">
 			<ul>
 				{{#files}}
@@ -58,7 +56,7 @@
 				},
 			hoverClass: "ui-state-hover"
 		})
-		$('#folders button').button();
+		$('#mkdir').button();
 		$('#folders .folder a').button();
 	</script>
 </div>
