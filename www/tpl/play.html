@@ -1,9 +1,58 @@
-<div>
-	{{#data}}
-	<h3><a class="showview" href="/view/files{{data.parent}}">{{file}}</a></h3>
-	<audio id="audio" preload="auto" controls autoplay="autoplay">
-		<source src="/files{{path}}"/>
-	</audio>
+{{#data}}
+<!-- <audio id="audio" preload="auto" controls autoplay="autoplay">
+	<source src="/files{{path}}"/>
+</audio> -->
 
-	{{/data}}
+<!--<object type="application/x-shockwave-flash" data="/www/swf/player_mp3_1.0.0.swf" width="800" height="40" style="overflow: hidden">
+	<param name="quality" value="high" />
+	<param name="wmode" value="transparent" />
+	<param name="bgcolor"/>
+	<param name="movie" value="/www/swf/player_mp3_1.0.0.swf" />
+	<param name="FlashVars" value="mp3=/files{{path}}&amp;showstop=1&amp;showinfo=1" />
+</object>-->
+
+<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="500" height="38" id="niftyPlayer1" align="">
+	<param name=movie value="/www/niftyplayer/niftyplayer.swf?file=/files{{path}}&as=1">
+	<param name="quality" value="high">
+	<param name="wmode" value="transparent" />
+	<param name="bgcolor" value="#999999">
+	<embed src="/www/niftyplayer/niftyplayer.swf?file=/files{{path}}&as=1" quality=high bgcolor="#999999" width="500" height="38" name="niftyPlayer1" align="" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" wmode="transparant">
+	</embed>
+</object>
+
+<div id="player_buttons">
+	<div id="btn_stop">Stop</div>
+	<div id="btn_play">Play</div>
+	<div id="btn_pause">Pause</div>
+	<div id="player_progress"></div>
 </div>
+<h3><a class="showview" href="/view/files{{data.parent}}">{{file}}</a></h3>
+{{/data}}
+<script type="text/javascript">
+	$(function() {
+		$('#tabs').css('margin-top', $('#top').height());
+	});
+	$('#btn_stop').button({
+		icons: {primary: "ui-icon-stop"}
+	}).click(function() {
+		niftyplayer('niftyPlayer1').stop();
+		$('#btn_play').show();
+		$('#btn_pause').hide();
+	});
+	$('#btn_play').button({
+		icons: {primary: "ui-icon-play"}
+	}).click(function() {
+		niftyplayer('niftyPlayer1').play();
+		$('#btn_pause').show();
+		$(this).hide();
+	}).hide();
+	$('#btn_pause').button({
+		icons: {primary: "ui-icon-pause"}
+	}).click(function() {
+		niftyplayer('niftyPlayer1').pause();
+		$('#btn_play').show();
+		$(this).hide();
+	});
+	
+	$('#player_progress').slider();
+</script>

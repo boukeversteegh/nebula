@@ -24,14 +24,19 @@ and (max-device-width : 480px) {
 	background:		#999;
 	width:			100%;
 	z-index:		1;
-	border-bottom:	1px solid black;
+	top:			0;
 }
 
 #top .layout td {
 	padding: 0;
 }
 
-
+#viewtitle {
+	margin: 0;
+	margin-left: 1em;
+	line-height: 2em;
+	text-shadow: 1px 1px 3px black;
+}
 a:visited {
 	/*color:	#66B;*/
 }
@@ -40,46 +45,19 @@ a:link {
 	/*color:	#66B;*/
 }
 
-.tabs, .tabs li {
-	float: left;
-	list-style-type: none;
-	margin: 0;
-	padding: 0;
-}
-
-.tabs {
-
-}
-
-.tabs {
-	margin: 0.25em;
-	margin-bottom: 0;
-}
-.tabs a {
-	padding:			0.5em 1em;
-	border-radius:		0.5em 0.5em 0 0;
-	background-color:	#EEE;
-	border:				1px solid black;
-	border-bottom:		0;
-	display:			block;
-	position:			relative;
-	text-decoration:	none;
-	color:				black;
-	margin-bottom:		-1px;
-}
-
-.tabs a:hover {
-	background-color: #eee;
-}
-
 #main {
 	clear: both;
 	background-color: #EEE;
 	padding: 0.5em;
 	min-height: 100%;
-	padding-top: 4em;
 	color: #333;
 }
+
+#tabs {
+	width: 100%;
+}
+
+
 a {
 	color: #333;
 }
@@ -98,17 +76,20 @@ a {
 }
 
 #player {
+	
+}
+
+#player audio {
+	width: 100%;
 }
 
 #player h3,
 #player audio {
-	float: left;
+
 }
+
 #player audio {
-	margin: 0 0.5em;
-	margin-top: 0.25em;
-	border: 0;
-	float: left;
+	margin: 0;
 }
 
 #player h3 {

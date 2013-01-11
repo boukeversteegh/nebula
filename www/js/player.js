@@ -22,7 +22,22 @@ function init() {
 	});
 	
 	window.view.show(window.location.pathname, true);
+	$('#tabs').tabs({
+		beforeLoad: function( event, ui ) {
+			/* Hack to prevent loading of first panel on pageload*/
+			if( !ui.panel.created ) {
+				ui.panel.created = true;
+				return false;
+			}
+			var href = $(ui.tab).find('a').attr('href');
+			window.view.show(href, true);
+			return false;
+		},
+		disabled: [1,2],
+		heightStyle: 'content'
+	});
 	
+	window.view.templates.tabs = $('#tabs').html();
 }
 
 function Uploader() {
@@ -46,6 +61,10 @@ function Uploader() {
 			}
 			window.uploader.refresh();
 		}
+		
+		/*xhr.upload.onprogress = function( event ) {
+			
+		}*/
 		xhr.onload = function(event) {
 			window.uploader.oncomplete(this._upload);
 		}
@@ -116,6 +135,7 @@ function Uploader() {
 function View() {
 	this.path = '';
 	this.filepath = '/';
+	this.templates = {};
 	
 	this.views = {
 		"/view/files*": [
@@ -207,17 +227,6 @@ function View() {
 			},
 			"data": data
 		});
-	}
-	
-	this.showFiles = function() {
-		var templateurl = '/tpl/browse/files';
-		var dataurl = '/api/files';
-		
-		var viewdata = {};
-		var self = this;
-		var target = 'main';
-		$.get(dataurl, function(data) { viewdata['data'] = data;     	self.renderTemplate(target, viewdata);}, 'json');
-		$.get(templateurl, function(data) { viewdata['template'] = data;	self.renderTemplate(target, viewdata);}, 'text');
 	}
 	
 	this.renderTemplate = function(view, viewdata) {

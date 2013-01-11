@@ -7,6 +7,7 @@
 		<script src="/www/js/mustache.js"></script>
 		<script src="/www/js/player.js"></script>
 		<script src="/www/js/dropfile.js"></script>
+		<script src="/www/niftyplayer/niftyplayer.js" type="text/javascript"></script>
 		<link href="/www/jqueryui/nebula/jquery-ui-1.9.2.custom.css" rel="stylesheet"/>
 		<link href="/www/css/player.css" rel="stylesheet"/>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1"/>
@@ -17,23 +18,16 @@
 	</head>
 	<body>
 		<div id="top">
-			<table class="layout" cellspacing="0">
-				<tr>
-					<td valign="bottom">
-						<ul id="menu_view" class="tabs">
-							<li><a href="/browse/files" id="btn_view_files">Files</a></li>
-							<!--<li><a href="/browse/artists" id="btn_view_artists">Artists</a></li>
-							<li><a href="/browse/albums" id="btn_view_artists">Albums</a></li>-->
-						</ul>
-					</td>
-					<td>
-						<div id="player"></div>
-					</td>
-				</tr>
-			</table>
+			<div id="player"></div>
 		</div>
-		<div id="main">
-		
+		<div id="tabs">
+			<ul id="menu_test">
+				<li><a href="/view/files" id="btn_view_files">Files</a></li>
+				<li><a href="/browse/artists" id="btn_view_artists">Artists</a></li>
+				<li><a href="/browse/albums" id="btn_view_artists">Albums</a></li>
+				<!--{{#data}}<li><h3 id="viewtitle">{{view.title}}</h3></li>{{/data}} -->
+			</ul>
+			<div id="main"></div>
 		</div>
 	</body>
 </html>
