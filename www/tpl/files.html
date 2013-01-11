@@ -36,14 +36,13 @@
 	</div>
 	<div class="playlist" id="uploads">
 		<h3>Uploads</h3>
-		<ul id="droplist"><i>Drop files here to upload</i>
-		</ul>
+		<ul id="uploads_progress"></ul>
 		{{/data}}
 	</div>
 	<script type="text/javascript">
 		dragdrop_init();
 		window.view.filepath = "{{{data.path}}}";
-		$('#files li.file, #folders li.folder').draggable({ revert: 'invalid', cursorAt: { left: -5 }})
+		$('#files li.file, #folders li.folder').remove('#mkdir').draggable({ revert: 'invalid', cursorAt: { left: -5 }})
 		$('#folders li.folder').droppable({
 			drop: function( event, ui ) {
 					var sourcepath = ui.draggable[0].dataset.path;
@@ -58,5 +57,6 @@
 		})
 		$('#mkdir').button();
 		$('#folders .folder a').button();
+		window.uploader.refresh();
 	</script>
 </div>

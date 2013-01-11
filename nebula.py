@@ -62,7 +62,7 @@ class Files:
 		response = {}
 		success = True
 		try:
-			upfile = cherrypy.request.params['upfile']
+			upfile = cherrypy.request.params['file']
 			localpath = os.path.join(librarypath, *trail)
 			f = open(localpath, 'w+b')
 			f.write(upfile.fullvalue())
@@ -122,7 +122,7 @@ class Files:
 						
 			except Exception as e:
 				success = False
-				response['error'] = repr(e)
+				response['error'] = "Error: %s" % e
 					
 		response['success'] = success
 		return json.dumps(response)
