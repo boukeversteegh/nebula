@@ -46,6 +46,13 @@ function Uploader() {
 			}
 			window.uploader.refresh();
 		}
+		xhr.upload.onprogress = function(event) {
+			if (event.lengthComputable) {
+                                this._upload.progress = (event.loaded / event.total * 100 | 0);
+                                this.loaded = event.loaded;
+                        }
+                        window.uploader.refresh();
+		}
 		xhr.onload = function(event) {
 			window.uploader.oncomplete(this._upload);
 		}
@@ -61,7 +68,7 @@ function Uploader() {
 			"loaded":		0
 		}
 		xhr._upload = upload;
-		
+		xhr.upload._upload = upload;
 		this.queue.push(upload);
 		this.uploads.push(upload);
 		this.processQueue();
@@ -76,6 +83,7 @@ function Uploader() {
 				i--;
 			}
 		}
+		window.uploader.refresh();
 		// Start uploads
 		while( this.active.length < this.maxconnections && this.queue.length > 0 ) {
 			var upload = this.queue.shift();
