@@ -91,7 +91,8 @@ a {
 	clear: both;
 	margin: 0.2em;
 	position: relative;
-	
+	overflow: visible;
+	white-space: nowrap;
 }
 
 #player-textstatus {
