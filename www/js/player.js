@@ -152,7 +152,7 @@ function View() {
 				"cache":	true,
 				"template":	"/www/tpl/play.html",
 				"data":		function (path, args) { return "/metadata" + args},
-				"target":	"#player"
+				"target":	"#playercontainer"
 			}
 		]
 	};

@@ -76,28 +76,47 @@ a {
 }
 
 #player {
+	padding: 0.5em;
+}
+
+#player .button {
+	margin: 0.2em;
+}
+
+#player .button {
+	float: left;
+}
+
+#player-progress {
+	clear: both;
+	margin: 0.2em;
+	position: relative;
 	
 }
 
-#player audio {
-	width: 100%;
+#player-textstatus {
+	text-shadow: black 1px 1px 3px;
+	position: absolute;
+	height: 100%;
 }
 
-#player h3,
-#player audio {
-
+#player-textstatus div {
+	display: inline-block;
 }
 
-#player audio {
-	margin: 0;
+#player-current-time {
+
+	line-height: 2em;
+	padding-left: 0.5em;
 }
+
 
 #player h3 {
 	color: white;
 	margin: 0.5em 0.5em;
 	text-shadow: black 1px 1px 3px;
 	font-size: 1em;
-	float: right;
+	display: inline-block;
 }
 
 #player h3 a {

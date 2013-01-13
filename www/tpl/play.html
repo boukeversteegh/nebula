@@ -11,48 +11,101 @@
 	<param name="FlashVars" value="mp3=/files{{path}}&amp;showstop=1&amp;showinfo=1" />
 </object>-->
 
-<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="500" height="38" id="niftyPlayer1" align="">
+<!--<object classid="clsid:D27CDB6E-AE6D-11cf-96B8-444553540000" codebase="http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=6,0,0,0" width="500" height="38" id="niftyPlayer1" align="">
 	<param name=movie value="/www/niftyplayer/niftyplayer.swf?file=/files{{path}}&as=1">
 	<param name="quality" value="high">
 	<param name="wmode" value="transparent" />
 	<param name="bgcolor" value="#999999">
 	<embed src="/www/niftyplayer/niftyplayer.swf?file=/files{{path}}&as=1" quality=high bgcolor="#999999" width="500" height="38" name="niftyPlayer1" align="" type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" wmode="transparant">
 	</embed>
-</object>
+</object>-->
 
-<div id="player_buttons">
-	<div id="btn_stop">Stop</div>
-	<div id="btn_play">Play</div>
-	<div id="btn_pause">Pause</div>
-	<div id="player_progress"></div>
+<div id="jplayer">
+
 </div>
-<h3><a class="showview" href="/view/files{{data.parent}}">{{file}}</a></h3>
-{{/data}}
+
+<div id="player">
+	<div id="player-stop" class="button">Stop</div>
+	<div id="player-play" class="button">Play</div>
+	<div id="player-pause" class="button">Pause</div>
+	<a id="player-open-folder" class="showview button" href="/view/files{{parent}}">&nbsp;</a>
+	<a id="player-open-file" class="button" href="/files{{path}}">&nbsp;</a>
+	<div id="player-progress" class="ui-state-default">
+		<div id="player-textstatus">
+			<div id="player-current-time"></div>
+			<div>&nbsp; {{file}}</div>
+		</div>
+	</div>
+</div>
+
+
 <script type="text/javascript">
+	$("#player-progress").progressbar({"value":0.1, "max":100}).hover(
+		function() { $(this).find('.ui-progressbar-value').addClass('ui-state-hover'); },
+		function() { $(this).find('.ui-progressbar-value').removeClass('ui-state-hover') }
+	);
+	
+	$('#jplayer').jPlayer({
+		swfPath: '/www/jplayer',
+		solution: 'flash, html',
+		supplied: 'mp3',
+		preload: 'auto',
+		volume: 0.8,
+		muted: false,
+		backgroundColor: '#000000',
+		cssSelectorAncestor: '#player',
+		cssSelector: {
+			//videoPlay: '.player-video-play',
+			play: '#player-play',
+			pause: '#player-pause',
+			stop: '#player-stop',
+			seekBar: '#player-progress',
+			playBar: '.ui-progressbar-value',
+			//mute: '.player-mute',
+			//unmute: '.player-unmute',
+			//volumeBar: '.player-volume-bar',
+			//volumeBarValue: '.player-volume-bar-value',
+			//volumeMax: '.player-volume-max',
+			currentTime: '#player-current-time',
+			//duration: '.player-duration',
+			//fullScreen: '.player-full-screen',
+			//restoreScreen: '.player-restore-screen',
+			//repeat: '.player-repeat',
+			//repeatOff: '.player-repeat-off',
+			//gui: '.player-gui',
+			//noSolution: '.player-no-solution'
+		},
+		ready: function() {
+			$(this).jPlayer("setMedia", {"mp3": "/files{{{path}}}"} ).jPlayer("play");;
+		},
+		errorAlerts: false,
+		warningAlerts: false
+	});
+	
+	$('#player-stop').button({
+		icons: {primary: "ui-icon-stop"}
+	});
+	$('#player-play').button({
+		icons: {primary: "ui-icon-play"}
+	});
+	$('#player-pause').button({
+		icons: {primary: "ui-icon-pause"}
+	});
+	
+	$('#player-open-folder').button({
+		text: false,
+		icons: {primary: "ui-icon-folder-collapsed"}
+	});
+	$('#player-open-file').button({
+		text: false,
+		icons: {primary: "ui-icon-arrowthickstop-1-s"}
+	});
+
+
 	$(function() {
 		$('#tabs').css('margin-top', $('#top').height());
 	});
-	$('#btn_stop').button({
-		icons: {primary: "ui-icon-stop"}
-	}).click(function() {
-		niftyplayer('niftyPlayer1').stop();
-		$('#btn_play').show();
-		$('#btn_pause').hide();
-	});
-	$('#btn_play').button({
-		icons: {primary: "ui-icon-play"}
-	}).click(function() {
-		niftyplayer('niftyPlayer1').play();
-		$('#btn_pause').show();
-		$(this).hide();
-	}).hide();
-	$('#btn_pause').button({
-		icons: {primary: "ui-icon-pause"}
-	}).click(function() {
-		niftyplayer('niftyPlayer1').pause();
-		$('#btn_play').show();
-		$(this).hide();
-	});
 	
-	$('#player_progress').slider();
 </script>
+
+{{/data}}
