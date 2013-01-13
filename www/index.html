@@ -21,12 +21,11 @@
 		<div id="top">
 			<div id="playercontainer"></div>
 		</div>
-		<div id="tabs">
-			<ul id="menu_test">
-				<li><a href="/view/files" id="btn_view_files">Files</a></li>
-				<li><a href="/browse/artists" id="btn_view_artists">Artists</a></li>
-				<li><a href="/browse/albums" id="btn_view_artists">Albums</a></li>
-				<!--{{#data}}<li><h3 id="viewtitle">{{view.title}}</h3></li>{{/data}} -->
+		<div id="tabs" class="ui-tabs ui-widget ui-widget-content ui-corner-all">
+			<ul id="menu_test" class="ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all">
+				<li class="ui-state-default ui-corner-top ui-tabs-active ui-state-active"><a href="/view/files" id="btn_view_files" >Files</a></li>
+				<li class="ui-state-default ui-corner-top ui-tabs-active ui-state-disabled"><a href="/view/artists" id="btn_view_artists">Artists</a></li>
+				<li class="ui-state-default ui-corner-top ui-tabs-active ui-state-disabled"><a href="/view/albums" id="btn_view_artists">Albums</a></li>
 			</ul>
 			<div id="main"></div>
 		</div>

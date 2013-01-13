@@ -22,22 +22,6 @@ function init() {
 	});
 	
 	window.view.show(window.location.pathname, true);
-	$('#tabs').tabs({
-		beforeLoad: function( event, ui ) {
-			/* Hack to prevent loading of first panel on pageload*/
-			if( !ui.panel.created ) {
-				ui.panel.created = true;
-				return false;
-			}
-			var href = $(ui.tab).find('a').attr('href');
-			window.view.show(href, true);
-			return false;
-		},
-		disabled: [1,2],
-		heightStyle: 'content'
-	});
-	
-	window.view.templates.tabs = $('#tabs').html();
 }
 
 function Uploader() {
