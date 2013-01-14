@@ -5,16 +5,63 @@ import cherrypy
 import mimetypes
 import sys
 import simplejson as json
+import eyed3
+import eyed3.mp3
 
 from cherrypy.lib.static import serve_file
 
 class Nebula:
-
+	id3tags = [
+		'version',
+		'bpm',
+		'title',
+		'artist',
+		'album',
+		'track_num',
+		##'play_count',
+		'publisher',
+		'cd_id',
+		#'images',
+		##'original_release_date',
+		##'recording_date',
+		#'encoding_date',
+		#'tagging_date',
+		#'lyrics',
+		'disc_num',
+		#'popularities',
+		#'genre',
+		'commercial_url',
+		#'audio_file_url',
+		'audio_source_url',
+		'artist_url',
+		'internet_radio_url',
+		'payment_url',
+		'publisher_url',
+		#'unique_file_ids',
+		'terms_of_use',
+		#'chapters',
+		#'table_of_contents'
+	]
+	
 	def metadata(self, *trail):
 		localpath = os.path.join(librarypath, *trail)
 		response = {'success': True}
+		
 		if os.path.isfile(localpath):
+			if eyed3.mp3.isMp3File(localpath):
+				audiofile = eyed3.load(localpath)
+				id3 = {}
+				for tagname in Nebula.id3tags:
+					tagvalue = getattr(audiofile.tag, tagname)
+					if tagvalue:
+						id3[tagname] = tagvalue
+					
+				#tag['release_date'] = audiofile.tag.best_release_date
+			else:
+				id3 = None
+				
 			response['data'] = {
+				"id3":    id3,
 				"path":   os.path.join("/", *trail),
 				"file":	  trail[-1] if len(trail) > 0 else "",
 				"parent": "/" + "/".join(trail[0:-1]) 
