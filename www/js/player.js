@@ -144,6 +144,14 @@ function View() {
 				"data":		function (path, args) { return "/metadata" + args},
 				"target":	"#playercontainer"
 			}
+		],
+		"/view/lyrics*" : [
+			{
+				"cache":	true,
+				"template":	"/www/tpl/lyrics.html",
+				"data":		function (path, args) { return "/lyrics" + args},
+				"target":	"#main"
+			}
 		]
 	};
 	

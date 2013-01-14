@@ -197,6 +197,27 @@ class Files:
 		response['success'] = success
 		return json.dumps(response)
 
+class Lyrics:
+	exposed = True
+	cache={}
+	
+	def GET(self, *trail):
+		cherrypy.response.headers['Content-Type'] = "application/json"
+		response = {'success': True}
+		if trail in Lyrics.cache:
+			response['data'] = {
+				'lyrics': Lyrics.cache[trail]
+			}
+		return json.dumps(response)
+		
+	def PUT(self, *trail, **params):
+		cherrypy.response.headers['Content-Type'] = "application/json"
+		response = {'success': True}
+		lyrics = params['lyrics']
+		Lyrics.cache[trail] = lyrics
+		#response['lyrics'] = lyrics
+		return json.dumps(response)
+	pass
 
 if __name__ == '__main__':
 	nebula = Nebula()
@@ -204,6 +225,8 @@ if __name__ == '__main__':
 	librarypath = sys.argv[1]
 	
 	nebula.files = Files()
+	nebula.lyrics = Lyrics()
+	
 	cherrypy.config.update({
 		'server.socket_host': '0.0.0.0', 
 		'server.socket_port': int(sys.argv[2])
@@ -222,6 +245,9 @@ if __name__ == '__main__':
 			'tools.staticdir.dir': os.path.join(os.getcwd(), 'www')
 		},
 		'/files': {
+		    'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
+		},
+		'/lyrics': {
 		    'request.dispatch': cherrypy.dispatch.MethodDispatcher(),
 		}
     }

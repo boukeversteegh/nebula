@@ -191,3 +191,7 @@ a {
 .playlist li:last-child{
     border-bottom: none;
 }
+
+#lyrics {
+	white-space: pre-wrap;
+}
