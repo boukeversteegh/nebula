@@ -46,7 +46,7 @@ class Nebula:
 	cache = {}
 	
 	def metadata(self, *trail):
-		if trail in Nebula.cache and cherrypy.request.headers['Cache-Control'] not in ['max-age=0', 'no-cache']:
+		if trail in Nebula.cache and (not 'Cache-Control' in cherrypy.request.headers or cherrypy.request.headers['Cache-Control'] not in ['max-age=0', 'no-cache']):
 			response = Nebula.cache[trail]
 			response['cached'] = True
 			response['headers'] = cherrypy.request.headers
