@@ -132,7 +132,7 @@ function View() {
 			{
 				"cache":	false,
 				"template": "/www/tpl/files.html",
-				"data":		function(path, args) { return "/files" + args},
+				"data":		function(path, args) { return "/metadata" + args},
 				"target":	"#main",
 				"history":	true
 			}

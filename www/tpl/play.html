@@ -33,7 +33,7 @@
 	<div id="player-progress" class="ui-state-default">
 		<div id="player-textstatus">
 			<div id="player-current-time"></div>
-			<div>&nbsp; {{id3.artist}} &mdash; {{id3.title}}</div>
+			<div>&nbsp; {{#id3.artist}}{{id3.artist}} &mdash; {{/id3.artist}}{{#id3.title}}{{id3.title}}{{/id3.title}}{{^id3.artist}}{{file}}{{/id3.artist}}</div>
 		</div>
 	</div>
 </div>

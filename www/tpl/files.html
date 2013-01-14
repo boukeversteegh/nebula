@@ -23,9 +23,9 @@
 		<div id="files">
 			<ul>
 				{{#files}}
-				<li class="file" data-file="{{.}}" data-path="{{path}}/{{.}}">
-					<a href="/view/play{{{path}}}/{{{.}}}" class="showview">{{.}}</a>
-					<button onClick="confirm('Are you sure you want to delete ' + this.dataset.href + '?') && view.xhttp('DELETE', this.dataset.href)" data-href="/files{{path}}/{{.}}" class="delete">delete</button>
+				<li class="file" data-file="{{file}}" data-path="{{path}}/{{file}}">
+					<a href="/view/play{{{path}}}/{{{file}}}" class="showview"><span class="filename">{{file}}</span>&#9;[{{id3.track_num.0}}] {{#id3.title}}{{#id3}}{{#id3.artist}}{{id3.artist}} &mdash; {{/id3.artist}}{{id3.title}}{{/id3}}{{/id3.title}}{{^id3.title}}{{file}}{{/id3.title}}</a>
+					<button onClick="confirm('Are you sure you want to delete ' + this.dataset.href + '?') && view.xhttp('DELETE', this.dataset.href)" data-href="/files{{path}}/{{file}}" class="delete">delete</button>
 				</li>
 				{{/files}}
 				{{^files}}

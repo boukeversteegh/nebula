@@ -149,6 +149,11 @@ a {
 	display: block;
 	text-align: left;
 	padding: 0.25em;
+	white-space: pre;
+}
+
+.playlist .filename {
+	color: #999;
 }
 
 .playlist li a:hover {

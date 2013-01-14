@@ -47,27 +47,58 @@ class Nebula:
 		localpath = os.path.join(librarypath, *trail)
 		response = {'success': True}
 		
-		if os.path.isfile(localpath):
-			if eyed3.mp3.isMp3File(localpath):
-				audiofile = eyed3.load(localpath)
-				id3 = {}
+		if os.path.exists(localpath):
+			# FILE
+			if os.path.isfile(localpath):
+				metadata = self._getFileMetadata(trail)
+				metadata["parent"] = "/" + "/".join(trail[0:-1])
+				metadata["path"] = os.path.join("/", *trail)
+				response['data'] = metadata
+			# DIRECTORY
+			else:
+				files = []
+				folders = []
+				for item in glob.glob(localpath + '/*'):
+					basename = os.path.basename(item)
+					if os.path.isdir(item):
+						folders.append(basename)
+					else:
+						filemetadata = self._getFileMetadata(trail+tuple([basename]))
+						files.append(filemetadata)
+				files.sort()
+				folders.sort()
+				path = "/".join(trail)
+				response['data'] = {
+					"files":	files,
+					"folders":	folders,
+					"path":		"/" + path if len(trail) > 0 else path,
+					"folder":	trail[-1] if len(trail) > 0 else "",
+					"trail":	trail,
+					"parent":	"/" + "/".join(trail[0:-1])
+				}
+		return json.dumps(response)
+
+	metadata.exposed = True
+	
+	def _getFileMetadata(self, trail):
+		localpath = os.path.join(librarypath, *trail)
+		if eyed3.mp3.isMp3File(localpath):
+			audiofile = eyed3.load(localpath)
+			id3 = {}
+			if audiofile.tag:
 				for tagname in Nebula.id3tags:
 					tagvalue = getattr(audiofile.tag, tagname)
 					if tagvalue:
 						id3[tagname] = tagvalue
-					
-				#tag['release_date'] = audiofile.tag.best_release_date
-			else:
-				id3 = None
-				
-			response['data'] = {
-				"id3":    id3,
-				"path":   os.path.join("/", *trail),
-				"file":	  trail[-1] if len(trail) > 0 else "",
-				"parent": "/" + "/".join(trail[0:-1]) 
-			}
-		return json.dumps(response)
-	metadata.exposed = True
+			
+			#tag['release_date'] = audiofile.tag.best_release_date
+		else:
+			id3 = None
+		metadata = {
+			"id3":    id3,
+			"file":	  trail[-1] if len(trail) > 0 else ""
+		}
+		return metadata
 
 class Files:
 	exposed = True
@@ -81,25 +112,9 @@ class Files:
 			if os.path.isfile(localpath):
 				return serve_file(localpath)
 			else:
-				response = {}
-				files = []
-				folders = []
-				for item in glob.glob(localpath + '/*'):
-					basename = os.path.basename(item)
-					if os.path.isdir(item):
-						folders.append(basename)
-					else:
-						files.append(basename)
-				files.sort()
-				folders.sort()
-				path = "/".join(trail)
-				response['data'] = {
-					"files":	files,
-					"folders":	folders,
-					"path":		"/" + path if len(trail) > 0 else path,
-					"folder":	trail[-1] if len(trail) > 0 else "",
-					"trail":	trail,
-					"parent":	"/" + "/".join(trail[0:-1])
+				response = {
+					"success":   false,
+					"error":	"This path is a directory"
 				}
 				return json.dumps(response)
 
