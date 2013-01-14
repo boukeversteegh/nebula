@@ -130,7 +130,7 @@ function View() {
 	this.views = {
 		"/view/files*": [
 			{
-				"cache":	false,
+				"cache":	true,
 				"template": "/www/tpl/files.html",
 				"data":		function(path, args) { return "/metadata" + args},
 				"target":	"#main",

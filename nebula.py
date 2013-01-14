@@ -43,39 +43,47 @@ class Nebula:
 		#'table_of_contents'
 	]
 	
+	cache = {}
+	
 	def metadata(self, *trail):
-		localpath = os.path.join(librarypath, *trail)
-		response = {'success': True}
+		if trail in Nebula.cache and cherrypy.request.headers['Cache-Control'] not in ['max-age=0', 'no-cache']:
+			response = Nebula.cache[trail]
+			response['cached'] = True
+			response['headers'] = cherrypy.request.headers
+		else:
+			localpath = os.path.join(librarypath, *trail)
+			response = {'success': True}
 		
-		if os.path.exists(localpath):
-			# FILE
-			if os.path.isfile(localpath):
-				metadata = self._getFileMetadata(trail)
-				metadata["parent"] = "/" + "/".join(trail[0:-1])
-				metadata["path"] = os.path.join("/", *trail)
-				response['data'] = metadata
-			# DIRECTORY
-			else:
-				files = []
-				folders = []
-				for item in glob.glob(localpath + '/*'):
-					basename = os.path.basename(item)
-					if os.path.isdir(item):
-						folders.append(basename)
-					else:
-						filemetadata = self._getFileMetadata(trail+tuple([basename]))
-						files.append(filemetadata)
-				files.sort()
-				folders.sort()
-				path = "/".join(trail)
-				response['data'] = {
-					"files":	files,
-					"folders":	folders,
-					"path":		"/" + path if len(trail) > 0 else path,
-					"folder":	trail[-1] if len(trail) > 0 else "",
-					"trail":	trail,
-					"parent":	"/" + "/".join(trail[0:-1])
-				}
+			if os.path.exists(localpath):
+				# FILE
+				if os.path.isfile(localpath):
+					metadata = self._getFileMetadata(trail)
+					metadata["parent"] = "/" + "/".join(trail[0:-1])
+					metadata["path"] = os.path.join("/", *trail)
+					response['data'] = metadata
+				# DIRECTORY
+				else:
+					files = []
+					folders = []
+					for item in glob.glob(localpath + '/*'):
+						basename = os.path.basename(item)
+						if os.path.isdir(item):
+							folders.append(basename)
+						else:
+							filemetadata = self._getFileMetadata(trail+tuple([basename]))
+							files.append(filemetadata)
+					files.sort()
+					folders.sort()
+					path = "/".join(trail)
+					response['data'] = {
+						"files":	files,
+						"folders":	folders,
+						"path":		"/" + path if len(trail) > 0 else path,
+						"folder":	trail[-1] if len(trail) > 0 else "",
+						"trail":	trail,
+						"parent":	"/" + "/".join(trail[0:-1])
+					}
+			Nebula.cache[trail] = response
 		return json.dumps(response)
 
 	metadata.exposed = True
