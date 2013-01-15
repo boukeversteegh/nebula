@@ -121,7 +121,7 @@ class Files:
 				return serve_file(localpath)
 			else:
 				response = {
-					"success":   false,
+					"success":   False,
 					"error":	"This path is a directory"
 				}
 				return json.dumps(response)
