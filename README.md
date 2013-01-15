@@ -1,4 +1,4 @@
-nebula
+Nebula
 ======
 
 Social music server
@@ -7,10 +7,21 @@ Social music server
 How to run
 ==========
 
+```bash
+python nebula.py $LIBRARYPATH $PORT
 ```
-python nebula.py LIBRARYPATH
+```bash
+# For example
+mkdir ~/library
+python nebula.py ~/library 8006
 ```
+
+Then visit `http://localhost:8006` in your webbrowser.
 
 Requirements
 ============
-Nebula requires CherryPy http://download.cherrypy.org/cherrypy/3.2.0rc1/CherryPy-3.2.0rc1.tar.gz
+* [Python 2.7](http://www.python.org/download/)
+* Python Modules (can be installed using `easy_install`)
+  * [cherrypy](http://download.cherrypy.org/cherrypy/3.2.2/): Webserver
+  * [eyed3](http://eyed3.nicfit.net/): Module for reading ID3-tags from MP3 files
+  * [simplejson](https://github.com/simplejson/simplejson): Fast JSON module
