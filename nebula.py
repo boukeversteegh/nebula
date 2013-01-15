@@ -11,6 +11,9 @@ import eyed3.mp3
 from cherrypy.lib.static import serve_file
 
 class Nebula:
+	pass
+
+class Metadata:
 	id3tags = [
 		'version',
 		'bpm',
@@ -45,9 +48,9 @@ class Nebula:
 	
 	cache = {}
 	
-	def metadata(self, *trail):
-		if trail in Nebula.cache and (not 'Cache-Control' in cherrypy.request.headers or cherrypy.request.headers['Cache-Control'] not in ['max-age=0', 'no-cache']):
-			response = Nebula.cache[trail]
+	def default(self, *trail):
+		if trail in Metadata.cache and (not 'Cache-Control' in cherrypy.request.headers or cherrypy.request.headers['Cache-Control'] not in ['max-age=0', 'no-cache']):
+			response = Metadata.cache[trail]
 			response['cached'] = True
 			response['headers'] = cherrypy.request.headers
 		else:
@@ -83,18 +86,17 @@ class Nebula:
 						"trail":	trail,
 						"parent":	"/" + "/".join(trail[0:-1])
 					}
-			Nebula.cache[trail] = response
+			Metadata.cache[trail] = response
 		return json.dumps(response)
-
-	metadata.exposed = True
-	
+	default.exposed = True
+		
 	def _getFileMetadata(self, trail):
 		localpath = os.path.join(librarypath, *trail)
 		if eyed3.mp3.isMp3File(localpath):
 			audiofile = eyed3.load(localpath)
 			id3 = {}
 			if audiofile.tag:
-				for tagname in Nebula.id3tags:
+				for tagname in Metadata.id3tags:
 					tagvalue = getattr(audiofile.tag, tagname)
 					if tagvalue:
 						id3[tagname] = tagvalue
@@ -204,6 +206,8 @@ if __name__ == '__main__':
 	librarypath = sys.argv[1]
 	
 	nebula.files = Files()
+	nebula.metadata = Metadata()
+	
 	cherrypy.config.update({
 		'server.socket_host': '0.0.0.0', 
 		'server.socket_port': int(sys.argv[2])

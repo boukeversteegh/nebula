@@ -10,6 +10,7 @@ function init() {
 		if( e.button == 0 ) {
 			e.preventDefault();
 			window.view.show($(this).attr('href'), true);
+			return false;
 		}
 	});
 	
@@ -52,9 +53,8 @@ function View() {
 	
 	this.views['/'] = this.views['/view/files*'];
 	
-	this.show = function(path, pushstate) {
+	this.show = function(path, pushstate, nocache) {
 		//console.log(["Showing path: " + path, pushstate]);
-		
 		var view = null;
 		var viewname = null;
 		var tail = null;
@@ -102,8 +102,30 @@ function View() {
 			//console.log(args);
 			//console.log(rmatch);;
 			var viewdata = {};
-			$.get(cview.data,		function(data) { viewdata['data'] = data;     	self.renderTemplate(cview, viewdata);}, 'json');
-			$.get(cview.template,	function(data) { viewdata['template'] = data;	self.renderTemplate(cview, viewdata);}, 'html');
+			//$.get(cview.data,		function(data) { viewdata['data'] = data;     	self.renderTemplate(cview, viewdata);}, 'json');
+			//#$.get(cview.template,	function(data) { viewdata['template'] = data;	self.renderTemplate(cview, viewdata);}, 'html');
+			
+			var headers = {};
+			if( !!nocache ) {
+				headers['Cache-Control'] = 'no-cache';
+			}
+			$.ajax({
+				"url":		cview.data,
+				"success":	function(data) {
+								viewdata['data'] = data;
+								self.renderTemplate(cview, viewdata);
+							},
+				"dataType":	"json",
+				"headers":	headers
+			});
+			$.ajax({
+				"url":		cview.template,
+				"success":	function(data) {
+								viewdata['template'] = data;
+								self.renderTemplate(cview, viewdata);
+							},
+				"dataType":	"html"
+			});
 		}
 	}
 	
@@ -113,7 +135,7 @@ function View() {
 			"type": method,
 			"success": function(response) {
 				if( response.success ) {
-					view.show(view.path);
+					view.show(view.path, false);
 				} else {
 					alert(response.error);
 				}
