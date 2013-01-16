@@ -91,7 +91,7 @@ function Uploader() {
 		window.uploader.refresh();
 		window.uploader.processQueue();
 		if( upload.path == view.filepath ) {
-			view.show(view.path);
+			view.show(view.path, false, true);
 		}
 	}
 }
