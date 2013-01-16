@@ -1,0 +1,56 @@
+# Line by line format
+{
+	lyrics:
+		[0, "Me not working hard?\n"]
+		[7, "Yeah, right, picture that with a Kodak\n"]
+}
+# Word by word format 
+{
+	lyrics: [
+		[0,   "Me "],
+		[0.4, "not "],
+		[0.8, "working "],
+		[1.1, "hard?\n"],
+		[7, "Yeah, right, picture that with a Kodak"]
+	]
+}
+
+# Indexed word by word format
+{
+	lyrics: {
+		0:		"Me ",
+		0.4:	"not ",
+		0.8:	"working "		
+	}
+}
+
+# Duet example:
+{
+	"lyrics": {
+		"male": {
+			0:		"Me ",
+			0.4:	"not ",
+			0.8:	"working ",
+			1:		"hard\n",	# End of line. Lyrics are displayed line by line. Until \n found.
+			1.5:	""			# Force clear
+		},
+		"female": {
+			0:		"Yeah",
+			1.5:	"\n"		# End of line, force clear
+		}
+		
+	]
+}
+
+# Multi-lingual lyrics example:
+{
+	"lyrics": {
+		
+	}
+}
+
+##########
+Male: Something on my mind
+Female: Something on my mind
+
+
