@@ -6,7 +6,12 @@ function dragdrop_init() {
 	dropbox.addEventListener("dragenter", dragEnter, false);
 	dropbox.addEventListener("dragexit", dragExit, false);
 	dropbox.addEventListener("dragover", noopHandler, false);
-	dropbox.addEventListener("drop", drop, false);
+	dropbox.addEventListener("drop", function(evt) {
+		drop(evt, this.dataset.path);
+		evt.stopPropagation();
+		evt.preventDefault();
+		return false;
+	});
 	document.body.addEventListener("dragenter", function() { $('body').addClass('filedrag');} , false);
 	
 	
