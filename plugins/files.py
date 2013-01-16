@@ -22,7 +22,7 @@ class Files:
 				return serve_file(localpath)
 			else:
 				response = {
-					"success":   False,
+					"success":	False,
 					"error":	"This path is a directory"
 				}
 				return json.dumps(response)
