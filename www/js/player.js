@@ -135,7 +135,7 @@ function View() {
 			"type": method,
 			"success": function(response) {
 				if( response.success ) {
-					view.show(view.path, false);
+					view.show(view.path, false, true);
 				} else {
 					alert(response.error);
 				}
