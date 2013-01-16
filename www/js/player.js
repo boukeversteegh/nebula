@@ -10,6 +10,7 @@ function init() {
 		if( e.button == 0 ) {
 			e.preventDefault();
 			window.view.show($(this).attr('href'), true);
+			return false;
 		}
 	});
 	
@@ -24,103 +25,6 @@ function init() {
 	window.view.show(window.location.pathname, true);
 }
 
-function Uploader() {
-	this.active = [];
-	this.queue = [];
-	this.maxconnections = 2;
-	this.uploads = [];
-	
-	this.upload = function (file, path) {
-		var xhr = new XMLHttpRequest();
-		if( typeof path == "undefined" ) {
-			path = window.view.filepath;
-		}
-		var targetpath = '/files' + path + '/' + file.name;
-		xhr.open('PUT', targetpath);
-		
-		xhr.onuploadprogress = function (event) {
-			if (event.lengthComputable) {
-				this._upload.progress = (event.loaded / event.total * 100 | 0);
-				this.loaded = event.loaded;
-			}
-			window.uploader.refresh();
-		}
-
-		xhr.upload.onprogress = function(event) {
-			if (event.lengthComputable) {
-                                this._upload.progress = (event.loaded / event.total * 100 | 0);
-                                this.loaded = event.loaded;
-                        }
-                        window.uploader.refresh();
-		}
-
-		xhr.onload = function(event) {
-			window.uploader.oncomplete(this._upload);
-		}
-		
-		var upload = {
-			"file": 		file,
-			"path": 		path,
-			"targetpath":	targetpath,
-			"xhr":			xhr,
-			"started":		false,
-			"completed":	false,
-			"progress":		0,
-			"loaded":		0
-		}
-		xhr._upload = upload;
-		xhr.upload._upload = upload;
-		this.queue.push(upload);
-		this.uploads.push(upload);
-		this.processQueue();
-	}
-	
-	this.processQueue = function() {
-		// Remove completed uploads from active
-		for( var i=0; i<this.active.length; i++) {
-			var activeupload = this.active[i];
-			if( activeupload.completed ) {
-				this.active.splice(i, 1);
-				i--;
-			}
-		}
-		window.uploader.refresh();
-		// Start uploads
-		while( this.active.length < this.maxconnections && this.queue.length > 0 ) {
-			var upload = this.queue.shift();
-			this.active.push(upload);
-			
-			var formData = new FormData();
-			formData.append('file', upload.file);
-			
-			upload.start = true;
-			upload.xhr.send(formData);
-		}
-	}
-	
-	this.refresh = function() {
-		var htmlprogress = '';
-		if( this.uploads.length ) {
-			for( var i=0; i<this.uploads.length; i++) {
-				var upload = this.uploads[i];
-				htmlprogress += '<li>' + upload.file.name + '(' + upload.file.size + ' bytes) ' + (upload.progress) + '%</li>';
-			}
-		} else {
-			htmlprogress = "<i>Drop files here to upload</i>";
-		}
-		$("#uploads_progress").html(htmlprogress);
-	}
-	
-	this.oncomplete = function(upload) {
-		upload.completed = true;
-		upload.progress = 100;
-		window.uploader.refresh();
-		window.uploader.processQueue();
-		if( upload.path == view.filepath ) {
-			view.show(view.path);
-		}
-	}
-}
 
 function View() {
 	this.path = '';
@@ -157,9 +61,8 @@ function View() {
 	
 	this.views['/'] = this.views['/view/files*'];
 	
-	this.show = function(path, pushstate) {
+	this.show = function(path, pushstate, nocache) {
 		//console.log(["Showing path: " + path, pushstate]);
-		
 		var view = null;
 		var viewname = null;
 		var tail = null;
@@ -207,8 +110,30 @@ function View() {
 			//console.log(args);
 			//console.log(rmatch);;
 			var viewdata = {};
-			$.get(cview.data,		function(data) { viewdata['data'] = data;     	self.renderTemplate(cview, viewdata);}, 'json');
-			$.get(cview.template,	function(data) { viewdata['template'] = data;	self.renderTemplate(cview, viewdata);}, 'html');
+			//$.get(cview.data,		function(data) { viewdata['data'] = data;     	self.renderTemplate(cview, viewdata);}, 'json');
+			//#$.get(cview.template,	function(data) { viewdata['template'] = data;	self.renderTemplate(cview, viewdata);}, 'html');
+			
+			var headers = {};
+			if( !!nocache ) {
+				headers['Cache-Control'] = 'no-cache';
+			}
+			$.ajax({
+				"url":		cview.data,
+				"success":	function(data) {
+								viewdata['data'] = data;
+								self.renderTemplate(cview, viewdata);
+							},
+				"dataType":	"json",
+				"headers":	headers
+			});
+			$.ajax({
+				"url":		cview.template,
+				"success":	function(data) {
+								viewdata['template'] = data;
+								self.renderTemplate(cview, viewdata);
+							},
+				"dataType":	"html"
+			});
 		}
 	}
 	
@@ -218,7 +143,7 @@ function View() {
 			"type": method,
 			"success": function(response) {
 				if( response.success ) {
-					view.show(view.path);
+					view.show(view.path, false);
 				} else {
 					alert(response.error);
 				}
