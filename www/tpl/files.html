@@ -11,7 +11,7 @@
 	<div class="playlist">
 		<div id="folders">
 			<ul>
-				<li class="folder"><a class="showview" data-path="{{data.parent}}" href="/view/files{{data.parent}}">..</a></li>
+				<li class="folder" data-path="{{data.parent}}"><a class="showview" href="/view/files{{data.parent}}">..</a></li>
 				{{#folders}}
 				<li class="folder" data-file="{{.}}" data-path="{{path}}/{{.}}">
 					<a class="showview" href="/view/files{{path}}/{{.}}">{{.}}</a>
