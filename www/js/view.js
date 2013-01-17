@@ -57,7 +57,7 @@ function View() {
 		}
 		if( view == null ) {
 			alert("Invalid view: " + path);
-			return;
+			return false;
 		}
 		
 		for( var i=0; i<view.length; i++) {

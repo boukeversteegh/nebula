@@ -45,9 +45,10 @@ function init() {
 	
 	window.view.show(window.location.pathname, true);
 	
-	$('.tabs a').click(function (e) {
+	$('#tabs a').click(function (e) {
+		e.preventDefault();
+		e.stopPropagation();
 		if( e.button == 0 ) {
-			e.preventDefault();
 			window.view.show($(this).attr('href'), true);
 			return false;
 		}
