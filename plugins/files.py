@@ -100,8 +100,8 @@ class Files:
 					
 					if not os.path.exists(localpath):
 						raise Exception("Path doesn't exist: " + "/".join(trail) + "(" + localpath + ")")
-						
-					os.rename(localpath, localtarget)
+					
+					os.rename(localpath, localtarget.encode('utf-8'))
 					pass
 						
 			except Exception as e:
