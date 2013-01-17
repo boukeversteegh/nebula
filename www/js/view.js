@@ -18,7 +18,12 @@ function View() {
 				"cache":	true,
 				"template":	"/www/tpl/play.html",
 				"data":		function (path, args) { return "/metadata" + args},
-				"target":	"#playercontainer"
+				"target":	"#player-metadata",
+				"onload":	function(view, viewdata) {
+					$('#jplayer').jPlayer('setMedia', {mp3: "/files" + viewdata.data.data.path});
+					$('#jplayer').jPlayer('play');
+				}//,
+				//onrender
 			}
 		]
 	};
@@ -66,7 +71,9 @@ function View() {
 				"cache":	view[i].cache,
 				"template":	view[i].template,
 				"data":		view[i].data,
-				"target":	view[i].target
+				"target":	view[i].target,
+				"onload":	view[i].onload,
+				"onrender":	view[i].onrender
 			}
 			if( typeof cview.data === 'function' ) {
 				cview.data = cview.data(path, args);
@@ -81,11 +88,33 @@ function View() {
 			if( !!nocache ) {
 				headers['Cache-Control'] = 'no-cache';
 			}
+			
+			var ifLoaded = function(viewdata, fn) {
+				if( !('data' in viewdata && 'template' in viewdata) ) {
+					return;
+				} else {
+					return fn();
+				}
+			}
+			
+			var onLoad = function() {
+				var dorender = true;
+				if( cview.onrender ) {
+					var dorender = cview.onrender(cview, viewdata);
+				}
+				if( dorender !== false ) {
+					self.renderTemplate(cview, viewdata);
+				}
+				if( cview.onload ) {
+					cview.onload(cview, viewdata);
+				}
+			}
+			
 			$.ajax({
 				"url":		cview.data,
 				"success":	function(data) {
 								viewdata['data'] = data;
-								self.renderTemplate(cview, viewdata);
+								ifLoaded(viewdata, onLoad);
 							},
 				"dataType":	"json",
 				"headers":	headers
@@ -94,7 +123,7 @@ function View() {
 				"url":		cview.template,
 				"success":	function(data) {
 								viewdata['template'] = data;
-								self.renderTemplate(cview, viewdata);
+								ifLoaded(viewdata, onLoad);
 							},
 				"dataType":	"html"
 			});
@@ -117,11 +146,6 @@ function View() {
 	}
 	
 	this.renderTemplate = function(view, viewdata) {
-		if( !('data' in viewdata && 'template' in viewdata) ) {
-			//console.log("waiting for data or template");
-			return;
-		}
-		//console.log(viewdata);
 		html = Mustache.render(viewdata.template, viewdata.data);
 		
 		$(view.target).html(html);
