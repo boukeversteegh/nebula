@@ -1,4 +1,4 @@
-$(function() {
+$(document).ready(function() {
 
 	// PLAYER UI
 	$('#player-stop').button({
@@ -24,6 +24,5 @@ $(function() {
 		function() { $(this).find('.ui-progressbar-value').addClass('ui-state-hover'); },
 		function() { $(this).find('.ui-progressbar-value').removeClass('ui-state-hover') }
 	);
-	
 	$('#tabs').css('margin-top', $('#top').height());
 });

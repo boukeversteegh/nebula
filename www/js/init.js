@@ -7,7 +7,7 @@ function init() {
 	window.uploader = new Uploader();
 	window.player = new Player();
 	window.player.init('#jplayer');
-
+	
 	$('#jplayer').jPlayer({
 		swfPath: '/www/jplayer',
 		solution: 'html, flash',
@@ -43,6 +43,7 @@ function init() {
 		warningAlerts: false
 	});
 	
+	window.view.show(window.location.pathname, true);
 	
 	$('.tabs a').click(function (e) {
 		if( e.button == 0 ) {
@@ -60,6 +61,6 @@ function init() {
 		}
 	});
 	
-	window.view.show(window.location.pathname, true);
+	
 }
 
