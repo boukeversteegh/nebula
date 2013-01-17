@@ -19,11 +19,13 @@ function View() {
 				"template":	"/www/tpl/play.html",
 				"data":		function (path, args) { return "/metadata" + args},
 				"target":	"#player-metadata",
-				"onload":	function(view, viewdata) {
-					$('#jplayer').jPlayer('setMedia', {mp3: "/files" + viewdata.data.data.path});
+				"onstart":	function() {
+					var filepath = this.path.split('/view/play')[1];
+					$('#jplayer').jPlayer('setMedia', {mp3: "/files" + filepath });
 					$('#jplayer').jPlayer('play');
-				}//,
-				//onrender
+				}
+				//"onload"
+				//"onrender"
 			}
 		]
 	};
@@ -68,21 +70,26 @@ function View() {
 				this.path = path;
 			}
 			cview = {
+				"path":		path,
 				"cache":	view[i].cache,
 				"template":	view[i].template,
 				"data":		view[i].data,
 				"target":	view[i].target,
+				"onstart":	view[i].onstart,
 				"onload":	view[i].onload,
 				"onrender":	view[i].onrender
 			}
 			if( typeof cview.data === 'function' ) {
 				cview.data = cview.data(path, args);
 			}
-			//console.log(args);
-			//console.log(rmatch);;
+			
+			if( typeof cview.onstart === 'function' ) {
+				if( cview.onstart.call(cview) === false ) {
+					return false;
+				}
+			}
+			
 			var viewdata = {};
-			//$.get(cview.data,		function(data) { viewdata['data'] = data;     	self.renderTemplate(cview, viewdata);}, 'json');
-			//#$.get(cview.template,	function(data) { viewdata['template'] = data;	self.renderTemplate(cview, viewdata);}, 'html');
 			
 			var headers = {};
 			if( !!nocache ) {
