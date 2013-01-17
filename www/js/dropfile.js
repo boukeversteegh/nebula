@@ -25,7 +25,6 @@ function dragdrop_init() {
 	
 	$('#folders .folder').each(function() {
 		this.addEventListener('drop', function(evt) {
-			console.log(this);
 			drop(evt, this.dataset.path);
 			evt.stopPropagation();
 			evt.preventDefault();
@@ -81,32 +80,36 @@ function drop(evt, path) {
 	})(path);
 	
 	if( evt.dataTransfer.items.length == 0 ) {
-		var files = evt.dataTransfer.files;
-		for( var i=0; i < files.length; i++ ) {
-			//console.log(files[i]);
-			window.uploader.upload(files[i], path);
+		if( evt.dataTransfer ) {
+			var files = evt.dataTransfer.files;
+			for( var i=0; i < files.length; i++ ) {
+				//console.log(files[i]);
+				window.uploader.upload(files[i], path);
+			}
 		}
 	} else {
 		var items = evt.dataTransfer.items;
-		//console.log(path);
+		//console.log(evt.dataTransfer.items[0]);
 		var uploads = [];
 		for( var i=0; i < items.length; i++ ) {
-			if( items[i].webkitGetAsEntry ) {
-				var entry = items[i].webkitGetAsEntry();
-				if (entry.isFile) {
-					console.log("is File");
-					entry.file(  (function(entry) { return function(file) {
-						window.uploader.upload(file, path, entry.fullPath);
-					}})(entry));
-				}
-				if (entry.isDirectory ) {
-					console.log("is Directory");
-					//console.log(entry);
-					var reader = entry.createReader();
+			if( items[i].kind == "file" ) {
+				if( items[i].webkitGetAsEntry ) {
+					var entry = items[i].webkitGetAsEntry();
+					if (entry.isFile) {
+						console.log("is File");
+						entry.file(  (function(entry) { return function(file) {
+							window.uploader.upload(file, path, entry.fullPath);
+						}})(entry));
+					}
+					if (entry.isDirectory ) {
+						console.log("is Directory");
+						//console.log(entry);
+						var reader = entry.createReader();
 
-					var direntry = reader.readEntries(handledir);
-					while( direntry ) {
-						reader.readEntries(handledir);
+						var direntry = reader.readEntries(handledir);
+						while( direntry ) {
+							reader.readEntries(handledir);
+						}
 					}
 				}
 			}
