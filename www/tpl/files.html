@@ -11,7 +11,7 @@
 	<div class="playlist">
 		<div id="folders">
 			<ul>
-				<li class="folder" data-path="{{data.parent}}"><a class="showview" href="/view/files{{data.parent}}">..</a></li>
+				<li id="parentfolder" class="folder" data-path="{{data.parent}}"><a class="showview" href="/view/files{{data.parent}}">..</a></li>
 				{{#folders}}
 				<li class="folder" data-file="{{.}}" data-path="{{path}}/{{.}}">
 					<a class="showview" href="/view/files{{path}}/{{.}}">{{.}}</a>
@@ -42,7 +42,7 @@
 	<script type="text/javascript">
 		dragdrop_init();
 		window.view.filepath = "{{{data.path}}}";
-		$('#files li.file, #folders li.folder').remove('#mkdir').draggable({ revert: 'invalid', cursorAt: { left: -5 }, delay: 50, distance: 10})
+		$('#files li.file, #folders li.folder').not('#parentfolder').draggable({ revert: 'invalid', cursorAt: { left: -5 }, delay: 50, distance: 10});
 		$('#folders li.folder').droppable({
 			drop: function( event, ui ) {
 					var sourcepath = ui.draggable[0].dataset.path;
