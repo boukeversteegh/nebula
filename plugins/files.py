@@ -1,6 +1,5 @@
 import os.path
 import simplejson as json
-from cherrypy.lib.static import serve_file
 
 class Files:
 	exposed = True
@@ -19,7 +18,7 @@ class Files:
 		else:
 			
 			if os.path.isfile(localpath):
-				return serve_file(localpath)
+				return cherrypy.lib.static.serve_file(localpath)
 			else:
 				response = {
 					"success":	False,
@@ -29,20 +28,34 @@ class Files:
 
 	# SEE
 	# http://docs.cherrypy.org/dev/refman/_cpreqbody.html
-	def PUT(self, *trail, **kwargs):
-		response = {}
+	def PUT(self, *trail, **params):
+		response = {"success": True}
 		success = True
 		try:
+			if 'path' in params:
+				response['params'] = params['path'];
+				localpath = os.path.join(self.userconf['librarypath'], *(params['path'].split("/")[1:-1]))
+				if os.path.exists(localpath):
+					
+					subpath = trail[0:-1]
+					
+					localsubpath = os.path.join(self.userconf['librarypath'], *subpath)
+					response['debug'] = "Created directory structure: %s" % localsubpath
+					response['subpath'] = subpath
+					if not os.path.exists(localsubpath):
+						os.makedirs(localsubpath)
+				else:
+					raise Exception("Path %s doesn't exist" % localpath)
+					
 			upfile = cherrypy.request.params['file']
 			localpath = os.path.join(self.userconf['librarypath'], *trail)
 			f = open(localpath, 'w+b')
 			f.write(upfile.fullvalue())
 		except Exception as e:
-			success = False
-			response['error'] = "Error writing file: " + repr(e)
+			response['success'] = False
+			response['error']  = "Error writing file: " + repr(e)
 			cherrypy.log("*******ERROR********\n" + repr(e))
 			
-		response["success"] = success
 		return json.dumps(response)
 	
 	def DELETE(self, *trail):
@@ -87,8 +100,8 @@ class Files:
 					
 					if not os.path.exists(localpath):
 						raise Exception("Path doesn't exist: " + "/".join(trail) + "(" + localpath + ")")
-						
-					os.rename(localpath, localtarget)
+					
+					os.rename(localpath, localtarget.encode('utf-8'))
 					pass
 						
 			except Exception as e:
