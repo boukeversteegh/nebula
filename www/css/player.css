@@ -160,17 +160,12 @@ a {
 	display: block;
 	text-align: left;
 	padding: 0.25em;
+	color: #333;
 }
 
-.playlist .filename {
-	color: #999;
-}
-
-.playlist li a:hover,
-.playlist tr:hover {
-	font-weight: bold;
+.playlist tr.file:hover td a {
+	color: black;
 	background: silver;
-	border-radius: 2px;
 }
 
 .playlist li.file a:hover {
