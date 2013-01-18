@@ -1,1 +1,0 @@
-- seekbar doesn't move

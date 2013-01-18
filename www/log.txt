@@ -1,0 +1,2 @@
+2013-01-17 BUG:	Seekbar doesn't move.	FIXED 2013-01-18
+2013-01-17 BUG:	Open current folder, download current mp3 buttons don't work.

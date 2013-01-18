@@ -1,5 +1,5 @@
 {{#data}}
 <div>
-&nbsp; {{#id3.artist}}{{id3.artist}} &mdash; {{/id3.artist}}{{#id3.title}}{{id3.title}}{{/id3.title}}{{^id3.artist}}{{file}}{{/id3.artist}}
+&nbsp; {{#id3.artist}}{{id3.artist}}{{/id3.artist}}{{#id3.title}}{{#id3.artist}} &mdash; {{/id3.artist}}{{id3.title}}{{/id3.title}}{{^id3.title}} {{file}}{{/id3.title}}
 </div>
 {{/data}}
