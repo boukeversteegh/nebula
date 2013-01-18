@@ -33,8 +33,27 @@
 						<td><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{file}}</a></td>
 					{{/id3.title}}{{/id3.artist}}
 					
+					{{! No artist but title available}}
+					{{^id3.artist}}
+					{{#id3.title}}
+						<td><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{id3.title}}</a></td>
+						<td colspan="2"><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{file}}</a></td>
+					{{/id3.title}}
+					{{/id3.artist}}
+					
+					{{! No title but artist available}}
 					{{^id3.title}}
+					{{#id3.artist}}
+						<td><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{id3.artist}}</a></td>
+						<td colspan="2"><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{file}}</a></td>
+					{{/id3.artist}}
+					{{/id3.title}}
+					
+					{{! No artist nor title available}}
+					{{^id3.title}}
+					{{^id3.artist}}
 						<td colspan="3"><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{file}}</a></td>
+					{{/id3.artist}}
 					{{/id3.title}}
 					
 					<td width="20">

@@ -13,7 +13,7 @@ function init() {
 		solution: 'html, flash',
 		supplied: 'mp3',
 		preload: 'auto',
-		volume: 0.8,
+		volume: 1,
 		muted: false,
 		backgroundColor: '#000000',
 		cssSelectorAncestor: '#player',
