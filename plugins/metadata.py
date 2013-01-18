@@ -55,7 +55,7 @@ class Metadata:
 		if trail in self.cache and (not 'Cache-Control' in cherrypy.request.headers or cherrypy.request.headers['Cache-Control'] not in ['max-age=0', 'no-cache']):
 			response = self.cache[trail]
 			response['cached'] = True
-			response['headers'] = cherrypy.request.headers
+			#response['headers'] = cherrypy.request.headers
 		else:
 			localpath = os.path.join(self.userconf['librarypath'], *trail)
 			response = {'success': True}
@@ -108,10 +108,24 @@ class Metadata:
 						id3[tagname] = tagvalue
 			
 			#tag['release_date'] = audiofile.tag.best_release_date
+			m, s = divmod(audiofile.info.time_secs, 60)
+			h, m = divmod(m, 60)
+			if h > 0:
+				durationstr = "%d:%02d:%02d" % (h, m, s)
+			else:
+				durationstr = "%2d:%02d" % (m, s)
+				
+			info = {
+				"duration":	audiofile.info.time_secs,
+				"durationstr" : durationstr
+			}
 		else:
 			id3 = None
+			info = None
+		
 		metadata = {
-			"id3":    id3,
-			"file":	  trail[-1] if len(trail) > 0 else ""
+			"id3":		id3,
+			"info":		info,
+			"file":		trail[-1] if len(trail) > 0 else ""
 		}
 		return metadata

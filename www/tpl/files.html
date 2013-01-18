@@ -55,7 +55,9 @@
 						<td colspan="3"><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{file}}</a></td>
 					{{/id3.artist}}
 					{{/id3.title}}
-					
+					<td width="20">
+						{{info.durationstr}}
+					</td>
 					<td width="20">
 						<button onClick="confirm('Are you sure you want to delete ' + this.dataset.href + '?') && view.xhttp('DELETE', this.dataset.href)" data-href="/files{{path}}/{{file}}" class="red delete">delete</button></td>
 					</td>
