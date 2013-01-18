@@ -10,7 +10,36 @@ function View() {
 				"template": "/www/tpl/files.html",
 				"data":		function(path, args) { return "/metadata" + args},
 				"target":	"#main",
-				"history":	true
+				"history":	true,
+				"onload": function() {
+					dragdrop_init();
+					window.view.filepath = "{{{data.path}}}";
+					$('button.delete').button();
+					$('#files tr.file, #folders li.folder').not('#parentfolder').draggable({
+						revert: 'invalid',
+						cursorAt: { left: -5 },
+						delay: 50,
+						distance: 10,
+						helper: function( event ) {
+							return $( '<div class="file"/>' ).button().css({width: 'auto'}).html($(this).find('a').clone().css({padding:'0.25em', display: 'inline-block'}));
+						}
+					});
+					$('#folders li.folder').droppable({
+						drop: function( event, ui ) {
+								var sourcepath = ui.draggable[0].dataset.path;
+								var targetpath = this.dataset.path + '/' + ui.draggable[0].dataset.file
+								console.log([sourcepath, targetpath])
+								view.xhttp('POST', '/files' + sourcepath, {'action':'mv', 'target': targetpath})
+								event.preventDefault();
+								event.stopPropagation();
+								return false;
+							},
+						hoverClass: "ui-state-hover"
+					})
+					$('#mkdir').button();
+					$('#folders .folder a').button();
+					window.uploader.refresh();
+				}
 			}
 		],
 		"/view/play*" : [
