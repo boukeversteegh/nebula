@@ -163,7 +163,7 @@ a {
 	color: #333;
 }
 
-.playlist tr.file:hover td a {
+.playlist tr.file:hover {
 	color: black;
 	background: silver;
 }
