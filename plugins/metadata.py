@@ -68,7 +68,7 @@ class Metadata:
 					metadata["path"] = os.path.join("/", *trail)
 					response['data'] = metadata
 				# DIRECTORY
-				else:
+				if os.path.isdir(localpath):
 					files = []
 					folders = []
 					for item in glob.glob(localpath + '/*'):

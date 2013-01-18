@@ -1,5 +1,10 @@
 import os.path
-import simplejson as json
+try:
+	import simplejson as json
+except ImportError:
+	import json
+
+import glob
 
 class Files:
 	exposed = True
@@ -65,10 +70,19 @@ class Files:
 		response = {}
 		success = True
 		try:
-			if not os.path.isfile(localpath):
+			if not os.path.exists(localpath):
 				raise Exception("Path doesn't exist")
-			self.events.trigger('files.DELETE', trail)
-			os.unlink(localpath)
+			if os.path.isfile(localpath):
+				self.events.trigger('files.DELETE', trail)
+				os.unlink(localpath)
+			if os.path.isdir(localpath):
+				files = glob.glob(localpath + '/*')
+				if not len(files) == 0:
+					raise Exception("Directory not empty")
+				os.rmdir(localpath)
+				#raise Exception("Can't delete directories")
+				
+				
 		except Exception as e:
 			success = False
 			response['error'] = "Can't delete item: " + repr(e)

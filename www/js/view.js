@@ -36,7 +36,7 @@ function View() {
 							},
 						hoverClass: "ui-state-hover"
 					})
-					$('#mkdir').button();
+					$('#mkdir,#rmdir').button();
 					$('#folders .folder a').button();
 					window.uploader.refresh();
 				}
@@ -166,13 +166,18 @@ function View() {
 		}
 	}
 	
-	this.xhttp = function(method, url, data) {
+	this.xhttp = function(method, url, data, nextpath) {
 		$.ajax({
 			"url": url,
 			"type": method,
 			"success": function(response) {
 				if( response.success ) {
-					view.show(view.path, false, true);
+					var pushstate = false;
+					if( typeof nextpath == "undefined" ) { 
+						nextpath = view.path;
+						pushstate = true;
+					}
+					view.show(nextpath, pushstate, true);
 				} else {
 					alert(response.error);
 				}
