@@ -39,6 +39,9 @@ function View() {
 					$('#mkdir,#rmdir').button();
 					$('#folders .folder a').button();
 					window.uploader.refresh();
+					if( window.player.current !== null ) {
+						$('[data-path="' + window.player.current.substr("/files".length) + '"]').addClass('player-current');
+					}
 				}
 			}
 		],
@@ -50,8 +53,11 @@ function View() {
 				"target":	"#player-metadata",
 				"onstart":	function() {
 					var filepath = this.path.split('/view/play')[1];
-					$('#jplayer').jPlayer('setMedia', {mp3: "/files" + filepath });
-					$('#jplayer').jPlayer('play');
+					window.player.playMedia("/files" + filepath);
+					//$('#jplayer').jPlayer('setMedia', {mp3: "/files" + filepath });
+					//$('#jplayer').jPlayer('play');
+					$('.player-current').removeClass('player-current');
+					$('[data-path="' + window.player.current.substr("/files".length) + '"]').addClass('player-current');
 				}
 				//"onload"
 				//"onrender"

@@ -142,6 +142,9 @@ a {
 .playlist table td {
 }
 
+.playlist tr.player-current td {
+	font-weight: bold;
+}
 .playlist .delete span {
 	padding: 0 0.25em;
 }
