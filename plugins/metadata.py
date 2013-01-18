@@ -44,6 +44,12 @@ class Metadata:
 		cherrypy = settings['cherrypy'];
 		self.userconf = settings['userconf']
 		self.cache = {}
+		self.events = settings['events']
+		
+		def files_DELETE(trail):
+			pass
+
+		self.events.bind('files.DELETE', files_DELETE)
 	
 	def default(self, *trail):
 		if trail in self.cache and (not 'Cache-Control' in cherrypy.request.headers or cherrypy.request.headers['Cache-Control'] not in ['max-age=0', 'no-cache']):

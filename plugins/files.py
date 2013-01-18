@@ -10,6 +10,7 @@ class Files:
 		settings['conf']['/files'] = {
 		    'request.dispatch': cherrypy.dispatch.MethodDispatcher()
 		}
+		self.events = settings['events']
 			
 	def GET(self, *trail):
 		localpath = os.path.join(self.userconf['librarypath'], *trail)
@@ -66,6 +67,7 @@ class Files:
 		try:
 			if not os.path.isfile(localpath):
 				raise Exception("Path doesn't exist")
+			self.events.trigger('files.DELETE', trail)
 			os.unlink(localpath)
 		except Exception as e:
 			success = False

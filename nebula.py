@@ -41,10 +41,10 @@ if __name__ == '__main__':
 	
 	# Objects that plugins need
 	settings = {
-		"cherrypy":		cherrypy,
-		"userconf":		userconf,
-		"conf":			conf,
-		"eventhandler":	events
+		"cherrypy":	cherrypy,
+		"userconf":	userconf,
+		"conf":		conf,
+		"events":	events
 	}
 	nebula.files = plugins.files.Files(settings)
 	nebula.metadata = plugins.metadata.Metadata(settings)
