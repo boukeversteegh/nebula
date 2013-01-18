@@ -3,11 +3,11 @@ import simplejson as json
 
 class Files:
 	exposed = True
-	def __init__(self, cp, userconf, conf):
+	def __init__(self, settings):
 		global cherrypy
-		cherrypy = cp
-		self.userconf = userconf
-		conf['/files'] = {
+		cherrypy = settings['cherrypy']
+		self.userconf = settings['userconf']
+		settings['conf']['/files'] = {
 		    'request.dispatch': cherrypy.dispatch.MethodDispatcher()
 		}
 			

@@ -7,6 +7,7 @@ import sys
 import simplejson as json
 import plugins.metadata
 import plugins.files
+import eventhandler
 
 class Nebula:
 	pass
@@ -35,9 +36,18 @@ if __name__ == '__main__':
 			'tools.staticdir.dir': os.path.join(os.getcwd(), 'www')
 		}
     }
-    
-	nebula.files = plugins.files.Files(cherrypy, userconf, conf)
-	nebula.metadata = plugins.metadata.Metadata(cherrypy, userconf)
+    # EventHandler is used to allow plugins to communicate indirectly
+	events = eventhandler.EventHandler()
+	
+	# Objects that plugins need
+	settings = {
+		"cherrypy":		cherrypy,
+		"userconf":		userconf,
+		"conf":			conf,
+		"eventhandler":	events
+	}
+	nebula.files = plugins.files.Files(settings)
+	nebula.metadata = plugins.metadata.Metadata(settings)
 	
 	cherrypy.config.update({
 		'server.socket_host': '0.0.0.0', 

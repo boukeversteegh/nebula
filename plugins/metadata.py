@@ -39,10 +39,10 @@ class Metadata:
 		#'table_of_contents'
 	]
 	
-	def __init__(self, cp, userconf, conf=None):
+	def __init__(self, settings):
 		global cherrypy
-		cherrypy = cp;
-		self.userconf = userconf
+		cherrypy = settings['cherrypy'];
+		self.userconf = settings['userconf']
 		self.cache = {}
 	
 	def default(self, *trail):
