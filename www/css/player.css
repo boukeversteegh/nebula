@@ -153,9 +153,14 @@ a {
 	clear: both;
 	position: relative;
 	list-style-type: none;
-	margin: 2px;
+	margin-bottom: 2px;
+	margin-top: 2px;
 }
 
+#breadcrumbs .folder {
+	margin-bottom: 1px;
+	margin-right: 3px;
+}
 
 .playlist li a,
 .playlist td a {

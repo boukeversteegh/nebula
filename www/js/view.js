@@ -11,20 +11,28 @@ function View() {
 				"data":		function(path, args) { return "/metadata" + args},
 				"target":	'#files',
 				"history":	true,
+				"onrender":	function(view, viewdata) {
+					var trail = viewdata.data.data.path.split('/');
+					var breadcrumbs = [];
+					for( var i=0; i<trail.length; i++) {
+						breadcrumbs.push( {'path': trail.slice(0,i+1).join('/'), 'folder': trail[i]} );
+					}
+					viewdata.data['breadcrumbs'] = breadcrumbs;
+				},
 				"onload": function() {
 					dragdrop_init();
 					window.view.filepath = "{{{data.path}}}";
 					$('button.delete').button();
 					$('#files tr.file, #folders li.folder').not('#parentfolder').draggable({
-						revert: 'invalid',
-						cursorAt: { left: -5 },
-						delay: 50,
-						distance: 10,
-						helper: function( event ) {
-							return $( '<div class="file"/>' ).button().css({width: 'auto'}).html($(this).find('a').clone().css({padding:'0.25em', display: 'inline-block'}));
-						}
+						revert:		'invalid',
+						cursorAt:	{ left: -5 },
+						delay:		50,
+						distance:	10,
+						helper:		function( event ) {
+										return $( '<div class="file"/>' ).button().css({width: 'auto'}).html($(this).find('a').clone().css({padding:'0.25em', display: 'inline-block'}));
+									}
 					});
-					$('#folders li.folder').droppable({
+					$('#folders .folder, #breadcrumbs .folder').droppable({
 						drop: function( event, ui ) {
 								var sourcepath = ui.draggable[0].dataset.path;
 								var targetpath = this.dataset.path + '/' + ui.draggable[0].dataset.file
@@ -34,14 +42,20 @@ function View() {
 								event.stopPropagation();
 								return false;
 							},
-						hoverClass: "ui-state-hover"
+						hoverClass: "ui-state-hover",
+						tolerance: 'pointer'
 					})
 					$('#mkdir,#rmdir').button();
-					$('#folders .folder a').button();
-					$('#parentfolder a').button({
-						icons: {primary: 'ui-icon-arrowreturnthick-1-w'}
+					$('#folders .folder a').button({icons: {primary: 'ui-icon-folder-collapsed'}});
+					
+					$('#breadcrumbs .folder a').button({
+						//icons: {primary: 'ui-icon-arrowreturnthick-1-w'}
 					});
- 
+					$('#breadcrumbs .folder a').eq(-1).button({
+						icons: {primary: 'ui-icon-folder-open'},
+						disabled: true
+					});
+ 					
 					window.uploader.refresh();
 					if( window.player.current !== null ) {
 						$('[data-path="' + window.player.current.substr("/files".length) + '"]').addClass('player-current');
@@ -210,6 +224,7 @@ function View() {
 		$(view.target + " a.showview").click(function (e) {
 			if( e.button == 0 ) {
 				e.preventDefault();
+				e.stopPropagation();
 				window.view.show($(this).attr('href'), true);
 			}
 		});
