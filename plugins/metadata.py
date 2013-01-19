@@ -46,29 +46,50 @@ class Metadata:
 		self.cache = {}
 		self.events = settings['events']
 		
-		def files_DELETE(trail):
-			pass
-
-		self.events.bind('files.DELETE', files_DELETE)
+		def file_CHANGE(trail):
+			# Delete file metadata from cache
+			if trail in self.cache:
+				del self.cache[trail]
+				
+			# Delete parent directory from cache
+			parentdir = trail[:-1]
+			if parentdir in self.cache:
+				del self.cache[parentdir]
+					
+		def folder_CHANGE(trail):
+			if trail in self.cache:
+				del self.cache[trail]
+			
+		self.events.bind('file.CHANGE', file_CHANGE)
+		self.events.bind('folder.CHANGE', folder_CHANGE)
 	
 	def default(self, *trail):
-		if trail in self.cache and (not 'Cache-Control' in cherrypy.request.headers or cherrypy.request.headers['Cache-Control'] not in ['max-age=0', 'no-cache']):
-			response = self.cache[trail]
-			response['cached'] = True
-			#response['headers'] = cherrypy.request.headers
-		else:
-			localpath = os.path.join(self.userconf['librarypath'], *trail)
-			response = {'success': True}
+		cherrypy.response.headers['Content-Type'] = "application/json"
+		localpath = os.path.join(self.userconf['librarypath'], *trail)
+		response = {'success': True}
 		
-			if os.path.exists(localpath):
-				# FILE
-				if os.path.isfile(localpath):
+		cacheDirs = True
+	
+		if os.path.exists(localpath):
+			doCache = self._doCache()
+			# FILE
+			if os.path.isfile(localpath):
+				if trail in self.cache and doCache:
+					metadata = self.cache[trail]
+					response['cached'] = True
+				else:
 					metadata = self._getFileMetadata(trail)
-					metadata["parent"] = "/" + "/".join(trail[0:-1])
-					metadata["path"] = os.path.join("/", *trail)
-					response['data'] = metadata
-				# DIRECTORY
-				if os.path.isdir(localpath):
+					self.cache[trail] = metadata
+				metadata["parent"] = "/" + "/".join(trail[0:-1])
+				metadata["path"] = os.path.join("/", *trail)
+				response['data'] = metadata
+			
+			# DIRECTORY
+			if os.path.isdir(localpath):
+				if cacheDirs and trail in self.cache:
+					response = self.cache[trail]
+					response['cached'] = True
+				else:
 					files = []
 					folders = []
 					for item in glob.glob(localpath + '/*'):
@@ -76,7 +97,13 @@ class Metadata:
 						if os.path.isdir(item):
 							folders.append(basename)
 						else:
-							filemetadata = self._getFileMetadata(trail+tuple([basename]))
+							cacheid = trail+(item,)
+							if cacheid in self.cache and doCache:
+								filemetadata = self.cache[cacheid]
+								filemetadata['cached'] = True
+							else:
+								filemetadata = self._getFileMetadata(trail+tuple([basename]))
+								self.cache[cacheid] = filemetadata
 							files.append(filemetadata)
 					files.sort()
 					folders.sort()
@@ -89,12 +116,27 @@ class Metadata:
 						"trail":	trail,
 						"parent":	"/" + "/".join(trail[0:-1])
 					}
-			else:
-				response['success'] = False
-				response['error'] = "Path '%s' doesn't exist" % '/'.join(trail)
-			self.cache[trail] = response
+					self.cache[trail] = response
+			
+		else:
+			response['success'] = False
+			response['error'] = "Path '%s' doesn't exist" % '/'.join(trail)
 		return json.dumps(response)
 	default.exposed = True
+	
+	
+	def _doCache(self):
+		# Enable caching by browser
+		clientSideCache = False
+		
+		if clientSideCache:
+			# Cache filemetadata on client for 5 minutes
+			cherrypy.response.headers['Cache-Control'] = 'max-age=%d, private' % (60*10)
+			doCache = cherrypy.request.headers.get('Cache-Control') not in ['max-age=0', 'no-cache']
+		else:
+			doCache = True
+			
+		return doCache
 		
 	def _getFileMetadata(self, trail):
 		localpath = os.path.join(self.userconf['librarypath'], *trail)

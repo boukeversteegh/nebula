@@ -178,12 +178,10 @@ function View() {
 			"type": method,
 			"success": function(response) {
 				if( response.success ) {
-					var pushstate = false;
 					if( typeof nextpath == "undefined" ) { 
 						nextpath = view.path;
-						pushstate = true;
 					}
-					view.show(nextpath, pushstate, true);
+					view.show(nextpath, true, true);
 				} else {
 					alert(response.error);
 				}

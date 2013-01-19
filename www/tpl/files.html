@@ -8,7 +8,7 @@
 	
 	{{#data}}
 	<button id="mkdir" class="green" onClick="var name = prompt('Please enter a name'); if( name ) { view.xhttp('POST', '/files{{path}}/' + name, {'action':'mkdir'}); }">Create folder</button>
-	<button id="rmdir" class="red" onClick="confirm('Are you sure you want to delete this folder?'); view.xhttp('DELETE', '/files{{path}}', null, '/view/files/{{parent}}');">Delete folder</button>
+	<button id="rmdir" class="red" onClick="confirm('Are you sure you want to delete this folder?'); view.xhttp('DELETE', '/files{{path}}', null, '/view/files{{parent}}');">Delete folder</button>
 	<div class="playlist">
 		<div id="folders">
 			<ul>

@@ -73,12 +73,13 @@ class Files:
 			if not os.path.exists(localpath):
 				raise Exception("Path doesn't exist")
 			if os.path.isfile(localpath):
-				self.events.trigger('files.DELETE', trail)
+				self.events.trigger('file.CHANGE', trail)
 				os.unlink(localpath)
 			if os.path.isdir(localpath):
 				files = glob.glob(localpath + '/*')
 				if not len(files) == 0:
 					raise Exception("Directory not empty")
+				self.events.trigger('folder.CHANGE', trail[:-1])
 				os.rmdir(localpath)
 				#raise Exception("Can't delete directories")
 				
@@ -105,19 +106,29 @@ class Files:
 					if os.path.exists(localpath):
 						raise Exception("Path already exists")
 					os.mkdir(localpath)
+					self.events.trigger('folder.CHANGE', trail[:-1])
 					pass
 
 				if params['action'] == 'mv':
 					if not 'target' in params:
 						raise Exception("Missing parameter: target")
 					
-					target = params['target'].lstrip("/")
-					localtarget = os.path.join(self.userconf['librarypath'], target)
+					target = params['target'].strip("/")
+					targettrail = tuple(target.split("/"))
+					
+					localtarget = os.path.join(self.userconf['librarypath'], *targettrail)
 					
 					if not os.path.exists(localpath):
 						raise Exception("Path doesn't exist: " + "/".join(trail) + "(" + localpath + ")")
-					
+
 					os.rename(localpath, localtarget.encode('utf-8'))
+					
+					# Source path is deleted:
+					self.events.trigger('file.CHANGE', trail)
+					
+					# Target path is created:
+					self.events.trigger('file.CHANGE', targettrail)
+					
 					pass
 						
 			except Exception as e:

@@ -14,10 +14,7 @@ class EventHandler:
 	def unbind(self, binding):
 		self.bindings[binding['event']].remove(binding)
 		
-	def trigger(self, eventname, args=None):
+	def trigger(self, eventname, *args):
 		eventbindings = self.bindings.setdefault(eventname, [])
 		for binding in eventbindings:
-			try:
-				binding['function'](args)
-			except TypeError:
-				binding['function']()
+			binding['function'](*args)
