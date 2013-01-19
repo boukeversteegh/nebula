@@ -1,16 +1,21 @@
 import os.path
-import simplejson as json
-from cherrypy.lib.static import serve_file
+try:
+	import simplejson as json
+except ImportError:
+	import json
+
+import glob
 
 class Files:
 	exposed = True
-	def __init__(self, cp, userconf, conf):
+	def __init__(self, settings):
 		global cherrypy
-		cherrypy = cp
-		self.userconf = userconf
-		conf['/files'] = {
+		cherrypy = settings['cherrypy']
+		self.userconf = settings['userconf']
+		settings['conf']['/files'] = {
 		    'request.dispatch': cherrypy.dispatch.MethodDispatcher()
 		}
+		self.events = settings['events']
 			
 	def GET(self, *trail):
 		localpath = os.path.join(self.userconf['librarypath'], *trail)
@@ -19,30 +24,44 @@ class Files:
 		else:
 			
 			if os.path.isfile(localpath):
-				return serve_file(localpath)
+				return cherrypy.lib.static.serve_file(localpath)
 			else:
 				response = {
-					"success":   False,
+					"success":	False,
 					"error":	"This path is a directory"
 				}
 				return json.dumps(response)
 
 	# SEE
 	# http://docs.cherrypy.org/dev/refman/_cpreqbody.html
-	def PUT(self, *trail, **kwargs):
-		response = {}
+	def PUT(self, *trail, **params):
+		response = {"success": True}
 		success = True
 		try:
+			if 'path' in params:
+				response['params'] = params['path'];
+				localpath = os.path.join(self.userconf['librarypath'], *(params['path'].split("/")[1:-1]))
+				if os.path.exists(localpath):
+					
+					subpath = trail[0:-1]
+					
+					localsubpath = os.path.join(self.userconf['librarypath'], *subpath)
+					response['debug'] = "Created directory structure: %s" % localsubpath
+					response['subpath'] = subpath
+					if not os.path.exists(localsubpath):
+						os.makedirs(localsubpath)
+				else:
+					raise Exception("Path %s doesn't exist" % localpath)
+					
 			upfile = cherrypy.request.params['file']
 			localpath = os.path.join(self.userconf['librarypath'], *trail)
 			f = open(localpath, 'w+b')
 			f.write(upfile.fullvalue())
 		except Exception as e:
-			success = False
-			response['error'] = "Error writing file: " + repr(e)
+			response['success'] = False
+			response['error']  = "Error writing file: " + repr(e)
 			cherrypy.log("*******ERROR********\n" + repr(e))
 			
-		response["success"] = success
 		return json.dumps(response)
 	
 	def DELETE(self, *trail):
@@ -51,9 +70,20 @@ class Files:
 		response = {}
 		success = True
 		try:
-			if not os.path.isfile(localpath):
+			if not os.path.exists(localpath):
 				raise Exception("Path doesn't exist")
-			os.unlink(localpath)
+			if os.path.isfile(localpath):
+				self.events.trigger('file.CHANGE', trail)
+				os.unlink(localpath)
+			if os.path.isdir(localpath):
+				files = glob.glob(localpath + '/*')
+				if not len(files) == 0:
+					raise Exception("Directory not empty")
+				self.events.trigger('folder.CHANGE', trail[:-1])
+				os.rmdir(localpath)
+				#raise Exception("Can't delete directories")
+				
+				
 		except Exception as e:
 			success = False
 			response['error'] = "Can't delete item: " + repr(e)
@@ -76,19 +106,29 @@ class Files:
 					if os.path.exists(localpath):
 						raise Exception("Path already exists")
 					os.mkdir(localpath)
+					self.events.trigger('folder.CHANGE', trail[:-1])
 					pass
 
 				if params['action'] == 'mv':
 					if not 'target' in params:
 						raise Exception("Missing parameter: target")
 					
-					target = params['target'].lstrip("/")
-					localtarget = os.path.join(self.userconf['librarypath'], target)
+					target = params['target'].strip("/")
+					targettrail = tuple(target.split("/"))
+					
+					localtarget = os.path.join(self.userconf['librarypath'], *targettrail)
 					
 					if not os.path.exists(localpath):
 						raise Exception("Path doesn't exist: " + "/".join(trail) + "(" + localpath + ")")
-						
-					os.rename(localpath, localtarget)
+
+					os.rename(localpath, localtarget.encode('utf-8'))
+					
+					# Source path is deleted:
+					self.events.trigger('file.CHANGE', trail)
+					
+					# Target path is created:
+					self.events.trigger('file.CHANGE', targettrail)
+					
 					pass
 						
 			except Exception as e:

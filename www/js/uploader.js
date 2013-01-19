@@ -4,12 +4,24 @@ function Uploader() {
 	this.maxconnections = 2;
 	this.uploads = [];
 	
-	this.upload = function (file, path) {
+	this.upload = function (file, path, fullpath) {
 		var xhr = new XMLHttpRequest();
 		if( typeof path == "undefined" ) {
 			path = window.view.filepath;
 		}
-		var targetpath = '/files' + path + '/' + file.name;
+		
+		
+		if( typeof fullpath == "undefined" ) {
+			var filepath = '/' + file.name;
+		} else {
+			var filepath = fullpath;
+		}
+		
+		var targetpath = '/files' + path + filepath;
+		console.log(" " + targetpath);
+		
+		
+		//var targetpath = '/files' + path + '/' + file.name;
 		xhr.open('PUT', targetpath);
 		
 		xhr.onuploadprogress = function (event) {
@@ -66,7 +78,7 @@ function Uploader() {
 			
 			var formData = new FormData();
 			formData.append('file', upload.file);
-			
+			formData.append('path', upload.path);
 			upload.start = true;
 			upload.xhr.send(formData);
 		}

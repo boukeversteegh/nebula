@@ -1,172 +1,22 @@
-$(function() {
-	init();
-});
-
-function init() {
-	window.view = new View();
-	window.uploader = new Uploader();
+function Player() {
+	this.jplayer = null;
+	this.jplayerid = null;
+	this.current = null;
 	
-	$('.tabs a').click(function (e) {
-		if( e.button == 0 ) {
-			e.preventDefault();
-			window.view.show($(this).attr('href'), true);
-			return false;
-		}
-	});
-	
-	$(window).bind('popstate', function(event) {
-		// if the event has our history data on it, load the page fragment with AJAX
-		var state = event.originalEvent.state;
-		if (event.originalEvent.state) {
-		    window.view.show(event.originalEvent.state.path, false);
-		}
-	});
-	
-	window.view.show(window.location.pathname, true);
-}
-
-
-function View() {
-	this.path = '';
-	this.filepath = '/';
-	this.templates = {};
-	
-	this.views = {
-		"/view/files*": [
-			{
-				"cache":	true,
-				"template": "/www/tpl/files.html",
-				"data":		function(path, args) { return "/metadata" + args},
-				"target":	"#main",
-				"history":	true
-			}
-		],
-		"/view/play*" : [
-			{
-				"cache":	true,
-				"template":	"/www/tpl/play.html",
-				"data":		function (path, args) { return "/metadata" + args},
-				"target":	"#playercontainer"
-			}
-		],
-		"/view/lyrics*" : [
-			{
-				"cache":	true,
-				"template":	"/www/tpl/lyrics.html",
-				"data":		function (path, args) { return "/lyrics" + args},
-				"target":	"#main"
-			}
-		]
-	};
-	
-	this.views['/'] = this.views['/view/files*'];
-	
-	this.show = function(path, pushstate, nocache) {
-		//console.log(["Showing path: " + path, pushstate]);
-		var view = null;
-		var viewname = null;
-		var tail = null;
-		var self = this;
-		for( var key in this.views ) {
-			if( this.views.hasOwnProperty(key) ) {
-				if( key.slice(-1) == "*" ) {
-					if( path.slice(0, key.length-1) == key.slice(0,-1) ) {
-						view = this.views[key];
-						viewname = key.slice(0,-1);
-						args = path.slice(viewname.length)
-						break;
-					}
-				} else {
-					if( path == key ) {
-						view = this.views[key];
-						viewname = key;
-						args = '';
-					}
-				}
-				continue;
-			}
-		}
-		if( view == null ) {
-			alert("Invalid view: " + path);
-			return;
-		}
-		
-		for( var i=0; i<view.length; i++) {
-			if( pushstate && view[i].history ) {
-				if( window.history.pushState ) {
-					window.history.pushState({"path": path}, null, path);
-				}
-				this.path = path;
-			}
-			cview = {
-				"cache":	view[i].cache,
-				"template":	view[i].template,
-				"data":		view[i].data,
-				"target":	view[i].target
-			}
-			if( typeof cview.data === 'function' ) {
-				cview.data = cview.data(path, args);
-			}
-			//console.log(args);
-			//console.log(rmatch);;
-			var viewdata = {};
-			//$.get(cview.data,		function(data) { viewdata['data'] = data;     	self.renderTemplate(cview, viewdata);}, 'json');
-			//#$.get(cview.template,	function(data) { viewdata['template'] = data;	self.renderTemplate(cview, viewdata);}, 'html');
-			
-			var headers = {};
-			if( !!nocache ) {
-				headers['Cache-Control'] = 'no-cache';
-			}
-			$.ajax({
-				"url":		cview.data,
-				"success":	function(data) {
-								viewdata['data'] = data;
-								self.renderTemplate(cview, viewdata);
-							},
-				"dataType":	"json",
-				"headers":	headers
-			});
-			$.ajax({
-				"url":		cview.template,
-				"success":	function(data) {
-								viewdata['template'] = data;
-								self.renderTemplate(cview, viewdata);
-							},
-				"dataType":	"html"
-			});
-		}
+	this.init = function(jplayerid) {
+		this.jplayerid = jplayerid;
 	}
 	
-	this.xhttp = function(method, url, data) {
-		$.ajax({
-			"url": url,
-			"type": method,
-			"success": function(response) {
-				if( response.success ) {
-					view.show(view.path, false, true);
-				} else {
-					alert(response.error);
-				}
-			},
-			"data": data
-		});
+	this.jp = function() {
+		if( this.jplayer == null ) {
+			this.jplayer = $(this.jplayerid);
+		}
+		return this.jplayer;
 	}
 	
-	this.renderTemplate = function(view, viewdata) {
-		if( !('data' in viewdata && 'template' in viewdata) ) {
-			//console.log("waiting for data or template");
-			return;
-		}
-		//console.log(viewdata);
-		html = Mustache.render(viewdata.template, viewdata.data);
-		
-		$(view.target).html(html);
-		
-		$(view.target + " a.showview").click(function (e) {
-			if( e.button == 0 ) {
-				e.preventDefault();
-				window.view.show($(this).attr('href'), true);
-			}
-		});
+	this.playMedia = function(url, data) {
+		//this.jp().jPlayer("stop");
+		this.jp().jPlayer("setMedia", {mp3: url}).jPlayer('play');
+		this.current = url;
 	}
 }
