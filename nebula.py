@@ -4,7 +4,6 @@ import os
 import cherrypy
 import mimetypes
 import sys
-import simplejson as json
 import plugins.metadata
 import plugins.files
 import eventhandler

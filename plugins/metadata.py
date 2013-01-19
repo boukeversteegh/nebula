@@ -2,7 +2,10 @@ import os.path
 import glob
 import eyed3
 import eyed3.mp3
-import json
+try:
+	import simplejson as json
+except ImportError:
+	import json
 
 global cherrypy
 
