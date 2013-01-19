@@ -19,16 +19,42 @@ and (max-device-width : 480px) {
 	}
 }*/
 
+@media screen and (max-width:500px) {
+	#mkdir,
+	#rmdir,
+	#uploads,
+	#changelog,
+	.playlist td.playlist-column-delete {
+		display: none;
+	}
+	.playlist .extra {
+		display: none;
+	}
+	.playlist td a {
+		padding: 0;
+	}
+	
+	#top #player {
+		padding: 0;
+	}
+}
+
 #top {
 	position: 		fixed;
 	background:		#999;
 	width:			100%;
 	z-index:		1;
 	top:			0;
+	left:			0;
+	box-shadow:		0 -5px 25px black;
 }
 
 #top .layout td {
 	padding: 0;
+}
+
+#tabs {
+
 }
 
 #viewtitle {
@@ -51,10 +77,6 @@ a:link {
 	padding: 0.5em;
 	min-height: 100%;
 	color: #333;
-}
-
-#tabs {
-	width: 100%;
 }
 
 
@@ -157,18 +179,39 @@ a {
 	margin-top: 2px;
 }
 
+#tabs .ui-tabs-panel {
+	padding: 0.25em 0.5em;
+}
+#mkdir, #rmdir {
+	float: right;
+	margin: 0 0.25em;
+}
+
+li#breadcrumbs {
+	margin: 0;
+}
 #breadcrumbs .folder {
-	margin-bottom: 1px;
+	margin-top: 2px;
+	margin-bottom: 2px;
 	margin-right: 3px;
 }
 
-.playlist li a,
-.playlist td a {
-	text-decoration: none;
+.playlist #folders a {
+	padding: 0.25em;
 	display: block;
 	text-align: left;
+}
+
+.playlist td {
+	vertical-align: top;
+}
+
+.playlist td a {
+	display: block;
 	padding: 0.25em;
 	color: #333;
+	text-decoration: none;
+	vertical-align: top;
 }
 
 .playlist tr.file:hover {
@@ -206,6 +249,10 @@ a {
 
 .playlist li:last-child{
     border-bottom: none;
+}
+
+.playlist-column-duration {
+	text-align: right;
 }
 
 #lyrics {

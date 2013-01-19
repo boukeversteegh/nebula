@@ -24,7 +24,7 @@ $(document).ready(function() {
 		function() { $(this).find('.ui-progressbar-value').addClass('ui-state-hover'); },
 		function() { $(this).find('.ui-progressbar-value').removeClass('ui-state-hover') }
 	);
-	//$('#tabs').css('margin-top', $('#top').height());
-	$('#tabs').css('margin-top', '100px');
+	$('#tabs').css('margin-top', $('#top').height());
+	//$('#tabs').css('margin-top', '100px');
 	$('#tabs').tabs();
 });

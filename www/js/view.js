@@ -45,7 +45,8 @@ function View() {
 						hoverClass: "ui-state-hover",
 						tolerance: 'pointer'
 					})
-					$('#mkdir,#rmdir').button();
+					$('#mkdir').button({icons: {primary: 'ui-icon-plus'}});
+					$('#rmdir').button();
 					$('#folders .folder a').button({icons: {primary: 'ui-icon-folder-collapsed'}});
 					
 					$('#breadcrumbs .folder a').button({
