@@ -167,8 +167,12 @@ a {
 .playlist tr.player-current td {
 	font-weight: bold;
 }
+.playlist .delete {
+	margin-left: 0.5em;
+}
 .playlist .delete span {
 	padding: 0 0.25em;
+	font-size: 0.9em;
 }
  
 .playlist li {
@@ -203,12 +207,11 @@ li#breadcrumbs {
 }
 
 .playlist td {
-	vertical-align: top;
 }
 
 .playlist td a {
 	display: block;
-	padding: 0.25em;
+	padding: 0.2em;
 	color: #333;
 	text-decoration: none;
 	vertical-align: top;
@@ -236,16 +239,6 @@ li#breadcrumbs {
 	display: none;
 }
 
-.playlist li button {
-	line-height: 1em;
-	top: 0.25em;
-	display: inline;
-}
-
-.playlist li button.delete {
-	position: absolute;
-	right: 0;
-}
 
 .playlist li:last-child{
     border-bottom: none;
