@@ -3,12 +3,12 @@ import simplejson as json
 class Lyrics:
 	exposed = True
 	
-	def __init__(self, cp, userconf, conf):
+	def __init__(self, settings):
 		global cherrypy
-		cherrypy = cp
-		self.userconf = userconf
+		cherrypy = settings['cherrypy']
+		self.userconf = settings['userconf']
 		self.cache={}
-		conf['/lyrics'] = {
+		settings['conf']['/lyrics'] = {
 		    'request.dispatch': cherrypy.dispatch.MethodDispatcher()
 		}
 	

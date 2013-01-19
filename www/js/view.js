@@ -9,7 +9,7 @@ function View() {
 				"cache":	true,
 				"template": "/www/tpl/files.html",
 				"data":		function(path, args) { return "/metadata" + args},
-				"target":	"#main",
+				"target":	'#files',
 				"history":	true,
 				"onload": function() {
 					dragdrop_init();
@@ -72,7 +72,7 @@ function View() {
 				"cache":	true,
 				"template":	"/www/tpl/lyrics.html",
 				"data":		function (path, args) { return "/lyrics" + args},
-				"target":	"#main"
+				"target":	'#lyrics'
 			}
 		]
 	};

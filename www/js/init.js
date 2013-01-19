@@ -45,15 +45,6 @@ function init() {
 	
 	window.view.show(window.location.pathname, true);
 	
-	$('#tabs a').click(function (e) {
-		e.preventDefault();
-		e.stopPropagation();
-		if( e.button == 0 ) {
-			window.view.show($(this).attr('href'), true);
-			return false;
-		}
-	});
-	
 	$(window).bind('popstate', function(event) {
 		// if the event has our history data on it, load the page fragment with AJAX
 		var state = event.originalEvent.state;
