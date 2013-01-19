@@ -3,6 +3,7 @@ Nebula
 
 Social music server
 
+![files](/docs/screenshots/files.png "Files view")
 
 How to run
 ==========
