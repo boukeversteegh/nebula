@@ -12,7 +12,7 @@
 	<div class="playlist">
 		<div id="folders">
 			<ul>
-				<li id="parentfolder" class="folder" data-path="{{parent}}"><a class="showview" href="/view/files{{parent}}">..</a></li>
+				<li id="parentfolder" class="folder" data-path="{{parent}}"><a class="showview" href="/view/files{{parent}}">&nbsp;</a></li>
 				{{#folders}}
 				<li class="folder" data-file="{{.}}" data-path="{{path}}/{{.}}">
 					<a class="showview" href="/view/files{{path}}/{{.}}">{{.}}</a>
@@ -28,7 +28,7 @@
 					<td align="right" width="40">{{id3.track_num.0}}</td>
 					
 					{{#id3.artist}}{{#id3.title}}
-						<td width="300"><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{id3.artist}}</a></td>
+						<td><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{id3.artist}}</a></td>
 						<td><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{id3.title}}</a></td>
 						<td><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{file}}</a></td>
 					{{/id3.title}}{{/id3.artist}}

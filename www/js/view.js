@@ -38,6 +38,10 @@ function View() {
 					})
 					$('#mkdir,#rmdir').button();
 					$('#folders .folder a').button();
+					$('#parentfolder a').button({
+						icons: {primary: 'ui-icon-arrowreturnthick-1-w'}
+					});
+ 
 					window.uploader.refresh();
 					if( window.player.current !== null ) {
 						$('[data-path="' + window.player.current.substr("/files".length) + '"]').addClass('player-current');
