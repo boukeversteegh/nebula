@@ -38,18 +38,30 @@ class Files:
 		response = {"success": True}
 		success = True
 		try:
+			# User uploads directory structure
+			# folderA/
+			#    file.txt
+			# 
+			# To:
+			# /Uploads
+			#
+			# PUT /Uploads/folderA/file.txt {path: /Uploads}
 			if 'path' in params:
-				response['params'] = params['path'];
-				localpath = os.path.join(self.userconf['librarypath'], *(params['path'].split("/")[1:-1]))
+				path = params['path'].strip('/')
+				pathtrail = tuple(path.split('/'))
+				cherrypy.log("\n\n\n%s" % repr(pathtrail))
+				localpath = os.path.join(self.userconf['librarypath'], *pathtrail)
 				if os.path.exists(localpath):
 					
-					subpath = trail[0:-1]
+					# Create subdirectories if missing
+					parent = trail[0:-1]
 					
-					localsubpath = os.path.join(self.userconf['librarypath'], *subpath)
-					response['debug'] = "Created directory structure: %s" % localsubpath
-					response['subpath'] = subpath
+					localsubpath = os.path.join(self.userconf['librarypath'], *parent)
 					if not os.path.exists(localsubpath):
 						os.makedirs(localsubpath)
+						
+					
+					self.events.trigger('folder.CHANGE', pathtrail)
 				else:
 					raise Exception("Path %s doesn't exist" % localpath)
 					
@@ -57,6 +69,7 @@ class Files:
 			localpath = os.path.join(self.userconf['librarypath'], *trail)
 			f = open(localpath, 'w+b')
 			f.write(upfile.fullvalue())
+			self.events.trigger('folder.CHANGE', trail[:-1])
 		except Exception as e:
 			response['success'] = False
 			response['error']  = "Error writing file: " + repr(e)

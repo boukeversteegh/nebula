@@ -1,5 +1,5 @@
 function dragdrop_init() {
-	var dropbox = document.getElementById("dropbox")
+	var dropbox = document.getElementById("dropbox");
 	 
 	// init event handlers
 	//dropbox.addEventListener("dragstart", dragStart, false);
@@ -96,14 +96,11 @@ function drop(evt, path) {
 				if( items[i].webkitGetAsEntry ) {
 					var entry = items[i].webkitGetAsEntry();
 					if (entry.isFile) {
-						console.log("is File");
 						entry.file(  (function(entry) { return function(file) {
 							window.uploader.upload(file, path, entry.fullPath);
 						}})(entry));
 					}
 					if (entry.isDirectory ) {
-						console.log("is Directory");
-						//console.log(entry);
 						var reader = entry.createReader();
 
 						var direntry = reader.readEntries(handledir);

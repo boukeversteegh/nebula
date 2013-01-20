@@ -21,7 +21,7 @@ function View() {
 				},
 				"onload": function() {
 					dragdrop_init();
-					window.view.filepath = "{{{data.path}}}";
+					window.view.filepath = this.path.substr("/view/files".length);
 					$('button.delete').button();
 					$('#files tr.file, #folders li.folder').not('#parentfolder').draggable({
 						revert:		'invalid',

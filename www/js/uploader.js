@@ -102,6 +102,7 @@ function Uploader() {
 		upload.progress = 100;
 		window.uploader.refresh();
 		window.uploader.processQueue();
+		console.log(upload);
 		if( upload.path == view.filepath ) {
 			view.show(view.path, false, true);
 		}
