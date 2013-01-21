@@ -80,6 +80,12 @@ function View() {
 				}
 				//"onload"
 				//"onrender"
+			},
+			{
+				"cache":	true,
+				"template":	"/www/tpl/lyrics.html",
+				"data":		function (path, args) { return "/lyrics" + args},
+				"target":	'#lyrics'
 			}
 		],
 		"/view/lyrics*" : [

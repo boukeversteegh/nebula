@@ -1,56 +1,27 @@
-# Line by line format
+/* Multi-lingual, multivoice lyrics example */
 {
-	lyrics:
-		[0, "Me not working hard?\n"]
-		[7, "Yeah, right, picture that with a Kodak\n"]
-}
-# Word by word format 
-{
-	lyrics: [
-		[0,   "Me "],
-		[0.4, "not "],
-		[0.8, "working "],
-		[1.1, "hard?\n"],
-		[7, "Yeah, right, picture that with a Kodak"]
-	]
-}
-
-# Indexed word by word format
-{
-	lyrics: {
-		0:		"Me ",
-		0.4:	"not ",
-		0.8:	"working "		
-	}
-}
-
-# Duet example:
-{
+	"language":	"zh", // Original language
 	"lyrics": {
-		"male": {
-			0:		"Me ",
-			0.4:	"not ",
-			0.8:	"working ",
-			1:		"hard\n",	# End of line. Lyrics are displayed line by line. Until \n found.
-			1.5:	""			# Force clear
+		"lang:zh_TW": {
+			"0":	"越山丘\n",	// Linebreak indicates end of phrase. Lyrics are shown phrase by phrase, until \n.
+			"2":	"過啞口"		// Previous phrase is shown between [0:00-0:02]
 		},
-		"female": {
-			0:		"Yeah",
-			1.5:	"\n"		# End of line, force clear
+		"background": {
+			"0":	"Yeah~\n",
+			"2":	""			// At [0:02] previous phrase ends. Phrase ended in \n so it will be cleared.
+		},
+		"lang:zh_CN": {
+			"0":	"越山丘\n",	// Phrase for zh_TW and zh_CN have same timing and number of words so can be shown in alignment.
+			"2":	"过哑口"
+		},
+		"lang:zh-pinyin": {
+			"0":	"yue shan qiu",
+			"2":	"guo Ya Kou"
+		},
+		"lang:en": {
+			"0":	"Over the hill, ",
+			"2":	"pass Ya Kou"
 		}
-		
-	]
-}
-
-# Multi-lingual lyrics example:
-{
-	"lyrics": {
-		
 	}
 }
-
-##########
-Male: Something on my mind
-Female: Something on my mind
-
 

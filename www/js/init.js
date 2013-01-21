@@ -7,6 +7,7 @@ function init() {
 	window.uploader = new Uploader();
 	window.player = new Player();
 	window.player.init('#jplayer');
+	window.lyrics = new Lyrics();
 	
 	$('#jplayer').jPlayer({
 		swfPath: '/www/jplayer',
