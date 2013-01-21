@@ -1,0 +1,48 @@
+[role=phrase] {
+	font-size: 2em;
+	font-weight: bold;
+	line-height: 2em;
+	height:		2em;
+}
+[role=phrase].active {
+	color: red;
+}
+
+[role=chunk] {
+	display: inline-block;
+	position: relative;
+	overflow: hidden;
+	height: 2em;
+}
+[role=chunk].active {
+}
+
+[role=chunk] .highlight {
+	width: 0%;
+	position: relative;
+	top: -2em;
+	overflow: hidden;
+	text-shadow: red 0 0 3px;
+	color: yellow;
+	white-space: nowrap;
+	
+	display: block;
+}
+
+[role=chunk].active .highlight {
+	-webkit-transition: width linear 0s;
+	width: 100%;
+	border-right: 2px solid yellow;
+}
+
+[role=chunk].complete {
+	-webkit-transition: top ease-out 0.5s, left ease-out 0.5s, opacity 0.5s;
+	top: 2em;
+	left: -2em;
+	opacity: 0;
+}
+
+[role=chunk].complete .highlight {
+	width: 100%;
+	-webkit-transition: width linear 0s;
+}

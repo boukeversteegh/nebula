@@ -15,13 +15,12 @@
 			"2":	"过哑口"
 		},
 		"lang:zh-pinyin": {
-			"0":	"yue shan qiu",
+			"0":	"yue shan qiu\n",
 			"2":	"guo Ya Kou"
 		},
 		"lang:en": {
-			"0":	"Over the hill, ",
+			"0":	"Over the hill, \n",
 			"2":	"pass Ya Kou"
 		}
 	}
 }
-
