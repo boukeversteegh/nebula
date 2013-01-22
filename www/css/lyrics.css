@@ -1,3 +1,7 @@
+[role=stream] {
+	display: table-cell;
+}
+
 [role=phrase] {
 	font-size: 2em;
 	font-weight: bold;
@@ -5,44 +9,58 @@
 	height:		2em;
 }
 [role=phrase].active {
-	color: red;
+	/*color: red;*/
+}
+
+[role=phrase].inactive {
 }
 
 [role=chunk] {
 	display: inline-block;
 	position: relative;
-	overflow: hidden;
 	height: 2em;
-}
-[role=chunk].active {
+	left: 1em;
 }
 
 [role=chunk] .highlight {
-	width: 0%;
 	position: relative;
 	top: -2em;
+	left: 0;
 	overflow: hidden;
 	text-shadow: red 0 0 3px;
 	color: yellow;
 	white-space: nowrap;
-	
+	width: 0%;
 	display: block;
+	visibility: hidden;
+	-webkit-transition: visibility linear 0s, color 0s, border 0s;
+}
+
+#stream-1 [role=chunk] .highlight {
+	color:	blue;
+	text-shadow: #AAF 0 0 3px;
+	border-color: #AAF;
+}
+
+[role=chunk].active {
+
 }
 
 [role=chunk].active .highlight {
-	-webkit-transition: width linear 0s;
 	width: 100%;
+	height: 2em;
 	border-right: 2px solid yellow;
-}
-
-[role=chunk].complete {
-	-webkit-transition: top ease-out 0.5s, left ease-out 0.5s, opacity 0.5s;
-	top: 2em;
-	left: -2em;
-	opacity: 0;
-}
-
-[role=chunk].complete .highlight {
-	width: 100%;
 	-webkit-transition: width linear 0s;
+	visibility: visible;
+}
+
+[role=chunk].ended .highlight {
+	-webkit-transition: top ease-out 0.3s, left ease-out 0.3s, opacity 0.3s, border 0s;
+	left: -2em;
+	top: 0em;
+	visibility: visible;
+	width: 100%;
+	opacity: 0;
+	color: yellow;
+	border-right: 0;
 }

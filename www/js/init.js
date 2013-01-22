@@ -40,6 +40,12 @@ function init() {
 			//noSolution: '.player-no-solution'
 		},
 		ready: function() {},
+		timeupdate: function(e) {
+			if( !e.jPlayer.status.paused ) {
+				var position = e.jPlayer.status.currentTime;
+				window.lyrics.updatePosition(position);
+			}
+		},
 		errorAlerts: true,
 		warningAlerts: false
 	});

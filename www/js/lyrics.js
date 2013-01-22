@@ -43,6 +43,41 @@ function Lyrics() {
 		this.loadLyrics(this.lyrics); 
 	}
 	
+	this.test2 = function() {
+		this.lyrics = {
+			"language":	"en", // Original language
+			"lyrics": {
+				"lang:en": {
+					"0.35": "Ain't not working hard?",
+					"1.5": "\n",
+					"2": "Yeah right, ",
+					"2.5": "picture that with a Kodak",
+					"3.7": "\n",
+					"3.9": "Or better yet, ",
+					"4.6": "go to Time Square",
+					"5.5": ", take a picture of me ",
+					"6.6": "with a Kodak\n",
+					"7.6": "Took my life from a negative to a positive, ",
+					"9.3": "I just want you to know that...\n",
+					"10.7": "and tonight, ",
+					"11.4": "let's enjoy life.",
+					"12.3": "\n",
+					"12.6": "Pitbull, ",
+					"13.1": "Nayer, ",
+					"13.7": "Ne-yo, ",
+					"14.0": "that's right!\n",
+					"15.1": ""
+				},
+				"neyo": {
+					"14.5": "Tonight...",
+					"16.3": "\n"
+				}
+			}
+		};
+		this.enabledstreams = ['lang:en', 'neyo'];//, 'lang:en', 'background', 'lang:zh-pinyin'];
+		this.loadLyrics(this.lyrics);
+	}
+	
 	this.loadLyrics = function(lyrics) {
 		var phrases = {};
 		for( var i=0; i < this.enabledstreams.length; i++ ) {
@@ -59,9 +94,19 @@ function Lyrics() {
 			var phraseend	= false;
 			var lastchunk	= null;
 			var index		= 0;
+			
+			
+			
 			// Find current phrase
-			for( var time in stream ) {
-				time = parseFloat(time);
+			var times = [];
+			for(var time in stream) {
+				if( stream.hasOwnProperty(time) ) {
+					times.push(time);
+				}
+			}
+			times.sort(function(a,b){return a-b});
+			for( var i_time=0; i_time < times.length; i_time++ ) {
+				var time = times[i_time];
 				var text = stream[time];
 				if( stream.hasOwnProperty(time) ) {
 					var chunk = {start: time, end: null, text: text};
@@ -122,7 +167,7 @@ function Lyrics() {
 			var streamstate		= this.state.streams[streamname];
 			var streamphrases	= this.phrases[streamname];
 			
-			var streamdomobject = $('<div id="' + streamstate.domobjectid + '"/>');
+			var streamdomobject = $('<div role="stream" id="' + streamstate.domobjectid + '"/>');
 			
 			// Phrases to stream
 			for( var i_phrase=0; i_phrase < streamphrases.length; i_phrase++ ) {
@@ -134,9 +179,12 @@ function Lyrics() {
 					
 					var chunkdomobject = $('<span role="chunk"/>');
 					chunkdomobject.append('<span class="text">' + chunk.text + '</span>');
+					chunkdomobject.css('-webkit-transition-duration', duration + 's');
+					
 					chunkdomobject.click( (function(p) {
 						return function() {
-							lyrics.updatePosition(p)
+							//lyrics.updatePosition(p)
+							$('#jplayer').jPlayer('playHead', p);
 						}
 					})(chunk.start));
 					
@@ -150,10 +198,6 @@ function Lyrics() {
 			}
 			$('#'+this.domobjectid).append(streamdomobject);
 		}
-		/*$('[role=chunk]').wrapInner('<div class="text"/>').each(function() {
-			var hl = $('<div class="highlight"> </div>').text($(this).text());
-			$(this).append(hl);
-		});*/
 	}
 	
 	
@@ -183,25 +227,28 @@ function Lyrics() {
 				var phrasedomobject = streamdomobject.find('[role=phrase]').eq(i_phrase);
 				
 				if( !this.inRange(position, phrase.start, phrase.end) ) {
-					phrasedomobject.removeClass('active');
-					phrasedomobject.find('[role=chunk]').removeClass('active complete');//.find('.highlight').css('-webkit-transition-duration', '');
+					phrasedomobject.removeClass('active').addClass('inactive');
+					phrasedomobject.find('[role=chunk]').not('.active').removeClass('ended');
+					phrasedomobject.find('[role=chunk]').filter('.active').addClass('ended').removeClass('active');//.find('.highlight').css('-webkit-transition-duration', '');
 				} else {
+					// Phrase is active
+					
 					//streamdomobject.addClass('active');
 					streamstate.phrase = i_phrase;
-					phrasedomobject.addClass('active');
+					phrasedomobject.not('.active').find('[role=chunk]').removeClass('ended');
+					phrasedomobject.removeClass('inactive').addClass('active');
 					
 					for( var i_chunk = 0; i_chunk < phrase.chunks.length; i_chunk++ ) {
 						var chunk = phrase.chunks[i_chunk];
 						var chunkdomobject = phrasedomobject.find('[role=chunk]').eq(i_chunk);
 						if( !this.inRange(position, chunk.start, chunk.end) ) {
-							chunkdomobject.filter('.active').addClass('complete');
-							chunkdomobject.removeClass('active');
+							// Current chunk is not active
+							chunkdomobject.filter('.active').addClass('ended').removeClass('active');
 							
 						} else {
 							streamstate.chunk = i_chunk;
 							var duration = (chunk.end - position);
-							chunkdomobject
-								.addClass('active');
+							chunkdomobject.addClass('active');
 								//.css('-webkit-transition-duration', duration + 's');
 							//chunkdomobject.find('.highlight').css('-webkit-transition-duration', duration + 's');
 						}
@@ -212,24 +259,9 @@ function Lyrics() {
 	}
 	
 	this.inRange = function(position, start, end) {
-		var after_start	= start <= position;
-		var before_end	= ( position < end || end === null );
+		var after_start	= parseFloat(start) <= position;
+		var before_end	= ( position < parseFloat(end) || end === null );
 		var active = after_start && before_end;
 		return active;
 	}
-	
-	this.phraseText = function(phrase) {
-		var text = '';
-		for( var i=0; i < phrase.chunks.length; i++ ) {
-			text += phrase.chunks[i].text;
-		}
-		return text;
-	}
-	
-	//this.get
-	this.render = function() {
-		
-	}
-	
-	this.test();
 }

@@ -85,7 +85,10 @@ function View() {
 				"cache":	true,
 				"template":	"/www/tpl/lyrics.html",
 				"data":		function (path, args) { return "/lyrics" + args},
-				"target":	'#lyrics'
+				"target":	'#lyrics',
+				"onload": function() {
+						lyrics.test2();
+				}
 			}
 		],
 		"/view/lyrics*" : [
