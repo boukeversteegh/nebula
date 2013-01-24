@@ -10,7 +10,7 @@ function Uploader() {
 				'{{#uploads}}'+
 				'<tr id="upload-{{index}}" class="upload">'+
 					'<td><div class="path inline"><a class="showview" href="/view/files{{path}}">{{path}}</div></td>'+
-					'<td><a class="showview" href="/view/play/{{path}}/{{file}}">{{file}}</a></td>'+
+					'<td><a class="showview" href="/view/play{{path}}/{{file}}">{{file}}</a></td>'+
 					'<td>{{hsize}}</td>' +
 					'<td><div class="progress ui-state-default"></div></td>'+
 				'</tr>'+
