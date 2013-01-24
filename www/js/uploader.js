@@ -8,7 +8,7 @@ function Uploader() {
 			'{{#uploads.0}}' +
 			'<table width="100%">' +
 				'{{#uploads}}'+
-				'<tr id="upload-{{index}}" class="upload">'+
+				'<tr id="upload-{{index}}" class="upload" data-path="{{path}}/{{file}}">'+
 					'<td><div class="path inline"><a class="showview" href="/view/files{{path}}">{{path}}</div></td>'+
 					'<td><a class="showview" href="/view/play{{path}}/{{file}}">{{file}}</a></td>'+
 					'<td>{{hsize}}</td>' +
