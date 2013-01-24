@@ -9,7 +9,7 @@ function View() {
 				"cache":	true,
 				"template": "/www/tpl/files.html",
 				"data":		function(path, args) { return "/metadata" + args},
-				"target":	'#files',
+				"target":	'#tab_files',
 				"history":	true,
 				"onrender":	function(view, viewdata) {
 					var trail = viewdata.data.data.path.split('/');
@@ -87,7 +87,7 @@ function View() {
 				"cache":	true,
 				"template":	"/www/tpl/lyrics.html",
 				"data":		function (path, args) { return "/lyrics" + args},
-				"target":	'#lyrics'
+				"target":	'#tab_lyrics'
 			}
 		]
 	};
@@ -221,8 +221,11 @@ function View() {
 		html = Mustache.render(viewdata.template, viewdata.data);
 		
 		$(view.target).html(html);
-		
-		$(view.target + " a.showview").click(function (e) {
+		this.rebind(view.target);
+	}
+	
+	this.rebind = function(target) {
+		$(target).find(" a.showview").click(function (e) {
 			if( e.button == 0 ) {
 				e.preventDefault();
 				e.stopPropagation();
