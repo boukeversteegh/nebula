@@ -60,8 +60,9 @@ class Files:
 					if not os.path.exists(localsubpath):
 						os.makedirs(localsubpath)
 						
+					for i in range(len(parent)-1):
+						self.events.trigger('folder.CHANGE', parent[0:i+1])
 					
-					self.events.trigger('folder.CHANGE', pathtrail)
 				else:
 					raise Exception("Path %s doesn't exist" % localpath)
 					
