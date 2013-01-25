@@ -5,7 +5,7 @@ $(function() {
 function init() {
 	window.view = new View();
 	window.uploader = new Uploader();
-	window.fileview = new FileView();
+	window.files = new Files();
 	window.player = new Player();
 	window.player.init('#jplayer');
 	
