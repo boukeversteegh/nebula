@@ -23,7 +23,7 @@ function Uploader() {
 	this.upload = function (file, path, fullpath) {
 		var xhr = new XMLHttpRequest();
 		if( typeof path == "undefined" ) {
-			path = window.view.filepath;
+			path = window.files.path;
 		}
 		
 		if( typeof fullpath == "undefined" ) {
@@ -166,7 +166,7 @@ function Uploader() {
 		window.uploader.refresh(false);
 		window.uploader.processQueue();
 		console.log(upload);
-		if( upload.path == view.filepath ) {
+		if( upload.path == window.files.path ) {
 			view.show(view.path, false, true);
 		}
 	}

@@ -15,7 +15,6 @@ function Player() {
 	}
 	
 	this.playMedia = function(url, data) {
-		//this.jp().jPlayer("stop");
 		this.jp().jPlayer("setMedia", {mp3: url}).jPlayer('play');
 		this.current = url;
 	}

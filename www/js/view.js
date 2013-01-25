@@ -6,22 +6,22 @@ function View() {
 	this.views = {
 		"/view/files*": [
 			{
-				"cache":	true,
-				"template": "/www/tpl/files.html",
-				"data":		function(path, args) { return "/metadata" + args},
-				"target":	'#tab_files',
-				"history":	true,
-				"onrender":	function(view, viewdata) {
-					var trail = viewdata.data.data.path.split('/');
+				"cache":		true,
+				"templateurl": "/www/tpl/files.html",
+				"dataurl":		function(path, args) { return "/metadata" + args},
+				"target":		'#tab_files',
+				"history":		true,
+				"onrender":		function(view) {
+					var trail = view.data.path.split('/');
 					var breadcrumbs = [];
 					for( var i=0; i<trail.length; i++) {
 						breadcrumbs.push( {'path': trail.slice(0,i+1).join('/'), 'folder': trail[i]} );
 					}
-					viewdata.data['breadcrumbs'] = breadcrumbs;
+					view.data['breadcrumbs'] = breadcrumbs;
+					window.files.loadView(view.response);
 				},
-				"onload": function() {
+				"onload": 	function(view) {
 					dragdrop_init();
-					window.view.filepath = this.path.substr("/view/files".length);
 					$('button.delete').button();
 					$('#files tr.file, #folders li.folder').not('#parentfolder').draggable({
 						revert:		'invalid',
@@ -49,9 +49,7 @@ function View() {
 					$('#rmdir').button();
 					$('#folders .folder a').button({icons: {primary: 'ui-icon-folder-collapsed'}});
 					
-					$('#breadcrumbs .folder a').button({
-						//icons: {primary: 'ui-icon-arrowreturnthick-1-w'}
-					});
+					$('#breadcrumbs .folder a').button();
 					$('#breadcrumbs .folder a').eq(-1).button({
 						icons: {primary: 'ui-icon-folder-open'},
 						disabled: true
@@ -66,11 +64,11 @@ function View() {
 		],
 		"/view/play*" : [
 			{
-				"cache":	true,
-				"template":	"/www/tpl/play.html",
-				"data":		function (path, args) { return "/metadata" + args},
-				"target":	"#player-metadata",
-				"onstart":	function() {
+				"cache":		true,
+				"templateurl":	"/www/tpl/play.html",
+				"dataurl":		function (path, args) { return "/metadata" + args},
+				"target":		"#player-metadata",
+				"onstart":		function() {
 					var filepath = this.path.split('/view/play')[1];
 					window.player.playMedia("/files" + filepath);
 					//$('#jplayer').jPlayer('setMedia', {mp3: "/files" + filepath });
@@ -84,10 +82,10 @@ function View() {
 		],
 		"/view/lyrics*" : [
 			{
-				"cache":	true,
-				"template":	"/www/tpl/lyrics.html",
-				"data":		function (path, args) { return "/lyrics" + args},
-				"target":	'#tab_lyrics'
+				"cache":		true,
+				"templateurl":	"/www/tpl/lyrics.html",
+				"dataurl":		function (path, args) { return "/lyrics" + args},
+				"target":		'#tab_lyrics'
 			}
 		]
 	};
@@ -132,17 +130,17 @@ function View() {
 				this.path = path;
 			}
 			cview = {
-				"path":		path,
-				"cache":	view[i].cache,
-				"template":	view[i].template,
-				"data":		view[i].data,
-				"target":	view[i].target,
-				"onstart":	view[i].onstart,
-				"onload":	view[i].onload,
-				"onrender":	view[i].onrender
+				"path":			path,
+				"cache":		view[i].cache,
+				"templateurl":	view[i].templateurl,
+				"dataurl":		view[i].dataurl,
+				"target":		view[i].target,
+				"onstart":		view[i].onstart,
+				"onload":		view[i].onload,
+				"onrender":		view[i].onrender
 			}
-			if( typeof cview.data === 'function' ) {
-				cview.data = cview.data(path, args);
+			if( typeof cview.dataurl === 'function' ) {
+				cview.dataurl = cview.dataurl(path, args);
 			}
 			
 			if( typeof cview.onstart === 'function' ) {
@@ -151,15 +149,13 @@ function View() {
 				}
 			}
 			
-			var viewdata = {};
-			
 			var headers = {};
 			if( !!nocache ) {
 				headers['Cache-Control'] = 'no-cache';
 			}
 			
-			var ifLoaded = function(viewdata, fn) {
-				if( !('data' in viewdata && 'template' in viewdata) ) {
+			var ifLoaded = function(view, fn) {
+				if( !('data' in view && 'template' in view) ) {
 					return;
 				} else {
 					return fn();
@@ -169,30 +165,33 @@ function View() {
 			var onLoad = function() {
 				var dorender = true;
 				if( cview.onrender ) {
-					var dorender = cview.onrender(cview, viewdata);
+					var dorender = cview.onrender(cview);
 				}
 				if( dorender !== false ) {
-					self.renderTemplate(cview, viewdata);
+					self.renderTemplate(cview);
 				}
 				if( cview.onload ) {
-					cview.onload(cview, viewdata);
+					cview.onload(cview);
 				}
 			}
 			
 			$.ajax({
-				"url":		cview.data,
-				"success":	function(data) {
-								viewdata['data'] = data;
-								ifLoaded(viewdata, onLoad);
+				"url":		cview.dataurl,
+				"success":	function(response) {
+								//viewdata['response'] = response;
+								cview['response'] = response;
+								cview['data'] = response.data;
+								ifLoaded(cview, onLoad);
 							},
 				"dataType":	"json",
 				"headers":	headers
 			});
 			$.ajax({
-				"url":		cview.template,
-				"success":	function(data) {
-								viewdata['template'] = data;
-								ifLoaded(viewdata, onLoad);
+				"url":		cview.templateurl,
+				"success":	function(template) {
+								//viewdata['template'] = template;
+								cview['template'] = template;
+								ifLoaded(cview, onLoad);
 							},
 				"dataType":	"html"
 			});
@@ -217,8 +216,8 @@ function View() {
 		});
 	}
 	
-	this.renderTemplate = function(view, viewdata) {
-		html = Mustache.render(viewdata.template, viewdata.data);
+	this.renderTemplate = function(view) {
+		html = Mustache.render(view.template, view.response);
 		
 		$(view.target).html(html);
 		this.rebind(view.target);
