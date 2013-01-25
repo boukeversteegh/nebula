@@ -18,7 +18,7 @@ function View() {
 						breadcrumbs.push( {'path': trail.slice(0,i+1).join('/'), 'folder': trail[i]} );
 					}
 					view.data['breadcrumbs'] = breadcrumbs;
-					window.files.loadView(view.response);
+					window.files.loadView(JSON.parse(JSON.stringify(view.response)));
 				},
 				"onload": 	function(view) {
 					dragdrop_init();
@@ -36,7 +36,6 @@ function View() {
 						drop: function( event, ui ) {
 								var sourcepath = ui.draggable[0].dataset.path;
 								var targetpath = this.dataset.path + '/' + ui.draggable[0].dataset.file
-								console.log([sourcepath, targetpath])
 								window.view.xhttp('POST', '/files' + sourcepath, {'action':'mv', 'target': targetpath})
 								event.preventDefault();
 								event.stopPropagation();

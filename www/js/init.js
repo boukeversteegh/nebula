@@ -8,6 +8,8 @@ function init() {
 	window.files = new Files();
 	window.player = new Player();
 	window.player.init('#jplayer');
+	window.playlist = new Playlist(window.player);
+	window.playlistview = new PlaylistView(window.playlist);
 	
 	window.view.show(window.location.pathname, true);
 	
