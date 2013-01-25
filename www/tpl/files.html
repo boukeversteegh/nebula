@@ -2,7 +2,7 @@
 <div id="dropbox" data-path="{{path}}">
 	<div class="playlist">
 		<div>
-			<ul>
+			<ul class="pane">
 				<li id="breadcrumbs">
 					
 					{{#breadcrumbs}}<div class="folder" data-path="{{path}}" style="display: inline-block">
@@ -17,8 +17,10 @@
 					<a id="mkdir" class="green" onClick="var name = prompt('Please enter a name'); if( name ) { view.xhttp('POST', '/files{{path}}/' + name, {'action':'mkdir'}); }">Create folder</a>
 				</li>
 			</ul>
+		</div>
+		<div>
 			{{#folders.0}}
-			<ul id="folders">
+			<ul id="folders" class="pane">
 				{{#folders}}
 				<li class="folder" data-file="{{.}}" data-path="{{path}}/{{.}}">
 					<a class="showview" href="/view/files{{path}}/{{.}}">{{.}}</a>
@@ -28,7 +30,7 @@
 			{{/folders.0}}
 		</div>
 		<div id="files">
-			<table border="0" width="100%" cellspacing="0">
+			<table border="0" width="100%" cellspacing="0" class="pane">
 				{{#files}}
 				<tr class="file" data-file="{{file}}" data-path="{{path}}/{{file}}">
 					<td align="right" width="40" class="extra">
@@ -79,7 +81,7 @@
 	</div>
 	<div class="playlist" id="uploads">
 		<h3>Uploads</h3>
-		<div id="uploads_progress"></div>
+		<div id="uploads_progress" class="pane"></div>
 	</div>
 </div>
 {{/data}}

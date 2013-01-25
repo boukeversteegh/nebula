@@ -151,8 +151,7 @@ a {
 	margin-bottom: 0;
 }
 
-.playlist ul,
-.playlist table {
+.playlist .pane {
 	background-color: #FFF;
 	padding-bottom: 1em;
 	padding: 0.5em;
