@@ -144,7 +144,7 @@ function Uploader() {
 							.css({'height': '1em', 'min-width': '50px'})
 						.find('.ui-progressbar-value')
 							.addClass('ui-state-hover');
-					htmlprogress.find('.path').button();
+					htmlprogress.find('.path').button({icons:{primary:'ui-icon-folder-collapsed'}});
 				} else {
 					console.log('partial');
 					container.find('.upload').eq(i).find('.progress').progressbar('option', {'value': tupload.progress});
