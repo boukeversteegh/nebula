@@ -37,7 +37,7 @@ function View() {
 								var sourcepath = ui.draggable[0].dataset.path;
 								var targetpath = this.dataset.path + '/' + ui.draggable[0].dataset.file
 								console.log([sourcepath, targetpath])
-								view.xhttp('POST', '/files' + sourcepath, {'action':'mv', 'target': targetpath})
+								window.view.xhttp('POST', '/files' + sourcepath, {'action':'mv', 'target': targetpath})
 								event.preventDefault();
 								event.stopPropagation();
 								return false;
