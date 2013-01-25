@@ -146,7 +146,6 @@ function Uploader() {
 							.addClass('ui-state-hover');
 					htmlprogress.find('.path').button({icons:{primary:'ui-icon-folder-collapsed'}});
 				} else {
-					console.log('partial');
 					container.find('.upload').eq(i).find('.progress').progressbar('option', {'value': tupload.progress});
 				}
 			}

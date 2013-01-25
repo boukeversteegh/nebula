@@ -79,12 +79,20 @@ function drop(evt, path) {
 		}
 	})(path);
 	
-	if( evt.dataTransfer.items.length == 0 ) {
+	if( !evt.dataTransfer.items || evt.dataTransfer.items.length == 0 ) {
 		if( evt.dataTransfer ) {
+			var errors = [];
 			var files = evt.dataTransfer.files;
 			for( var i=0; i < files.length; i++ ) {
-				//console.log(files[i]);
-				window.uploader.upload(files[i], path);
+				var file = files[i];
+				if( file.type ) {
+					window.uploader.upload(files, path);
+				} else {
+					errors.push("Invalid file: " + file.name + " (Folders not supported)");
+				}
+			}
+			if( errors.length ) {
+				alert("Errors:\n - " + errors.join("\n - "));
 			}
 		}
 	} else {
