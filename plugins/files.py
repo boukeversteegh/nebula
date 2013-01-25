@@ -130,12 +130,14 @@ class Files:
 					target = params['target'].strip("/")
 					targettrail = tuple(target.split("/"))
 					
-					localtarget = os.path.join(self.userconf['librarypath'], *targettrail)
+					localtarget = os.path.join(self.userconf['librarypath'], *targettrail).encode('utf-8')
 					
 					if not os.path.exists(localpath):
 						raise Exception("Path doesn't exist: " + "/".join(trail) + "(" + localpath + ")")
+					if os.path.exists(localtarget):
+						raise Exception("Target file or directory already exists: /%s" % target)
 
-					os.rename(localpath, localtarget.encode('utf-8'))
+					os.rename(localpath, localtarget)
 					
 					# Source path is deleted:
 					self.events.trigger('file.CHANGE', trail)
