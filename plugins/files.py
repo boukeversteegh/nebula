@@ -127,10 +127,10 @@ class Files:
 					if not 'target' in params:
 						raise Exception("Missing parameter: target")
 					
-					target = params['target'].strip("/")
+					target = params['target'].encode('utf-8').strip("/")
 					targettrail = tuple(target.split("/"))
 					
-					localtarget = os.path.join(self.userconf['librarypath'], *targettrail).encode('utf-8')
+					localtarget = os.path.join(self.userconf['librarypath'], *targettrail)
 					
 					if not os.path.exists(localpath):
 						raise Exception("Path doesn't exist: " + "/".join(trail) + "(" + localpath + ")")
