@@ -10,7 +10,8 @@ function Uploader() {
 				'{{#uploads}}'+
 				'<tr id="upload-{{index}}" class="upload" data-path="{{path}}/{{file}}">'+
 					'<td><div class="path inline"><a class="showview" href="/view/files{{path}}">{{path}}</div></td>'+
-					'<td><a class="showview" href="/view/play{{path}}/{{file}}">{{file}}</a></td>'+
+					'<td><button onclick="player.playFile(uploader.get({{index}}))" disabled>Play</button>'+
+					'<td>{{file}}</td>'+
 					'<td>{{hsize}}</td>' +
 					'<td><div class="progress ui-state-default"></div></td>'+
 				'</tr>'+
