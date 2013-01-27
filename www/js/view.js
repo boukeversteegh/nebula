@@ -18,18 +18,34 @@ function View() {
 						breadcrumbs.push( {'path': trail.slice(0,i+1).join('/'), 'folder': trail[i]} );
 					}
 					this.data['breadcrumbs'] = breadcrumbs;
+					for( var i=0; i<this.data.files.length; i++ ) {
+						this.data.files[i].index = i;
+					}
 					window.files.loadView(JSON.parse(JSON.stringify(this.response)));
 				},
 				"onload": 	function() {
 					dragdrop_init();
 					$('button.delete').button();
+										
+					$('#breadcrumbs .folder a').button();
+					$('#breadcrumbs .folder a').eq(-1).button({
+						icons: {primary: 'ui-icon-folder-open'},
+						disabled: true
+					});
+					
 					$('#files tr.file, #folders li.folder').not('#parentfolder').draggable({
 						revert:		'invalid',
 						cursorAt:	{ left: -5 },
 						delay:		50,
 						distance:	10,
 						helper:		function( event ) {
-										return $( '<div class="file"/>' ).button().css({width: 'auto'}).html($(this).find('a').clone().css({padding:'0.25em', display: 'inline-block'}));
+										var clone = $(this).clone();
+										clone.filter('td').remove('.ui-button');
+										//clone = clone.not('.extra');
+										clone.css({padding:'0.25em', display: 'inline-block'});
+										clone.html(clone.text());
+										//console.log(clone.text());
+										return $( '<div class="file"/>' ).button().css({width: 'auto'}).html(clone);
 									}
 					});
 					$('#folders .folder, #breadcrumbs .folder').droppable({
@@ -47,17 +63,9 @@ function View() {
 					$('#mkdir').button({icons: {primary: 'ui-icon-plus'}});
 					$('#rmdir').button();
 					$('#folders .folder a').button({icons: {primary: 'ui-icon-folder-collapsed'}});
-					
-					$('#breadcrumbs .folder a').button();
-					$('#breadcrumbs .folder a').eq(-1).button({
-						icons: {primary: 'ui-icon-folder-open'},
-						disabled: true
-					});
  					
 					window.uploader.refresh();
-					if( window.player.current !== null ) {
-						$('[data-path="' + window.player.current.substr("/files".length) + '"]').addClass('player-current');
-					}
+					window.playerview.refresh();
 					
 					$('#files').find('.playlist-add').empty().button({
 						icons: {primary: 'ui-icon-plus'},
@@ -68,20 +76,6 @@ function View() {
 						icons: {primary: 'ui-icon-play'},
 						text: false
 					});
-				}
-			}
-		],
-		"/view/play*" : [
-			{
-				"cache":		true,
-				"templateurl":	"/www/tpl/play.html",
-				"dataurl":		function () { return "/metadata" + this.trail},
-				"target":		"#player-metadata",
-				"onstart":		function() {
-					var filepath = this.trail;
-					window.player.playMedia("/files" + filepath);
-					$('.player-current').removeClass('player-current');
-					$('[data-path="' + window.player.current.substr("/files".length) + '"]').addClass('player-current');
 				}
 			}
 		],
@@ -185,7 +179,7 @@ function View() {
 					var dorender = cview.onrender.call(cview);
 				}
 				if( dorender !== false ) {
-					self.renderTemplate(cview);
+					self.renderView(cview);
 				}
 				if( cview.onload ) {
 					cview.onload.call(cview);
@@ -233,8 +227,36 @@ function View() {
 		});
 	}
 	
-	this.renderTemplate = function(view) {
-		html = Mustache.render(view.template, view.response);
+	
+	this.render = function(templateurl, data, target) {
+		var self = this;
+		var cb_rendertemplate = function (template, data, target) {
+			var html = Mustache.render(template, data);
+			$(target).html(html);
+			self.rebind(target);
+		}
+		
+		if( typeof this.templates[templateurl] != "undefined" ) {
+			var template = this.templates[templateurl];
+			var defer = $.Deferred(function() { cb_rendertemplate(template, data, target); });
+			defer.resolve();
+			return defer;
+		} else {
+			return $.ajax({
+				"url":		templateurl,
+				"datatype":	"html",
+				"success":	(function(templateurl, data, target, templates) {
+					return function(template) {
+						templates[templateurl] = template;
+						cb_rendertemplate(template, data, target);
+					}
+				})(templateurl, data, target, this.templates)
+			});
+		}
+	}
+	
+	this.renderView = function(view) {
+		var html = Mustache.render(view.template, view.response);
 		
 		$(view.target).html(html);
 		this.rebind(view.target);

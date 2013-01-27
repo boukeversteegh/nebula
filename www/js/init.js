@@ -6,10 +6,15 @@ function init() {
 	window.view = new View();
 	window.uploader = new Uploader();
 	window.files = new Files();
+	
 	window.player = new Player();
-	window.player.init('#jplayer');
+	window.playerview = new PlayerView(window.player);
+	
+	window.player.init('#player', '#jplayer');
 	window.playlist = new Playlist(window.player);
-	window.playlistview = new PlaylistView(window.playlist);
+	window.playlistview = new PlaylistView(window.playlist, '#playlist');
+	window.playlistview.refresh();
+	UI();
 	
 	window.view.show(window.location.pathname, true);
 	

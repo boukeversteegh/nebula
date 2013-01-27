@@ -2,10 +2,10 @@
 	Stores files and folders in current view
 */
 function Files(player) {
-	this.player = player;
-	this.folders = [];
-	this.files = [];
-	this.playlist = null;
+	this.player		= player;
+	this.folders	= [];
+	this.files		= [];
+	this.playlist	= null;
 	
 	this.loadView = function(response) {
 		this.folders	= response.data.folders;
@@ -18,10 +18,14 @@ function Files(player) {
 			var file = response.data.files[i];
 			file.path = this.path + '/' + file.file;
 			file.type = 'file';
-			playlist.addItem(file);
+			playlist.add(file);
 			files.push(file);
 		}
 		this.files = files;
 		this.playlist = playlist;
+	}
+	
+	this.get = function(index) {
+		return this.files[index];
 	}
 }

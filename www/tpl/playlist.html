@@ -1,0 +1,51 @@
+{{#data}}
+
+
+{{#items.0}}
+<table class="pane" width="100%">
+{{#items}}
+	<tr data-path="{{path}}">
+		<td><a onclick="player.playFile(playlist.get({{index}}))" class="playlist-play green">play</a></td>
+		<td align="right" width="40" class="extra">
+			{{id3.track_num.0}}
+		</td>
+
+		{{#id3.artist}}{{#id3.title}}
+			<td>{{id3.artist}}</td>
+			<td>{{id3.title}}</td>
+			<td>{{file}}</td>
+		{{/id3.title}}{{/id3.artist}}
+
+		{{! No artist but title available}}
+		{{^id3.artist}}
+		{{#id3.title}}
+			<td>{{id3.title}}</td>
+			<td colspan="2">{{file}}</td>
+		{{/id3.title}}
+		{{/id3.artist}}
+
+		{{! No title but artist available}}
+		{{^id3.title}}
+		{{#id3.artist}}
+			<td>{{id3.artist}}</td>
+			<td colspan="2">{{file}}</td>
+		{{/id3.artist}}
+		{{/id3.title}}
+
+		{{! No artist nor title available}}
+		{{^id3.title}}
+		{{^id3.artist}}
+			<td colspan="3">{{file}}</td>
+		{{/id3.artist}}
+		{{/id3.title}}
+		<td width="20" class="playlist-column-duration">
+			{{info.durationstr}}
+		</td>
+	</tr>
+{{/items}}
+</table>
+{{/items.0}}
+{{^items}}
+<div class="pane"><i>Playlist is empty</i></div>
+{{/items}}
+{{/data}}
