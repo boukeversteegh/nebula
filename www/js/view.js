@@ -8,19 +8,19 @@ function View() {
 			{
 				"cache":		true,
 				"templateurl": "/www/tpl/files.html",
-				"dataurl":		function(path, args) { return "/metadata" + args},
+				"dataurl":		function() { return "/metadata" + this.trail},
 				"target":		'#tab_files',
 				"history":		true,
-				"onrender":		function(view) {
-					var trail = view.data.path.split('/');
+				"onrender":		function() {
+					var trail = this.data.path.split('/');
 					var breadcrumbs = [];
 					for( var i=0; i<trail.length; i++) {
 						breadcrumbs.push( {'path': trail.slice(0,i+1).join('/'), 'folder': trail[i]} );
 					}
-					view.data['breadcrumbs'] = breadcrumbs;
-					window.files.loadView(JSON.parse(JSON.stringify(view.response)));
+					this.data['breadcrumbs'] = breadcrumbs;
+					window.files.loadView(JSON.parse(JSON.stringify(this.response)));
 				},
-				"onload": 	function(view) {
+				"onload": 	function() {
 					dragdrop_init();
 					$('button.delete').button();
 					$('#files tr.file, #folders li.folder').not('#parentfolder').draggable({
@@ -58,6 +58,16 @@ function View() {
 					if( window.player.current !== null ) {
 						$('[data-path="' + window.player.current.substr("/files".length) + '"]').addClass('player-current');
 					}
+					
+					$('#files').find('.playlist-add').empty().button({
+						icons: {primary: 'ui-icon-plus'},
+						text: false
+					});
+					
+					$('#files').find('.playlist-play').empty().button({
+						icons: {primary: 'ui-icon-play'},
+						text: false
+					});
 				}
 			}
 		],
@@ -65,26 +75,31 @@ function View() {
 			{
 				"cache":		true,
 				"templateurl":	"/www/tpl/play.html",
-				"dataurl":		function (path, args) { return "/metadata" + args},
+				"dataurl":		function () { return "/metadata" + this.trail},
 				"target":		"#player-metadata",
 				"onstart":		function() {
-					var filepath = this.path.split('/view/play')[1];
+					var filepath = this.trail;
 					window.player.playMedia("/files" + filepath);
-					//$('#jplayer').jPlayer('setMedia', {mp3: "/files" + filepath });
-					//$('#jplayer').jPlayer('play');
 					$('.player-current').removeClass('player-current');
 					$('[data-path="' + window.player.current.substr("/files".length) + '"]').addClass('player-current');
 				}
-				//"onload"
-				//"onrender"
 			}
 		],
 		"/view/lyrics*" : [
 			{
 				"cache":		true,
 				"templateurl":	"/www/tpl/lyrics.html",
-				"dataurl":		function (path, args) { return "/lyrics" + args},
+				"dataurl":		function () { return "/lyrics" + this.trail},
 				"target":		'#tab_lyrics'
+			}
+		],
+		"/view/playlist/add*": [
+			{
+				"onstart": function() {
+					console.log("Adding to playlist");
+					console.log(this.trail);
+					
+				}
 			}
 		]
 	};
@@ -95,22 +110,24 @@ function View() {
 		//console.log(["Showing path: " + path, pushstate]);
 		var view = null;
 		var viewname = null;
-		var tail = null;
+		var trail = null;
 		var self = this;
 		for( var key in this.views ) {
 			if( this.views.hasOwnProperty(key) ) {
 				if( key.slice(-1) == "*" ) {
-					if( path.slice(0, key.length-1) == key.slice(0,-1) ) {
+					var issubpath = (path[key.length-1] == "/") && path.slice(0, key.length-1) == key.slice(0,-1);
+					var isroot = key.slice(0,-1) == path;
+					if( issubpath || isroot ) {
 						view = this.views[key];
 						viewname = key.slice(0,-1);
-						args = path.slice(viewname.length)
+						trail = path.slice(viewname.length);
 						break;
 					}
 				} else {
 					if( path == key ) {
 						view = this.views[key];
 						viewname = key;
-						args = '';
+						trail = '';
 					}
 				}
 				continue;
@@ -130,6 +147,7 @@ function View() {
 			}
 			cview = {
 				"path":			path,
+				"trail":		trail,
 				"cache":		view[i].cache,
 				"templateurl":	view[i].templateurl,
 				"dataurl":		view[i].dataurl,
@@ -139,7 +157,7 @@ function View() {
 				"onrender":		view[i].onrender
 			}
 			if( typeof cview.dataurl === 'function' ) {
-				cview.dataurl = cview.dataurl(path, args);
+				cview.dataurl = cview.dataurl.call(cview);
 			}
 			
 			if( typeof cview.onstart === 'function' ) {
@@ -164,13 +182,13 @@ function View() {
 			var onLoad = function() {
 				var dorender = true;
 				if( cview.onrender ) {
-					var dorender = cview.onrender(cview);
+					var dorender = cview.onrender.call(cview);
 				}
 				if( dorender !== false ) {
 					self.renderTemplate(cview);
 				}
 				if( cview.onload ) {
-					cview.onload(cview);
+					cview.onload.call(cview);
 				}
 			}
 			
