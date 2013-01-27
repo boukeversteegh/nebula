@@ -1,5 +1,4 @@
 import os.path
-import glob
 import eyed3
 import eyed3.mp3
 try:
@@ -95,7 +94,8 @@ class Metadata:
 				else:
 					files = []
 					folders = []
-					for item in glob.glob(localpath + '/*'):
+					for item in os.listdir(localpath):
+						item = os.path.join(localpath, item)
 						basename = os.path.basename(item)
 						if os.path.isdir(item):
 							folders.append(basename)
