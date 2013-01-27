@@ -1,3 +1,4 @@
+*	2013-01-27 BROKEN: Play button in uploader.
 *	2013-01-27 BUG: Dropping a file to its own parent folder doesn't cancel the drag operation.
 	2013-01-17 BUG:	Seekbar doesn't move.	FIXED 2013-01-18
 *	2013-01-17 BUG:	Open current folder, download current mp3 buttons don't work.
