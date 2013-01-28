@@ -1,6 +1,12 @@
 function PlayerView(player) {
+	var self = this;
 	this.player = player;
-	this.player.view = this;
+	this.player.events.bind('STARTED', function(file) { self.onStarted(file)} );
+	
+	this.onStarted = function(file) {
+		window.view.render('/www/tpl/play.html', {data:file}, '#player-metadata');
+		this.refresh();
+	}
 	
 	this.refresh = function() {
 		$('.player-current').removeClass('player-current');

@@ -1,0 +1,90 @@
+.playlist .metadata-file {
+	color: #666;
+}
+
+.playlist tr {
+	cursor: default;
+}
+
+
+.playlist h3 {
+	margin-bottom: 0;
+}
+
+.playlist .pane {
+	background-color: #FFF;
+	padding-bottom: 1em;
+	padding: 0.5em;
+	border-radius: 0.25em;
+	margin: 0.5em 0;
+	border-spacing: 0;
+}
+
+.playlist table td {
+}
+
+.playlist tr.player-current td {
+	font-weight: bold;
+}
+.playlist .delete {
+	margin-left: 0.5em;
+}
+
+
+.playlist #folders a {
+	padding: 0.25em;
+	display: block;
+	text-align: left;
+}
+
+.playlist td {
+	line-height: 1.5em;
+	padding: 0 0.25em;
+}
+
+.playlist .ui-button {
+	min-height: 1em;
+}
+
+.playlist td a {
+	display: block;
+	color: #333;
+	text-decoration: none;
+	vertical-align: top;
+}
+
+.playlist tr:hover {
+	color: black;
+	background: #9ECBDB;
+}
+
+
+.playlist li {
+	clear: both;
+	position: relative;
+	list-style-type: none;
+	margin-bottom: 2px;
+	margin-top: 2px;
+}
+
+.playlist li.file.ui-draggable-dragging {
+	display: inline-block;
+}
+.playlist li.file.ui-draggable-dragging a {
+	background: silver;
+	border-radius: 2px;
+	display: inline-block;
+}
+.playlist li.file.ui-draggable-dragging button {
+	display: none;
+}
+
+
+.playlist li:last-child{
+    border-bottom: none;
+}
+
+.playlist-column-duration {
+	text-align: right;
+}
+

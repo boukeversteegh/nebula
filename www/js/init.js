@@ -14,6 +14,8 @@ function init() {
 	window.playlist = new Playlist(window.player);
 	window.playlistview = new PlaylistView(window.playlist, '#playlist');
 	window.playlistview.refresh();
+	
+	window.uploader.refresh();
 	UI();
 	
 	window.view.show(window.location.pathname, true);

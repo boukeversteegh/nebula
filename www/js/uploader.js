@@ -106,48 +106,41 @@ function Uploader() {
 		var htmlprogress = '';
 		var tuploads = [];
 		var tdata = {'data':{'uploads':[]}};
-		if( this.uploads.length ) {
-			var tuploads = tdata.data.uploads;
-			for( var i=0; i<this.uploads.length; i++) {
-				var upload = this.uploads[i];
-				var tupload = {
-					/*   /files/pathabc/file.mp3 --> /pathabc */
-					path:		'/'+upload.targetpath.split('/').slice(2, -1).join('/'),
-					file:		upload.file.name,
-					size:		upload.file.size,
-					hsize:		this.getHumanSize(upload.file.size),
-					completed:	upload.completed,
-					progress:	upload.progress,
-					started:	upload.started,
-					index:		i
-				};
-				
-				tuploads.push(tupload);
+		
+		var tuploads = tdata.data.uploads;
+		for( var i=0; i<this.uploads.length; i++) {
+			var upload = this.uploads[i];
+			var tupload = {
+				/*   /files/pathabc/file.mp3 --> /pathabc */
+				path:		'/'+upload.targetpath.split('/').slice(2, -1).join('/'),
+				file:		upload.file.name,
+				size:		upload.file.size,
+				hsize:		this.getHumanSize(upload.file.size),
+				completed:	upload.completed,
+				progress:	upload.progress,
+				started:	upload.started,
+				index:		i
+			};
+			
+			tuploads.push(tupload);
 
-				if( !fullrefresh) {
-					container.find('.upload').eq(i).find('.progress').progressbar('option', {'value': tupload.progress});
-				}
+			if( !fullrefresh) {
+				container.find('.upload').eq(i).find('.progress').progressbar('option', {'value': tupload.progress});
 			}
-			if( fullrefresh ) {
-				view.render('/www/tpl/uploads.html', tdata, '#uploads_progress').then(
-					function() {
-						$(container).find('.progress').each(function(index) {
-							$(this)
-								.progressbar({'max': 100, 'value': self.get(index).progress})
-									.css({'height': '1em', 'min-width': '50px'})
-								.find('.ui-progressbar-value')
-									.addClass('ui-state-hover');
-						});
-						$(container).find('.uploader-showfolder').button({icons:{primary:'ui-icon-folder-collapsed'}});
-					}
-				);
-			}
-		} else {
-			htmlprogress = "<i>Drop files here to upload</i>";
 		}
 		if( fullrefresh ) {
-			//container.html(htmlprogress);
-			console.log('rebound');
+			view.render('/www/tpl/uploads.html', tdata, '#uploads_progress').then(
+				function() {
+					$(container).find('.progress').each(function(index) {
+						$(this)
+							.progressbar({'max': 100, 'value': self.get(index).progress})
+								.css({'height': '1em', 'min-width': '50px'})
+							.find('.ui-progressbar-value')
+								.addClass('ui-state-hover');
+					});
+					$(container).find('.uploader-showfolder').button({icons:{primary:'ui-icon-folder-collapsed'}});
+				}
+			);
 			view.rebind(container);
 		}
 	}

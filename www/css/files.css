@@ -1,0 +1,15 @@
+
+li#breadcrumbs {
+	margin: 0;
+}
+#breadcrumbs .folder {
+	margin-top: 2px;
+	margin-bottom: 2px;
+	margin-right: 3px;
+}
+
+
+#mkdir, #rmdir, #playlist-add-all {
+	float: right;
+	margin: 0 0.25em;
+}

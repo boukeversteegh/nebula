@@ -1,9 +1,8 @@
-function Player(playerview) {
+function Player() {
 	this.jplayer	= null;
 	this.jplayerid	= null;
 	this.current	= null;
 	this.filesroot	= '/files';
-	this.playerview	= playerview;
 	this.events		= new EventHandler();
 	
 	this.init = function(playerid, jplayerid) {
@@ -95,11 +94,6 @@ function Player(playerview) {
 		var url = this.filesroot + file.path;
 		this.jp().jPlayer("setMedia", {mp3: url}).jPlayer('play');
 		this.current = file;
-		
-		this.view.refresh();
-	}
-	
-	this.showMetadata = function(file) {
-		window.view.render('/www/tpl/play.html', file, '#player-metadata');
+		this.events.trigger('STARTED', [file]);
 	}
 }

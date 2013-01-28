@@ -12,8 +12,5 @@
 		{{/uploads}}
 	</table>
 	{{/uploads.0}}
-	{{^uploads}}Drop files here to upload{{/uploads}}
 {{/data}}
-{{^data}}
-	NO DATA;
-{{/data}}
+{{^data.uploads}}<i>Drop files here to upload</i>{{/data.uploads}}
