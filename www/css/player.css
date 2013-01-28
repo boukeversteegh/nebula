@@ -121,15 +121,15 @@ a {
 	text-shadow: black 1px 1px 3px;
 	position: absolute;
 	height: 100%;
+	width: 100%;
 }
 
 #player-textstatus div {
 	display: inline-block;
+	line-height: 2em;
 }
 
 #player-current-time {
-
-	line-height: 2em;
 	padding-left: 0.5em;
 }
 
@@ -173,7 +173,6 @@ a {
 .ui-button.inline {
 }
 .ui-button.inline .ui-button-text {
-	line-height: 1em;
 	padding-top: 0;
 	padding-bottom: 0;
 	font-size: 0.9em;
@@ -190,7 +189,7 @@ a {
 #tabs .ui-tabs-panel {
 	padding: 0.25em 0.5em;
 }
-#mkdir, #rmdir {
+#mkdir, #rmdir, #playlist-add-all {
 	float: right;
 	margin: 0 0.25em;
 }
@@ -211,11 +210,18 @@ li#breadcrumbs {
 }
 
 .playlist td {
+	line-height: 1.5em;
+}
+
+.playlist td {
+}
+
+.playlist .ui-button {
+	min-height: 1em;
 }
 
 .playlist td a {
 	display: block;
-	padding: 0.2em;
 	color: #333;
 	text-decoration: none;
 	vertical-align: top;
@@ -223,12 +229,7 @@ li#breadcrumbs {
 
 .playlist tr:hover {
 	color: black;
-	background: silver;
-}
-
-.playlist li.file a:hover {
-	background: silver;
-	border-radius: 2px;
+	background: #9ECBDB;
 }
 
 .playlist li.file.ui-draggable-dragging {

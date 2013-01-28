@@ -11,10 +11,11 @@
 					
 					{{^folders}}
 					{{^files}}
-					<a id="rmdir" class="red" onClick="confirm('Are you sure you want to delete this folder?'); view.xhttp('DELETE', '/files{{path}}', null, '/view/files{{parent}}');">Delete folder</a>
+					<button id="rmdir" class="red" onClick="confirm('Are you sure you want to delete this folder?'); view.xhttp('DELETE', '/files{{path}}', null, '/view/files{{parent}}');">Delete folder</button>
 					{{/files}}
 					{{/folders}}
-					<a id="mkdir" class="green" onClick="var name = prompt('Please enter a name'); if( name ) { view.xhttp('POST', '/files{{path}}/' + name, {'action':'mkdir'}); }">Create folder</a>
+					<button id="mkdir" class="green" onClick="var name = prompt('Please enter a name'); name && files.mkdir('{{path}}/' + name)">Create folder</button>
+					<button id="playlist-add-all" onClick="playlist.loadPlaylist(files.playlist)">Add to Playlist</button>
 				</li>
 			</ul>
 		</div>
@@ -32,37 +33,39 @@
 		<div id="files">
 			<table border="0" width="100%" cellspacing="0" class="pane">
 				{{#files}}
-				<tr class="file" data-file="{{file}}" data-path="{{path}}/{{file}}">
+				<tr class="file" role="song" date-model="files" data-id="files:{{index}}" data-file="{{file}}" data-path="{{path}}/{{file}}">
+					<td width="10"><a onclick="player.playFile(files.get({{index}}))" class="playlist-play green">Play</a></td>
+					<td width="10"><a onclick="playlist.add(files.get({{index}}))" class="playlist-add">&nbsp;</a></td>
 					<td align="right" width="40" class="extra">
-						<a>{{id3.track_num.0}}</a>
+						{{id3.track_num.0}}
 					</td>
-					
+
 					{{#id3.artist}}{{#id3.title}}
-						<td><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{id3.artist}}</a></td>
-						<td><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{id3.title}}</a></td>
-						<td><a href="/view/play{{{path}}}/{{{file}}}" class="showview extra">{{file}}</a></td>
+						<td>{{id3.artist}}</td>
+						<td>{{id3.title}}</td>
+						<td>{{file}}</td>
 					{{/id3.title}}{{/id3.artist}}
-					
+
 					{{! No artist but title available}}
 					{{^id3.artist}}
 					{{#id3.title}}
-						<td><a href="/view/play{{{path}}}/{{{file}}}" class="showview extra">{{id3.title}}</a></td>
-						<td colspan="2"><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{file}}</a></td>
+						<td>{{id3.title}}</td>
+						<td colspan="2">{{file}}</td>
 					{{/id3.title}}
 					{{/id3.artist}}
-					
+
 					{{! No title but artist available}}
 					{{^id3.title}}
 					{{#id3.artist}}
-						<td><a href="/view/play{{{path}}}/{{{file}}}" class="showview extra">{{id3.artist}}</a></td>
-						<td colspan="2"><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{file}}</a></td>
+						<td>{{id3.artist}}</td>
+						<td colspan="2">{{file}}</td>
 					{{/id3.artist}}
 					{{/id3.title}}
-					
+
 					{{! No artist nor title available}}
 					{{^id3.title}}
 					{{^id3.artist}}
-						<td colspan="3"><a href="/view/play{{{path}}}/{{{file}}}" class="showview">{{file}}</a></td>
+						<td colspan="3">{{file}}</td>
 					{{/id3.artist}}
 					{{/id3.title}}
 					<td width="20" class="playlist-column-duration">

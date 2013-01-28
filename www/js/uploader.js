@@ -3,22 +3,6 @@ function Uploader() {
 	this.queue = [];
 	this.maxconnections = 2;
 	this.uploads = [];
-	this.template = 
-		'{{#data}}' + 
-			'{{#uploads.0}}' +
-			'<table width="100%">' +
-				'{{#uploads}}'+
-				'<tr id="upload-{{index}}" class="upload" data-path="{{path}}/{{file}}">'+
-					'<td><div class="path inline"><a class="showview" href="/view/files{{path}}">{{path}}</div></td>'+
-					'<td><a class="showview" href="/view/play{{path}}/{{file}}">{{file}}</a></td>'+
-					'<td>{{hsize}}</td>' +
-					'<td><div class="progress ui-state-default"></div></td>'+
-				'</tr>'+
-				'{{/uploads}}'+
-			'</table>'+
-			'{{/uploads.0}}'+
-			'{{^uploads}}Drop files here to upload{{/uploads}}'+
-		'{{/data}}';
 	
 	this.upload = function (file, path, fullpath) {
 		var xhr = new XMLHttpRequest();
@@ -114,6 +98,7 @@ function Uploader() {
 	}
 	
 	this.refresh = function(fullrefresh /*=true*/) {
+		var self = this;
 		if( typeof fullrefresh == 'undefined' ) {
 			fullrefresh = true;
 		}
@@ -127,35 +112,48 @@ function Uploader() {
 				var upload = this.uploads[i];
 				var tupload = {
 					/*   /files/pathabc/file.mp3 --> /pathabc */
-					path: '/'+upload.targetpath.split('/').slice(2, -1).join('/'),
-					file: upload.file.name,
-					size: upload.file.size,
-					hsize: this.getHumanSize(upload.file.size),
-					completed: upload.completed,
-					progress: upload.progress,
-					started: upload.started
+					path:		'/'+upload.targetpath.split('/').slice(2, -1).join('/'),
+					file:		upload.file.name,
+					size:		upload.file.size,
+					hsize:		this.getHumanSize(upload.file.size),
+					completed:	upload.completed,
+					progress:	upload.progress,
+					started:	upload.started,
+					index:		i
 				};
 				
 				tuploads.push(tupload);
-				if( fullrefresh ) {
-					htmlprogress = $(Mustache.render(this.template, tdata));
-					htmlprogress.find('.progress')
-						.progressbar({'max': 100, 'value': tupload.progress})
-							.css({'height': '1em', 'min-width': '50px'})
-						.find('.ui-progressbar-value')
-							.addClass('ui-state-hover');
-					htmlprogress.find('.path').button({icons:{primary:'ui-icon-folder-collapsed'}});
-				} else {
+
+				if( !fullrefresh) {
 					container.find('.upload').eq(i).find('.progress').progressbar('option', {'value': tupload.progress});
 				}
+			}
+			if( fullrefresh ) {
+				view.render('/www/tpl/uploads.html', tdata, '#uploads_progress').then(
+					function() {
+						$(container).find('.progress').each(function(index) {
+							$(this)
+								.progressbar({'max': 100, 'value': self.get(index).progress})
+									.css({'height': '1em', 'min-width': '50px'})
+								.find('.ui-progressbar-value')
+									.addClass('ui-state-hover');
+						});
+						$(container).find('.uploader-showfolder').button({icons:{primary:'ui-icon-folder-collapsed'}});
+					}
+				);
 			}
 		} else {
 			htmlprogress = "<i>Drop files here to upload</i>";
 		}
 		if( fullrefresh ) {
-			container.html(htmlprogress);
+			//container.html(htmlprogress);
+			console.log('rebound');
 			view.rebind(container);
 		}
+	}
+	
+	this.get = function(index) {
+		return this.uploads[index];
 	}
 	
 	this.oncomplete = function(upload) {

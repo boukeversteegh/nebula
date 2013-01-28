@@ -7,12 +7,15 @@
 		<script src="/www/js/lib/jquery-ui-1.9.2.custom.min.js"></script>
 		<script src="/www/js/lib/mustache.js"></script>
 		
+		<script src="/www/js/eventhandler.js"></script>
 		<script src="/www/js/player.js"></script>
+		<script src="/www/js/playerview.js"></script>
 		<script src="/www/js/uploader.js"></script>
 		<script src="/www/js/view.js"></script>
 		<script src="/www/js/dropfile.js"></script>
 		<script src="/www/js/files.js"></script>
 		<script src="/www/js/playlist.js"></script>
+		<script src="/www/js/playlistview.js"></script>
 		<script src="/www/jplayer/jquery.jplayer.min.js"></script>
 		
 		
@@ -42,6 +45,8 @@
 					<div id="player-progress" class="ui-state-default">
 						<div id="player-textstatus">
 							<div id="player-current-time"></div>
+							<div>/</div>
+							<div id="player-duration"></div>
 							<div id="player-metadata"></div>
 						</div>
 					</div>
@@ -53,7 +58,7 @@
 			<ul>
 				<li><a href="#tab_files" id="btn_view_files" >Files</a></li>
 				<!--<li class="ui-state-default ui-corner-top ui-tabs-active"><a href="#tab_lyrics" id="btn_view_artists">Lyrics</a></li>-->
-				<li><a href="#tab_albums" id="btn_view_artists">Playlist</a></li>
+				<li><a href="#tab_playlist" id="btn_view_artists">Playlist</a></li>
 				<li><a href="#tab_artists" id="btn_view_artists" class="ui-state-disabled">Artists</a></li>
 				<li><a href="#tab_albums" id="btn_view_artists" class="ui-state-disabled">Albums</a></li>
 			</ul>
@@ -61,7 +66,7 @@
 			<div id="tab_lyrics"></div>
 			<div id="tab_artists"></div>
 			<div id="tab_albums"></div>
-			<div id="tab_playlist"></div>
+			<div id="tab_playlist"><div id="playlist" class="playlist"></div></div>
 		</div>
 	</body>
 </html>

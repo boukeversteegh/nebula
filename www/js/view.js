@@ -8,35 +8,50 @@ function View() {
 			{
 				"cache":		true,
 				"templateurl": "/www/tpl/files.html",
-				"dataurl":		function(path, args) { return "/metadata" + args},
+				"dataurl":		function() { return "/metadata" + this.trail},
 				"target":		'#tab_files',
 				"history":		true,
-				"onrender":		function(view) {
-					var trail = view.data.path.split('/');
+				"onrender":		function() {
+					var trail = this.data.path.split('/');
 					var breadcrumbs = [];
 					for( var i=0; i<trail.length; i++) {
 						breadcrumbs.push( {'path': trail.slice(0,i+1).join('/'), 'folder': trail[i]} );
 					}
-					view.data['breadcrumbs'] = breadcrumbs;
-					window.files.loadView(view.response);
+					this.data['breadcrumbs'] = breadcrumbs;
+					for( var i=0; i<this.data.files.length; i++ ) {
+						this.data.files[i].index = i;
+					}
+					window.files.loadView(JSON.parse(JSON.stringify(this.response)));
 				},
-				"onload": 	function(view) {
+				"onload": 	function() {
 					dragdrop_init();
 					$('button.delete').button();
+										
+					$('#breadcrumbs .folder a').button();
+					$('#breadcrumbs .folder a').eq(-1).button({
+						icons: {primary: 'ui-icon-folder-open'},
+						disabled: true
+					});
+					
 					$('#files tr.file, #folders li.folder').not('#parentfolder').draggable({
 						revert:		'invalid',
 						cursorAt:	{ left: -5 },
 						delay:		50,
 						distance:	10,
 						helper:		function( event ) {
-										return $( '<div class="file"/>' ).button().css({width: 'auto'}).html($(this).find('a').clone().css({padding:'0.25em', display: 'inline-block'}));
+										var clone = $(this).clone();
+										clone.filter('td').remove('.ui-button');
+										//clone = clone.not('.extra');
+										clone.css({padding:'0.25em', display: 'inline-block'});
+										clone.html(clone.text());
+										//console.log(clone.text());
+										return $( '<div class="file"/>' ).button().css({width: 'auto'}).html(clone);
 									}
 					});
 					$('#folders .folder, #breadcrumbs .folder').droppable({
 						drop: function( event, ui ) {
 								var sourcepath = ui.draggable[0].dataset.path;
 								var targetpath = this.dataset.path + '/' + ui.draggable[0].dataset.file
-								console.log([sourcepath, targetpath])
 								window.view.xhttp('POST', '/files' + sourcepath, {'action':'mv', 'target': targetpath})
 								event.preventDefault();
 								event.stopPropagation();
@@ -46,46 +61,40 @@ function View() {
 						tolerance: 'pointer'
 					})
 					$('#mkdir').button({icons: {primary: 'ui-icon-plus'}});
+					$('#playlist-add-all').button({icons: {primary: 'ui-icon-plus'}});
 					$('#rmdir').button();
 					$('#folders .folder a').button({icons: {primary: 'ui-icon-folder-collapsed'}});
-					
-					$('#breadcrumbs .folder a').button();
-					$('#breadcrumbs .folder a').eq(-1).button({
-						icons: {primary: 'ui-icon-folder-open'},
-						disabled: true
-					});
  					
 					window.uploader.refresh();
-					if( window.player.current !== null ) {
-						$('[data-path="' + window.player.current.substr("/files".length) + '"]').addClass('player-current');
-					}
+					window.playerview.refresh();
+					
+					$('#files').find('.playlist-add').empty().button({
+						icons: {primary: 'ui-icon-plus'},
+						text: false
+					});
+					
+					$('#files').find('.playlist-play').empty().button({
+						icons: {primary: 'ui-icon-play'},
+						text: false
+					});
 				}
-			}
-		],
-		"/view/play*" : [
-			{
-				"cache":		true,
-				"templateurl":	"/www/tpl/play.html",
-				"dataurl":		function (path, args) { return "/metadata" + args},
-				"target":		"#player-metadata",
-				"onstart":		function() {
-					var filepath = this.path.split('/view/play')[1];
-					window.player.playMedia("/files" + filepath);
-					//$('#jplayer').jPlayer('setMedia', {mp3: "/files" + filepath });
-					//$('#jplayer').jPlayer('play');
-					$('.player-current').removeClass('player-current');
-					$('[data-path="' + window.player.current.substr("/files".length) + '"]').addClass('player-current');
-				}
-				//"onload"
-				//"onrender"
 			}
 		],
 		"/view/lyrics*" : [
 			{
 				"cache":		true,
 				"templateurl":	"/www/tpl/lyrics.html",
-				"dataurl":		function (path, args) { return "/lyrics" + args},
+				"dataurl":		function () { return "/lyrics" + this.trail},
 				"target":		'#tab_lyrics'
+			}
+		],
+		"/view/playlist/add*": [
+			{
+				"onstart": function() {
+					console.log("Adding to playlist");
+					console.log(this.trail);
+					
+				}
 			}
 		]
 	};
@@ -96,22 +105,24 @@ function View() {
 		//console.log(["Showing path: " + path, pushstate]);
 		var view = null;
 		var viewname = null;
-		var tail = null;
+		var trail = null;
 		var self = this;
 		for( var key in this.views ) {
 			if( this.views.hasOwnProperty(key) ) {
 				if( key.slice(-1) == "*" ) {
-					if( path.slice(0, key.length-1) == key.slice(0,-1) ) {
+					var issubpath = (path[key.length-1] == "/") && path.slice(0, key.length-1) == key.slice(0,-1);
+					var isroot = key.slice(0,-1) == path;
+					if( issubpath || isroot ) {
 						view = this.views[key];
 						viewname = key.slice(0,-1);
-						args = path.slice(viewname.length)
+						trail = path.slice(viewname.length);
 						break;
 					}
 				} else {
 					if( path == key ) {
 						view = this.views[key];
 						viewname = key;
-						args = '';
+						trail = '';
 					}
 				}
 				continue;
@@ -131,6 +142,7 @@ function View() {
 			}
 			cview = {
 				"path":			path,
+				"trail":		trail,
 				"cache":		view[i].cache,
 				"templateurl":	view[i].templateurl,
 				"dataurl":		view[i].dataurl,
@@ -140,7 +152,7 @@ function View() {
 				"onrender":		view[i].onrender
 			}
 			if( typeof cview.dataurl === 'function' ) {
-				cview.dataurl = cview.dataurl(path, args);
+				cview.dataurl = cview.dataurl.call(cview);
 			}
 			
 			if( typeof cview.onstart === 'function' ) {
@@ -165,13 +177,13 @@ function View() {
 			var onLoad = function() {
 				var dorender = true;
 				if( cview.onrender ) {
-					var dorender = cview.onrender(cview);
+					var dorender = cview.onrender.call(cview);
 				}
 				if( dorender !== false ) {
-					self.renderTemplate(cview);
+					self.renderView(cview);
 				}
 				if( cview.onload ) {
-					cview.onload(cview);
+					cview.onload.call(cview);
 				}
 			}
 			
@@ -216,8 +228,36 @@ function View() {
 		});
 	}
 	
-	this.renderTemplate = function(view) {
-		html = Mustache.render(view.template, view.response);
+	
+	this.render = function(templateurl, data, target) {
+		var self = this;
+		var cb_rendertemplate = function (template, data, target) {
+			var html = Mustache.render(template, data);
+			$(target).html(html);
+			self.rebind(target);
+		}
+		
+		if( typeof this.templates[templateurl] != "undefined" ) {
+			var template = this.templates[templateurl];
+			var defer = $.Deferred(function() { cb_rendertemplate(template, data, target); });
+			defer.resolve();
+			return defer;
+		} else {
+			return $.ajax({
+				"url":		templateurl,
+				"datatype":	"html",
+				"success":	(function(templateurl, data, target, templates) {
+					return function(template) {
+						templates[templateurl] = template;
+						cb_rendertemplate(template, data, target);
+					}
+				})(templateurl, data, target, this.templates)
+			});
+		}
+	}
+	
+	this.renderView = function(view) {
+		var html = Mustache.render(view.template, view.response);
 		
 		$(view.target).html(html);
 		this.rebind(view.target);
