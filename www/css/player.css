@@ -173,7 +173,6 @@ a {
 .ui-button.inline {
 }
 .ui-button.inline .ui-button-text {
-	line-height: 1em;
 	padding-top: 0;
 	padding-bottom: 0;
 	font-size: 0.9em;
@@ -190,7 +189,7 @@ a {
 #tabs .ui-tabs-panel {
 	padding: 0.25em 0.5em;
 }
-#mkdir, #rmdir {
+#mkdir, #rmdir, #playlist-add-all {
 	float: right;
 	margin: 0 0.25em;
 }

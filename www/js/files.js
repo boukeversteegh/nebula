@@ -28,4 +28,8 @@ function Files(player) {
 	this.get = function(index) {
 		return this.files[index];
 	}
+	
+	this.mkdir = function(path) {
+		view.xhttp('POST', '/files' + path, {'action':'mkdir'});
+	}
 }

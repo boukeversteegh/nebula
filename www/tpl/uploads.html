@@ -1,0 +1,19 @@
+{{#data}}
+	{{#uploads.0}}
+	<table width="100%">
+		{{#uploads}}
+		<tr id="upload:{{index}}" class="upload" data-path="{{path}}/{{file}}">
+			<td width="50"><a class="uploader-showfolder showview" href="/view/files{{path}}">{{path}}</a></td>
+			<td width="20"><button onclick="player.playFile(uploader.get({{index}}))" disabled>Play</button>
+			<td>{{file}}</td>
+			<td>{{hsize}}</td>
+			<td><div class="progress ui-state-default"></div></td>
+		</tr>
+		{{/uploads}}
+	</table>
+	{{/uploads.0}}
+	{{^uploads}}Drop files here to upload{{/uploads}}
+{{/data}}
+{{^data}}
+	NO DATA;
+{{/data}}

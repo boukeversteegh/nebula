@@ -11,10 +11,11 @@
 					
 					{{^folders}}
 					{{^files}}
-					<a id="rmdir" class="red" onClick="confirm('Are you sure you want to delete this folder?'); view.xhttp('DELETE', '/files{{path}}', null, '/view/files{{parent}}');">Delete folder</a>
+					<button id="rmdir" class="red" onClick="confirm('Are you sure you want to delete this folder?'); view.xhttp('DELETE', '/files{{path}}', null, '/view/files{{parent}}');">Delete folder</button>
 					{{/files}}
 					{{/folders}}
-					<a id="mkdir" class="green" onClick="var name = prompt('Please enter a name'); if( name ) { view.xhttp('POST', '/files{{path}}/' + name, {'action':'mkdir'}); }">Create folder</a>
+					<button id="mkdir" class="green" onClick="var name = prompt('Please enter a name'); name && files.mkdir('{{path}}/' + name)">Create folder</button>
+					<button id="playlist-add-all" onClick="playlist.loadPlaylist(files.playlist)">Add to Playlist</button>
 				</li>
 			</ul>
 		</div>

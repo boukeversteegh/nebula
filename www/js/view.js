@@ -61,6 +61,7 @@ function View() {
 						tolerance: 'pointer'
 					})
 					$('#mkdir').button({icons: {primary: 'ui-icon-plus'}});
+					$('#playlist-add-all').button({icons: {primary: 'ui-icon-plus'}});
 					$('#rmdir').button();
 					$('#folders .folder a').button({icons: {primary: 'ui-icon-folder-collapsed'}});
  					

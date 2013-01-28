@@ -4,13 +4,18 @@ function Player(playerview) {
 	this.current	= null;
 	this.filesroot	= '/files';
 	this.playerview	= playerview;
+	this.events		= new EventHandler();
 	
 	this.init = function(playerid, jplayerid) {
 		this.playerid	= playerid;
 		this.jplayerid	= jplayerid;
 		
-		this.loadJplayer();
 		this.showPlayer();
+		this.loadJplayer();
+		
+		/*this.jp().jPlayer('option', 'ended',function() {
+			alert('song ended');
+		});*/
 	}
 	
 	this.showPlayer = function() {
@@ -39,6 +44,7 @@ function Player(playerview) {
 	}
 	
 	this.loadJplayer = function() {
+		var self = this;
 		$(this.jplayerid).jPlayer({
 			swfPath:			'/www/jplayer',
 			solution:			'html, flash',
@@ -70,6 +76,9 @@ function Player(playerview) {
 				//noSolution: '.player-no-solution'
 			},
 			//ready: function() {},
+			ended: function(a,b) {
+				self.events.trigger('ENDED');
+			},
 			errorAlerts: true,
 			warningAlerts: false
 		});

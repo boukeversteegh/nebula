@@ -1,10 +1,29 @@
 function Playlist(player) {
+	var self		= this;
+	
 	this.player		= player;
 	this.items		= [];
 	this.current	= 0;
 	this.type		= "playlist";
+	this.playing	= false;
 	
 	this.view		= null;
+	
+	this.player.events.bind('ENDED', function(e) {
+		if( self.playing ) {
+			self.onSongEnded();
+		}
+	});
+	
+	this.onSongEnded = function() {
+		this.playing = false;
+		this.current++;
+		this.play();
+	}
+	
+	this.onListEnded = function() {
+		console.log("List ended");
+	}
 	
 	this.add = function(item, index) {
 		if( typeof index !== "undefined" ) {
@@ -38,18 +57,25 @@ function Playlist(player) {
 	}
 	
 	this.loadPlaylist = function(playlist) {
-		var items = [];
 		for( var i=0; i<playlist.items.length; i++ ) {
 			var item = playlist.items[i];
-			items.push(item);
+			item.index = this.items.length;
+			this.items.push(item);
+			
 		}
-		this.items = items;
+		this.view.refresh();
 	}
 	this.play = function(index) {
 		if( typeof index == "undefined" ) {
 			index = this.current;
 		}
-		this.player.playMedia('/files' + this.items[index].path);
+		if( !this.items[index] ) {
+			this.onListEnded();
+			return;
+		}
+		this.current = index;
+		this.player.playFile(this.items[index]);
+		this.playing = true;
 	}
 }
 

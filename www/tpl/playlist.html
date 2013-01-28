@@ -5,7 +5,7 @@
 <table class="pane" width="100%">
 {{#items}}
 	<tr data-path="{{path}}">
-		<td><a onclick="player.playFile(playlist.get({{index}}))" class="playlist-play green">play</a></td>
+		<td><a onclick="playlist.play({{index}})" class="playlist-play green">play</a></td>
 		<td align="right" width="40" class="extra">
 			{{id3.track_num.0}}
 		</td>
