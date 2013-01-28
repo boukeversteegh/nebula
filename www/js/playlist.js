@@ -75,7 +75,7 @@ function Playlist(player) {
 	}
 	
 	this.setCurrent = function(index) {
-		if( index < 0 || index > this.items.length ) {
+		if( index < 0 || index >= this.items.length ) {
 			this.current = null;
 			return false;
 		} else {
