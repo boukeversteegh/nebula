@@ -4,10 +4,17 @@ import os
 import cherrypy
 import mimetypes
 import sys
+import eventhandler
+import inspect
+
+# Adds 'lib' folder to Systempath
+cmd_folder = os.path.join(os.path.realpath(os.path.abspath(os.path.split(inspect.getfile( inspect.currentframe() ))[0])), 'lib')
+if cmd_folder not in sys.path:
+	sys.path.insert(0, cmd_folder)
+	
 import plugins.metadata
 import plugins.files
 import plugins.lyrics
-import eventhandler
 
 class Nebula:
 	pass
