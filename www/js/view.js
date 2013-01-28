@@ -102,7 +102,6 @@ function View() {
 	this.views['/'] = this.views['/view/files*'];
 	
 	this.show = function(path, pushstate, nocache) {
-		//console.log(["Showing path: " + path, pushstate]);
 		var view = null;
 		var viewname = null;
 		var trail = null;
@@ -261,6 +260,13 @@ function View() {
 		
 		$(view.target).html(html);
 		this.rebind(view.target);
+		
+		var hashpos = view.path.indexOf('#');
+		if( hashpos > -1 ) {
+			// Go to anchor after loading view.
+			// Doesn't work because of player fixed position.
+			/// window.location.assign(view.path.slice(hashpos));
+		}
 	}
 	
 	this.rebind = function(target) {
