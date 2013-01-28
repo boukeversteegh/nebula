@@ -24,9 +24,9 @@ Requirements
 * [Python 2.7](http://www.python.org/download/)
 * Python Modules (can be installed using `easy_install`)
   * [cherrypy](http://download.cherrypy.org/cherrypy/3.2.2/): Webserver
-  * [eyed3](http://eyed3.nicfit.net/): Module for reading ID3-tags from MP3 files
 
 Optional
 ========
 * Python Modules
   * [simplejson](https://github.com/simplejson/simplejson): Faster JSON module than built-in
+  * [eyed3](http://eyed3.nicfit.net/): Module for reading ID3-tags from MP3 files (Now built-in. Delete lib/eyed3 to use system module instead.)
