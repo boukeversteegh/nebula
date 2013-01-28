@@ -19,13 +19,19 @@ function Player() {
 	
 	this.showPlayer = function() {
 		$('#player-stop').button({
-			icons: {primary: "ui-icon-stop"}
+			icons: {primary: "ui-icon-stop"}, text: false
 		});
 		$('#player-play').button({
-			icons: {primary: "ui-icon-play"}
+			icons: {primary: "ui-icon-play"}, text: false
 		});
 		$('#player-pause').button({
-			icons: {primary: "ui-icon-pause"}
+			icons: {primary: "ui-icon-pause"}, text: false
+		});
+		$('#player-prev').button({
+			icons: {primary: "ui-icon-seek-prev"}, text: false
+		});
+		$('#player-next').button({
+			icons: {primary: "ui-icon-seek-next"}, text: false
 		});
 
 		$('#player-open-folder').button({
@@ -95,5 +101,13 @@ function Player() {
 		this.jp().jPlayer("setMedia", {mp3: url}).jPlayer('play');
 		this.current = file;
 		this.events.trigger('STARTED', [file]);
+	}
+	
+	this.seek = function(position) {
+		this.jp().jPlayer('playHead', position);
+	}
+	
+	this.position = function() {
+		return this.jp().data('jPlayer').status.currentTime;
 	}
 }

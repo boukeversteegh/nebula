@@ -16,7 +16,16 @@ function init() {
 	window.playlistview.refresh();
 	
 	window.uploader.refresh();
-	UI();
+	window.nebula = new Nebula();
+
+	nebula.player = window.player;
+	nebula.playlist = window.playlist;
+	nebula.files = window.files;
+	nebula.init();
+	
+
+	$('#tabs').css('margin-top', $('#top').height());
+	$('#tabs').tabs();
 	
 	window.view.show(window.location.pathname, true);
 	

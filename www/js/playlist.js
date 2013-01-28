@@ -16,9 +16,27 @@ function Playlist(player) {
 	});
 	
 	this.onSongEnded = function() {
-		this.playing = false;
-		this.current++;
-		this.play();
+		this.next();
+	}
+	
+	this.next = function() {
+		var hasnext = this.setCurrent(this.current+1);
+		if( hasnext && this.playing ) {
+			this.playing = false;
+			this.play();
+		}
+	}
+	
+	this.previous = function() {
+		var hasprev = this.setCurrent(this.current-1);
+		if( hasprev ) {
+			if( this.playing ) {
+				this.playing = false;
+				this.play();
+			}
+		} else {
+			this.player.seek(0);
+		}
 	}
 	
 	this.onListEnded = function() {
@@ -56,6 +74,16 @@ function Playlist(player) {
 		return this.items[index];
 	}
 	
+	this.setCurrent = function(index) {
+		if( index < 0 || index > this.items.length ) {
+			this.current = null;
+			return false;
+		} else {
+			this.current = index;
+			return true;
+		}
+	}
+	
 	this.loadPlaylist = function(playlist) {
 		for( var i=0; i<playlist.items.length; i++ ) {
 			var item = playlist.items[i];
@@ -65,17 +93,19 @@ function Playlist(player) {
 		}
 		this.view.refresh();
 	}
+	
 	this.play = function(index) {
 		if( typeof index == "undefined" ) {
 			index = this.current;
 		}
-		if( !this.items[index] ) {
+		if( !this.setCurrent(index) ){ 
 			this.onListEnded();
 			return;
 		}
-		this.current = index;
+		
 		this.player.playFile(this.items[index]);
 		this.playing = true;
 	}
+	
 }
 
