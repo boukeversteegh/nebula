@@ -29,11 +29,15 @@ function init() {
 	$('#tabs a').each(function() {
 		$(this).click( function() {
 			var tabid = $(this).attr('href');
+			$('#tabs a').removeClass('ui-state-focus');
 			$('[role=tab]').hide();
 			$(tabid).show();
+			$(this).addClass('ui-state-focus');
 			return false;
 		});
 	});
+	$('#tabs [href="#tab_files"]').trigger('click');
+	$('#tabs a').filter(':eq(2), :eq(3)').addClass('ui-state-disabled');
 	
 	window.view.show(window.location.pathname, true);
 	

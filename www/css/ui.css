@@ -16,4 +16,5 @@
 #main {
 	padding:		0.5em;
 	background:		#CCC;
+	min-height:		100%;
 }
