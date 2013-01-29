@@ -160,4 +160,15 @@ function Uploader() {
 			view.show(view.path, false, true);
 		}
 	}
+	
+	this.test = function() {
+		this.uploads = [
+			{
+				file: { name: "foobar.mp3", size: 123234 },
+				targetpath: '/files/Test/foobar.mp3',
+				progress: 30
+			}
+		];
+		this.refresh();
+	}
 }
