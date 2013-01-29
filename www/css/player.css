@@ -39,20 +39,6 @@ and (max-device-width : 480px) {
 	}
 }
 
-#top {
-	position: 		fixed;
-	background:		#999;
-	width:			100%;
-	z-index:		1;
-	top:			0;
-	left:			0;
-	box-shadow:		0 -5px 25px black;
-}
-
-#tabs {
-
-}
-
 a:visited {
 	/*color:	#66B;*/
 }
@@ -128,9 +114,6 @@ a {
 	font-size: 0.9em;
 }
 
-#tabs .ui-tabs-panel {
-	padding: 0.25em 0.5em;
-}
 
 #lyrics {
 	white-space: pre-wrap;

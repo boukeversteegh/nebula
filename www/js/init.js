@@ -24,8 +24,16 @@ function init() {
 	nebula.init();
 	
 
-	$('#tabs').css('margin-top', $('#top').height());
-	$('#tabs').tabs();
+	$('#main').css('margin-top', $('#top').height());
+	$('#tabs').buttonset();
+	$('#tabs a').each(function() {
+		$(this).click( function() {
+			var tabid = $(this).attr('href');
+			$('[role=tab]').hide();
+			$(tabid).show();
+			return false;
+		});
+	});
 	
 	window.view.show(window.location.pathname, true);
 	

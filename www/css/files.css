@@ -1,15 +1,14 @@
 
-li#breadcrumbs {
-	margin: 0;
+#breadcrumbs {
+	margin-top: 0.5em;
+	margin-bottom: 1em;
 }
 #breadcrumbs .folder {
-	margin-top: 2px;
-	margin-bottom: 2px;
 	margin-right: 3px;
 }
 
 
 #mkdir, #rmdir, #playlist-add-all {
 	float: right;
-	margin: 0 0.25em;
+	margin: 0.5em 0.25em;
 }

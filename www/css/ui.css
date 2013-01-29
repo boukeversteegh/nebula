@@ -1,3 +1,19 @@
 #tabs {
-	min-height: 100%;
+	
+}
+
+
+#top {
+	position: 		fixed;
+	background:		#999;
+	width:			100%;
+	z-index:		1;
+	top:			0;
+	left:			0;
+	box-shadow:		0 0px 10px black;
+}
+
+#main {
+	padding:		0.5em;
+	background:		#CCC;
 }
