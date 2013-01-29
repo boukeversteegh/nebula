@@ -26,18 +26,18 @@ function init() {
 
 	$('#main').css('margin-top', $('#top').height());
 	$('#tabs').buttonset();
-	$('#tabs a').each(function() {
+	$('#tabs input').each(function() {
 		$(this).click( function() {
-			var tabid = $(this).attr('href');
-			$('#tabs a').removeClass('ui-state-focus');
+			var tabid = $(this).val();
+			//$('#tabs a').removeClass('ui-state-focus');
 			$('[role=tab]').hide();
 			$(tabid).show();
-			$(this).addClass('ui-state-focus');
+			//$(this).addClass('ui-state-focus');
 			return false;
 		});
 	});
-	$('#tabs [href="#tab_files"]').trigger('click');
-	$('#tabs a').filter(':eq(2), :eq(3)').addClass('ui-state-disabled');
+	$('[for=tab-btn-files]').addClass('ui-state-active').trigger('click');
+	$('#tabs input').filter(':eq(2), :eq(3)').button('option', 'disabled', true);//.addClass('ui-state-disabled');
 	
 	window.view.show(window.location.pathname, true);
 	
