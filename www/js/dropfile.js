@@ -1,5 +1,6 @@
 function dragdrop_init() {
 	var dropbox = document.getElementById("dropbox");
+	console.log(dropbox);
 	 
 	// init event handlers
 	//dropbox.addEventListener("dragstart", dragStart, false);
