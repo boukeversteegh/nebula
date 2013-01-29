@@ -36,7 +36,8 @@ function init() {
 			return false;
 		});
 	});
-	$('[for=tab-btn-files]').addClass('ui-state-active').trigger('click');
+	$('[for=tab-btn-files]').addClass('ui-state-active');
+	$('#tab-btn-files').trigger('click');
 	$('#tabs input').filter(':eq(2), :eq(3)').button('option', 'disabled', true);//.addClass('ui-state-disabled');
 	
 	window.view.show(window.location.pathname, true);
