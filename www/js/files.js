@@ -15,7 +15,7 @@ function Files(player) {
 		
 		// Store a separate playlist for every path.
 		// This allows continous playing of a folder while browsing.
-		if( !this.playlists[this.path] ) {
+		if( !this.playlists[this.path] || !response.cached ) {
 			var playlist = new Playlist(this.player);
 			
 			this.playlists[this.path] = playlist;
