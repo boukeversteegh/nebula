@@ -5,7 +5,8 @@ function Playlist(player) {
 	this.items		= [];
 	this.current	= 0;
 	this.type		= "playlist";
-	this.playing	= false;
+	this.playing	= false; // A song is loaded and playback has been started
+	this.paused		= false; // Player is paused at the moment
 	
 	this.view		= null;
 	
@@ -15,13 +16,21 @@ function Playlist(player) {
 		}
 	});
 	
+	this.player.events.bind('PAUSE', function(e) {
+		self.paused = true;
+	});
+	
+	this.player.events.bind('PLAY', function(e) {
+		self.paused = false;
+	});
+	
 	this.onSongEnded = function() {
 		this.next();
 	}
 	
 	this.next = function() {
 		var hasnext = this.setCurrent(this.current+1);
-		if( hasnext && this.playing ) {
+		if( hasnext && this.playing && !this.paused ) {
 			this.playing = false;
 			this.play();
 		}
@@ -61,8 +70,23 @@ function Playlist(player) {
 		}
 	}
 	
-	this.remove = function(index) {
+	this._remove = function(index) {
 		this.items.splice(index, 1);
+		return true;
+	}
+	
+	this.remove = function(index) {
+		if( this._remove(index) ) {
+			this._rebuild_indexes();
+			this._refresh_views();
+		}
+	}
+	
+	this.move = function(from, to) {
+		var item = this.get(from);
+		console.log(item);
+		this._remove(from);
+		this._add(item, to);
 		this._rebuild_indexes();
 		this._refresh_views();
 	}
@@ -121,6 +145,7 @@ function Playlist(player) {
 		
 		this.player.playFile(this.items[index]);
 		this.playing = true;
+		this.paused = false;
 	}
 	
 }

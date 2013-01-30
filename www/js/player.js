@@ -81,8 +81,14 @@ function Player() {
 				//noSolution: '.player-no-solution'
 			},
 			//ready: function() {},
-			ended: function(a,b) {
+			ended: function() {
 				self.events.trigger('ENDED');
+			},
+			pause: function() {
+				self.events.trigger('PAUSE');
+			},
+			play: function() {
+				self.events.trigger('PLAY');
 			},
 			errorAlerts: true,
 			warningAlerts: false
