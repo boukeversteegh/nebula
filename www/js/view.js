@@ -2,7 +2,6 @@ function View() {
 	this.path = '';
 	this.filepath = '/';
 	this.templates = {};
-	
 	this.views = {
 		"/view/files*": [
 			{
@@ -24,6 +23,7 @@ function View() {
 						file.playable = ( file.mimetype == 'audio/mpeg' );
 					}
 					window.files.loadView(JSON.parse(JSON.stringify(this.response)));
+					nebula.showTab('files');
 				},
 				"onload": 	function() {
 					dragdrop_init();

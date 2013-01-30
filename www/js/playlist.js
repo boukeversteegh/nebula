@@ -44,7 +44,6 @@ function Playlist(player) {
 	}
 	
 	this.add = function(item, index) {
-		console.log(item);
 		if( item.mimetype == 'audio/mpeg' ) {
 			if( typeof index !== "undefined" ) {
 				this.items.slice(index, 0, item);

@@ -3,6 +3,7 @@ $(function() {
 });
 
 function init() {
+	
 	window.view = new View();
 	window.uploader = new Uploader();
 	
@@ -16,8 +17,8 @@ function init() {
 	window.playlistview.refresh();
 	
 	window.uploader.refresh();
-	window.nebula = new Nebula();
 
+	window.nebula = new Nebula();
 	nebula.player = window.player;
 	nebula.playlist = window.playlist;
 	nebula.files = window.files;
@@ -28,15 +29,19 @@ function init() {
 	$('#tabs').buttonset();
 	$('#tabs input').each(function() {
 		$(this).click( function() {
-			var tabid = $(this).val();
-			//$('#tabs a').removeClass('ui-state-focus');
+			var tabname = $(this).val();
+			var tabdomid = '#tab_' + tabname;
+			
+			$('#tabs label').removeClass('ui-state-active');
 			$('[role=tab]').hide();
-			$(tabid).show();
-			//$(this).addClass('ui-state-focus');
+			$(tabdomid).show();
+			
+			$('#tabs [for=tab-btn-' + tabname + ']').addClass('ui-state-active');
 			return false;
 		});
 	});
-	$('[for=tab-btn-files]').addClass('ui-state-active');
+	
+	//$('[for=tab-btn-files]').addClass('ui-state-active');
 	$('#tab-btn-files').trigger('click');
 	$('#tabs input').filter(':eq(2), :eq(3)').button('option', 'disabled', true);//.addClass('ui-state-disabled');
 	

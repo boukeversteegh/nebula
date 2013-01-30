@@ -30,4 +30,8 @@ function Nebula() {
 	this.clickNext = function() {
 		this.playlist.next();
 	}
+	
+	this.showTab = function(tabname) {
+		$('#tab-btn-' + tabname).trigger('click');
+	}
 }
