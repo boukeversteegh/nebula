@@ -36,8 +36,9 @@
 					</td>
 					<td width="10">
 						{{#playable}}
-						<button class="playlist-add">Add</button></td>
+						<button onclick="playlist.add(files.get({{index}}))" class="playlist-add">Add</button>
 						{{/playable}}
+					</td>
 					<td align="right" width="40" class="extra">
 						{{id3.track_num.0}}
 					</td>

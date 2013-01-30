@@ -106,6 +106,7 @@ function Playlist(player) {
 			var item = playlist.items[i];
 			this._add(item);
 		}
+		this._rebuild_indexes();
 		this._refresh_views();
 	}
 	
