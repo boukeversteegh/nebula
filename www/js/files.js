@@ -5,21 +5,33 @@ function Files(player) {
 	this.player		= player;
 	this.folders	= [];
 	this.files		= [];
-	this.playlist	= new Playlist(player);
+	
+	this.playlists	= {};
+	this.playlist	= null;
 	
 	this.loadView = function(response) {
 		this.folders	= response.data.folders;
 		this.path		= response.data.path;
 		
-		this.playlist.clear();
-		var files = [];
-		for( var i=0; i < response.data.files.length; i++ ) {
-			var file = response.data.files[i];
-			file.path = this.path + '/' + file.file;
-			this.playlist._add(file);
-			files.push(file);
+		// Store a separate playlist for every path.
+		// This allows continous playing of a folder while browsing.
+		if( !this.playlists[this.path] ) {
+			var playlist = new Playlist(this.player);
+			
+			this.playlists[this.path] = playlist;
+			
+			var files = [];
+			for( var i=0; i < response.data.files.length; i++ ) {
+				var file = response.data.files[i];
+				file.path = this.path + '/' + file.file;
+				playlist._add(file);
+				files.push(file);
+			}
+			this.files = files;
+		} else {
+			var playlist = this.playlists[this.path];
 		}
-		this.files = files;
+		this.playlist = playlist;
 	}
 	
 	this.get = function(index) {
