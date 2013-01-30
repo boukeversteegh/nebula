@@ -12,7 +12,7 @@
 			{{/files}}
 			{{/folders}}
 			<button id="mkdir" class="green" onClick="var name = prompt('Please enter a name'); name && files.mkdir('{{path}}/' + name)">Create folder</button>
-			<button id="playlist-add-all" onClick="playlist.loadPlaylist(files.playlist)">Add to Playlist</button>
+			<button id="playlist-add-all" onClick="nebula.userplaylist.loadPlaylist(files.playlist)">Add to Playlist</button>
 		</div>
 		<div>
 			{{#folders.0}}
@@ -31,7 +31,7 @@
 				<tr class="file" role="song" date-model="files" data-id="files:{{index}}" data-file="{{file}}" data-path="{{path}}/{{file}}">
 					<td width="10">
 						{{#playable}}
-						<button onclick="files.playlist.play({{playlistindex}})" class="playlist-play green">Play</button>
+						<button onclick="nebula.files.playlist.play({{playlistindex}})" class="playlist-play green">Play</button>
 						{{/playable}}
 					</td>
 					<td width="10">
