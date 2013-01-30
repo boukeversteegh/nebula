@@ -98,6 +98,7 @@ function Player() {
 	
 	this.playFile = function(file) {
 		var url = this.filesroot + file.path;
+		url = url.replace('#', '%23');
 		this.jp().jPlayer("setMedia", {mp3: url}).jPlayer('play');
 		this.current = file;
 		this.events.trigger('STARTED', [file]);
