@@ -17,10 +17,15 @@ function View() {
 						breadcrumbs.push( {'path': trail.slice(0,i+1).join('/'), 'folder': trail[i]} );
 					}
 					this.data['breadcrumbs'] = breadcrumbs;
+					var playlistindex = 0;
 					for( var i=0; i<this.data.files.length; i++ ) {
 						var file = this.data.files[i];
 						file.index = i;
 						file.playable = ( file.mimetype == 'audio/mpeg' );
+						if( file.playable ) {
+							file.playlistindex = playlistindex;
+							playlistindex++;
+						}
 					}
 					window.files.loadView(JSON.parse(JSON.stringify(this.response)));
 					nebula.showTab('files');
