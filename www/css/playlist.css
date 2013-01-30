@@ -59,7 +59,7 @@
 	vertical-align: top;
 }
 
-.playlist tr:hover {
+.playlist tr:hover td {
 	color: black;
 	background: #9ECBDB;
 }
