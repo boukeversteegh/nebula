@@ -5,7 +5,7 @@
 <table class="pane" width="100%">
 {{#items}}
 	<tr data-path="{{path}}">
-		<td><a onclick="playlist.play({{index}})" class="playlist-play green">play</a></td>
+		<td><button onclick="playlist.play({{index}})" class="playlist-play green">play</button></td>
 		<td align="right" width="40" class="extra">
 			{{id3.track_num.0}}
 		</td>
@@ -42,7 +42,7 @@
 			{{info.durationstr}}
 		</td>
 		<td width="20">
-			<button class="playlist-remove">Remove</button>
+			<button onclick="playlist.remove({{index}})" class="playlist-remove red">Remove</button>
 		</td>
 	</tr>
 {{/items}}
