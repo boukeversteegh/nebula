@@ -34,11 +34,8 @@ function View() {
 					dragdrop_init();
 					$('button.delete').button();
 										
-					$('#breadcrumbs .folder a').button();
-					$('#breadcrumbs .folder a').eq(-1).button({
-						icons: {primary: 'ui-icon-folder-open'},
-						disabled: true
-					});
+					$('#breadcrumbs').buttonset();
+					$('#breadcrumbs a:eq(-1)').addClass('ui-state-active');
 					
 					$('#files tr.file, #folders li.folder').not('#parentfolder').draggable({
 						revert:		'invalid',
