@@ -19,7 +19,9 @@ function View() {
 					}
 					this.data['breadcrumbs'] = breadcrumbs;
 					for( var i=0; i<this.data.files.length; i++ ) {
-						this.data.files[i].index = i;
+						var file = this.data.files[i];
+						file.index = i;
+						file.playable = ( file.mimetype == 'audio/mpeg' );
 					}
 					window.files.loadView(JSON.parse(JSON.stringify(this.response)));
 				},
