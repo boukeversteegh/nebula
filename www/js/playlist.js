@@ -8,6 +8,8 @@ function Playlist(player) {
 	this.playing	= false; // A song is loaded and playback has been started
 	this.paused		= false; // Player is paused at the moment
 	
+	this.repeat		= 'playlist';
+	
 	this.view		= null;
 	
 	this.player.events.bind('ENDED', function(e) {
@@ -17,6 +19,7 @@ function Playlist(player) {
 	});
 	
 	this.player.events.bind('PAUSE', function(e) {
+		console.log("pause event");
 		self.paused = true;
 	});
 	
@@ -25,14 +28,44 @@ function Playlist(player) {
 	});
 	
 	this.onSongEnded = function() {
-		this.next();
+		if( this.isLast(this.current) ) {
+			this.onPlaylistEnded();
+		} else {
+			this.next();
+		}
+	}
+	
+	this.onPlaylistEnded = function() {
+		if( this.repeat === 'playlist' ) {
+			this.next();
+		} else {
+			this.playing = false;
+			this.current = null;
+			this._refresh_views();
+		}
 	}
 	
 	this.next = function() {
-		var hasnext = this.setCurrent(this.current+1);
-		if( hasnext && this.playing && !this.paused ) {
+		if( this.current === null ) {
+			return false;
+		}
+		
+		if( this.isLast(this.current) ) {
+			// Repeat list if next song is requested.
+			// For non-playlist repeat, don't call .next().
+			var next = 0;
+		} else {
+			var next = this.current + 1;
+		}
+		
+		
+		if( this.setCurrent(next) ) {
+			if( this.playing && !this.paused ) {
+				this.playing = false;
+				this.play();
+			}
+		} else {
 			this.playing = false;
-			this.play();
 		}
 	}
 	
@@ -48,10 +81,6 @@ function Playlist(player) {
 		}
 	}
 	
-	this.onListEnded = function() {
-		console.log("List ended");
-	}
-	
 	this._add = function(item, index) {
 		if( item.mimetype == 'audio/mpeg' ) {
 			if( typeof index !== "undefined" ) {
@@ -61,6 +90,7 @@ function Playlist(player) {
 			}
 			return true;
 		}
+		return false;
 	}
 	
 	this.add = function(item, index) {
@@ -115,8 +145,12 @@ function Playlist(player) {
 		return this.items[index];
 	}
 	
+	this.isLast = function(index) {
+		return ( this.items.length-1 === index );
+	}
+	
 	this.setCurrent = function(index) {
-		if( index < 0 || index >= this.items.length ) {
+		if( index === null || index < 0 || index >= this.items.length ) {
 			this.current = null;
 			return false;
 		} else {
@@ -134,18 +168,23 @@ function Playlist(player) {
 		this._refresh_views();
 	}
 	
+	this.load = function(index) {
+		this.player.loadFile(this.items[index]);
+	}
+	
 	this.play = function(index) {
 		if( typeof index == "undefined" ) {
 			index = this.current;
 		}
 		if( !this.setCurrent(index) ){ 
-			this.onListEnded();
+			this.onPlaylistEnded();
 			return;
 		}
 		
 		this.player.playFile(this.items[index]);
 		this.playing = true;
 		this.paused = false;
+		window.nebula.playlist = this;
 	}
 	
 }

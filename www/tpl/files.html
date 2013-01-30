@@ -31,12 +31,12 @@
 				<tr class="file" role="song" date-model="files" data-id="files:{{index}}" data-file="{{file}}" data-path="{{path}}/{{file}}">
 					<td width="10">
 						{{#playable}}
-						<button onclick="player.playFile(files.get({{index}}))" class="playlist-play green">Play</button>
+						<button onclick="files.playlist.play({{index}})" class="playlist-play green">Play</button>
 						{{/playable}}
 					</td>
 					<td width="10">
 						{{#playable}}
-						<button onclick="playlist.add(files.get({{index}}))" class="playlist-add">Add</button>
+						<button onclick="nebula.userplaylist.add(files.get({{index}}))" class="playlist-add">Add</button>
 						{{/playable}}
 					</td>
 					<td align="right" width="40" class="extra">

@@ -12,15 +12,17 @@ function init() {
 	
 	window.files = new Files(window.player);
 	window.player.init('#player', '#jplayer');
-	window.playlist = new Playlist(window.player);
-	window.playlistview = new PlaylistView(window.playlist, '#playlist');
-	window.playlistview.refresh();
+	
+	var userplaylist = new Playlist(window.player);
+	var playlistview = new PlaylistView(userplaylist, '#playlist');
+	playlistview.refresh();
 	
 	window.uploader.refresh();
 
 	window.nebula = new Nebula();
 	nebula.player = window.player;
-	nebula.playlist = window.playlist;
+	nebula.playlist = window.files.playlist;
+	nebula.userplaylist = userplaylist;
 	nebula.files = window.files;
 	nebula.init();
 	

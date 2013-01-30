@@ -5,23 +5,21 @@ function Files(player) {
 	this.player		= player;
 	this.folders	= [];
 	this.files		= [];
-	this.playlist	= null;
+	this.playlist	= new Playlist(player);
 	
 	this.loadView = function(response) {
 		this.folders	= response.data.folders;
 		this.path		= response.data.path;
 		
-		var playlist = new Playlist(this.player);
-		
+		this.playlist.clear();
 		var files = [];
 		for( var i=0; i < response.data.files.length; i++ ) {
 			var file = response.data.files[i];
 			file.path = this.path + '/' + file.file;
-			playlist.add(file);
+			this.playlist._add(file);
 			files.push(file);
 		}
 		this.files = files;
-		this.playlist = playlist;
 	}
 	
 	this.get = function(index) {
