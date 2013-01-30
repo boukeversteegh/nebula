@@ -46,15 +46,25 @@ function Playlist(player) {
 	this.add = function(item, index) {
 		if( item.mimetype == 'audio/mpeg' ) {
 			if( typeof index !== "undefined" ) {
-				this.items.slice(index, 0, item);
+				this.items.splice(index, 0, item);
 			} else {
 				this.items.push(item);
 			}
 		
-			for( var i=0; i < this.items.length; i++ ) {
-				this.items[i].index = i;
-			}
+			this._rebuild_indexes();
 			this._refresh_views();
+		}
+	}
+	
+	this.remove = function(index) {
+		this.items.splice(index, 1);
+		this._rebuild_indexes();
+		this._refresh_views();
+	}
+	
+	this._rebuild_indexes = function() {
+		for( var i=0; i < this.items.length; i++ ) {
+			this.items[i].index = i;
 		}
 	}
 	
