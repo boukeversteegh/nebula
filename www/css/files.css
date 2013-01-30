@@ -8,7 +8,9 @@
 }
 
 
-#mkdir, #rmdir, #playlist-add-all {
+#mkdir,
+#rmdir,
+#playlist-add-all {
 	float: right;
-	margin: 0.5em 0.25em;
+	margin-left: 1em;
 }
