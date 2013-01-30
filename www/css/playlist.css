@@ -49,6 +49,8 @@
 
 .playlist .ui-button {
 	min-height: 1em;
+	font-size: 1em;
+	display: block;
 }
 
 .playlist td a {

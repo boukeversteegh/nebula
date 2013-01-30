@@ -44,16 +44,19 @@ function Playlist(player) {
 	}
 	
 	this.add = function(item, index) {
-		if( typeof index !== "undefined" ) {
-			this.items.slice(index, 0, item);
-		} else {
-			this.items.push(item);
-		}
+		console.log(item);
+		if( item.mimetype == 'audio/mpeg' ) {
+			if( typeof index !== "undefined" ) {
+				this.items.slice(index, 0, item);
+			} else {
+				this.items.push(item);
+			}
 		
-		for( var i=0; i < this.items.length; i++ ) {
-			this.items[i].index = i;
+			for( var i=0; i < this.items.length; i++ ) {
+				this.items[i].index = i;
+			}
+			this._refresh_views();
 		}
-		this._refresh_views();
 	}
 	
 	this._refresh_views = function() {
@@ -87,9 +90,7 @@ function Playlist(player) {
 	this.loadPlaylist = function(playlist) {
 		for( var i=0; i<playlist.items.length; i++ ) {
 			var item = playlist.items[i];
-			item.index = this.items.length;
-			this.items.push(item);
-			
+			this.add(item);
 		}
 		this.view.refresh();
 	}

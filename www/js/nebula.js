@@ -12,6 +12,10 @@ function Nebula() {
 		$('#player-next').click(function() {
 			self.clickNext();
 		});
+		
+		$('#playlist-add-all').click(function() {
+			self.playlist.loadPlaylist(self.files.playlist);
+		});
 	}
 
 	this.clickPrevious = function() {

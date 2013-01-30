@@ -29,8 +29,8 @@
 			<table border="0" width="100%" cellspacing="0" class="pane">
 				{{#files}}
 				<tr class="file" role="song" date-model="files" data-id="files:{{index}}" data-file="{{file}}" data-path="{{path}}/{{file}}">
-					<td width="10"><a onclick="player.playFile(files.get({{index}}))" class="playlist-play green">Play</a></td>
-					<td width="10"><a onclick="playlist.add(files.get({{index}}))" class="playlist-add">&nbsp;</a></td>
+					<td width="10"><button onclick="player.playFile(files.get({{index}}))" class="playlist-play green">Play</button></td>
+					<td width="10"><button class="playlist-add">&nbsp;</button></td>
 					<td align="right" width="40" class="extra">
 						{{id3.track_num.0}}
 					</td>

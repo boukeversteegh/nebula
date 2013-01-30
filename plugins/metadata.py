@@ -161,16 +161,19 @@ class Metadata:
 				durationstr = "%2d:%02d" % (m, s)
 				
 			info = {
-				"duration":	audiofile.info.time_secs,
+				"duration":		audiofile.info.time_secs,
 				"durationstr" : durationstr
 			}
+			mimetype = 'audio/mpeg';
 		else:
-			id3 = None
-			info = None
+			id3		= None
+			info	= None
+			mimetype = None
 		
 		metadata = {
 			"id3":		id3,
 			"info":		info,
-			"file":		trail[-1] if len(trail) > 0 else ""
+			"file":		trail[-1] if len(trail) > 0 else "",
+			"mimetype":	mimetype
 		}
 		return metadata

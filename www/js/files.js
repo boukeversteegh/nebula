@@ -17,7 +17,6 @@ function Files(player) {
 		for( var i=0; i < response.data.files.length; i++ ) {
 			var file = response.data.files[i];
 			file.path = this.path + '/' + file.file;
-			file.type = 'file';
 			playlist.add(file);
 			files.push(file);
 		}
