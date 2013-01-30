@@ -64,16 +64,20 @@ a {
 	
 }
 
-#player {
+#player td {
 	padding: 0.5em;
 }
 
-#player .button {
-	margin: 0.2em;
+
+#player-controls {
 }
 
-#player .button {
-	float: left;
+#player button {
+	padding: 0 1.5em;
+}
+
+#player button .ui-button-text {
+	padding: 0.5em;
 }
 
 #player-progress {

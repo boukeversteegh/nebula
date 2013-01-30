@@ -18,6 +18,7 @@ function Player() {
 	}
 	
 	this.showPlayer = function() {
+		
 		$('#player-stop').button({
 			icons: {primary: "ui-icon-stop"}, text: false
 		});
@@ -33,6 +34,8 @@ function Player() {
 		$('#player-next').button({
 			icons: {primary: "ui-icon-seek-next"}, text: false
 		});
+
+		$('#player-controls').buttonset();
 
 		$('#player-open-folder').button({
 			text: false,
