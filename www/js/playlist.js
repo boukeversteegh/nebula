@@ -13,19 +13,26 @@ function Playlist(player) {
 	this.view		= null;
 	
 	this.player.events.bind('ENDED', function(e) {
-		if( self.playing ) {
+		if( this.isActivePlaylist() && self.playing ) {
 			self.onSongEnded();
 		}
 	});
 	
 	this.player.events.bind('PAUSE', function(e) {
-		console.log("pause event");
-		self.paused = true;
+		if( this.isActivePlaylist() ) {
+			self.paused = true;
+		}
 	});
 	
 	this.player.events.bind('PLAY', function(e) {
-		self.paused = false;
+		if( this.isActivePlaylist() ) {
+			self.paused = false;
+		}
 	});
+
+	this.isActivePlaylist = function() {
+		return (nebula.playlist === this);
+	}
 	
 	this.onSongEnded = function() {
 		if( this.isLast(this.current) ) {
