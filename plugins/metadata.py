@@ -57,19 +57,23 @@ class Metadata:
 		self.events		= settings['events']
 		self.cache		= {}
 		
-		# Setup PyInotify (Linux Only)
-		pyinotifyhandler	= PyInotifyHandler(self.events)
-		watchmanager		= pyinotify.WatchManager()
-		watchmask			= pyinotify.IN_DELETE | pyinotify.IN_CREATE | pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO
-		notifier 			= pyinotify.ThreadedNotifier(watchmanager, pyinotifyhandler)
-		notifier.start()
+		try:
+			# Setup PyInotify (Linux Only)
+			pyinotifyhandler	= PyInotifyHandler(self.events)
+			watchmanager		= pyinotify.WatchManager()
+			watchmask			= pyinotify.IN_DELETE | pyinotify.IN_CREATE | pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO
+			notifier 			= pyinotify.ThreadedNotifier(watchmanager, pyinotifyhandler)
+			notifier.start()
 
-		watchmanager.add_watch(self.userconf['librarypath'], watchmask, rec=True)
+			watchmanager.add_watch(self.userconf['librarypath'], watchmask, rec=True)
 
-		self.pyinotifyhandler = pyinotifyhandler
-		
-		# Make sure notifier thread is killed on exiting Nebula
-		cherrypy.engine.subscribe('exit', lambda: notifier.stop())
+			self.pyinotifyhandler = pyinotifyhandler
+			
+			# Make sure notifier thread is killed on exiting Nebula
+			cherrypy.engine.subscribe('exit', lambda: notifier.stop())
+		except InotifyBindingNotFoundError:
+			# Inotify not supported (Windows, Mac)
+			pass
 
 		def file_CHANGE(trail):
 			# Delete file metadata from cache
