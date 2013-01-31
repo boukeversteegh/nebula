@@ -13,19 +13,19 @@ function Playlist(player) {
 	this.view		= null;
 	
 	this.player.events.bind('ENDED', function(e) {
-		if( this.isActivePlaylist() && self.playing ) {
+		if( self.isActivePlaylist() && self.playing ) {
 			self.onSongEnded();
 		}
 	});
 	
 	this.player.events.bind('PAUSE', function(e) {
-		if( this.isActivePlaylist() ) {
+		if( self.isActivePlaylist() ) {
 			self.paused = true;
 		}
 	});
 	
 	this.player.events.bind('PLAY', function(e) {
-		if( this.isActivePlaylist() ) {
+		if( self.isActivePlaylist() ) {
 			self.paused = false;
 		}
 	});
