@@ -1,12 +1,27 @@
 import os.path
 import eyed3
 import eyed3.mp3
+import pyinotify
+import asyncore
+import eventhandler
+
 try:
 	import simplejson as json
 except ImportError:
 	import json
 
 global cherrypy
+
+class PyInotifyHandler(pyinotify.ProcessEvent):
+	def __init__(self, events):
+		self.events = events
+
+	def process_IN_CREATE(self, event):
+		cherrypy.log("\n\n---Creating: %s" % event.pathname)
+		self.events.trigger('localfile.CHANGE', event.pathname)
+
+	def process_IN_DELETE(self, event):
+		cherrypy.log("\n\n---Removing: %s" % event.pathname)
 
 class Metadata:
 	id3tags = [
@@ -43,11 +58,26 @@ class Metadata:
 	
 	def __init__(self, settings):
 		global cherrypy
-		cherrypy = settings['cherrypy'];
-		self.userconf = settings['userconf']
-		self.cache = {}
-		self.events = settings['events']
+
+		cherrypy		= settings['cherrypy'];
+		self.userconf	= settings['userconf']
+		self.events		= settings['events']
+		self.cache		= {}
 		
+		# Setup PyInotify (Linux Only)
+		pyinotifyhandler	= PyInotifyHandler(self.events)
+		watchmanager		= pyinotify.WatchManager()
+		watchmask			= pyinotify.IN_DELETE | pyinotify.IN_CREATE
+		notifier 			= pyinotify.ThreadedNotifier(watchmanager, pyinotifyhandler)
+		notifier.start()
+
+		watchmanager.add_watch(self.userconf['librarypath'], watchmask, rec=True)
+
+		self.pyinotifyhandler = pyinotifyhandler
+		
+		# Make sure notifier thread is killed on exiting Nebula
+		cherrypy.engine.subscribe('exit', lambda: notifier.stop())
+
 		def file_CHANGE(trail):
 			# Delete file metadata from cache
 			if trail in self.cache:
@@ -57,6 +87,15 @@ class Metadata:
 			parentdir = trail[:-1]
 			if parentdir in self.cache:
 				del self.cache[parentdir]
+
+		def localfile_CHANGE(localpath):
+			libpath = self.userconf['librarypath']
+			cherrypy.log('\nlocalpath: %s\n' % localpath)
+			if localpath.startswith(libpath):
+				path = localpath[len(libpath)+1:]
+				trail = tuple(path.split('/'))
+				cherrypy.log('\ntrail: %s' % repr(trail))
+				self.events.trigger('file.CHANGE', trail)
 					
 		def folder_CHANGE(trail):
 			if trail in self.cache:
@@ -64,6 +103,7 @@ class Metadata:
 			
 		self.events.bind('file.CHANGE', file_CHANGE)
 		self.events.bind('folder.CHANGE', folder_CHANGE)
+		self.events.bind('localfile.CHANGE', localfile_CHANGE)
 	
 	def default(self, *trail):
 		cherrypy.response.headers['Content-Type'] = "application/json"
