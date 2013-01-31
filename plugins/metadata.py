@@ -17,41 +17,34 @@ class PyInotifyHandler(pyinotify.ProcessEvent):
 		self.events = events
 
 	def process_IN_CREATE(self, event):
-		cherrypy.log("\n\n---Creating: %s" % event.pathname)
 		self.events.trigger('localfile.CHANGE', event.pathname)
 
 	def process_IN_DELETE(self, event):
-		cherrypy.log("\n\n---Removing: %s" % event.pathname)
+		self.events.trigger('localfile.CHANGE', event.pathname)
+
+	def process_IN_MOVED_FROM(self, event):
+		self.events.trigger('localfile.CHANGE', event.pathname)
+
+	def process_IN_MOVED_TO(self, event):
+		self.events.trigger('localfile.CHANGE', event.pathname)
 
 class Metadata:
 	id3tags = [
-		'version',
-		'bpm',
-		'title',
-		'artist',
-		'album',
-		'track_num',
+		'version', 'bpm', 'title', 'artist', 'album', 'track_num', 'publisher','cd_id',
+		'disc_num',
+		'commercial_url', 'audio_source_url', 'artist_url', 'internet_radio_url', 'payment_url', 'publisher_url',
+		#'genre',
 		##'play_count',
-		'publisher',
-		'cd_id',
 		#'images',
 		##'original_release_date',
 		##'recording_date',
 		#'encoding_date',
 		#'tagging_date',
 		#'lyrics',
-		'disc_num',
 		#'popularities',
-		#'genre',
-		'commercial_url',
 		#'audio_file_url',
-		'audio_source_url',
-		'artist_url',
-		'internet_radio_url',
-		'payment_url',
-		'publisher_url',
 		#'unique_file_ids',
-		'terms_of_use',
+		# 'terms_of_use',
 		#'chapters',
 		#'table_of_contents'
 	]
@@ -67,7 +60,7 @@ class Metadata:
 		# Setup PyInotify (Linux Only)
 		pyinotifyhandler	= PyInotifyHandler(self.events)
 		watchmanager		= pyinotify.WatchManager()
-		watchmask			= pyinotify.IN_DELETE | pyinotify.IN_CREATE
+		watchmask			= pyinotify.IN_DELETE | pyinotify.IN_CREATE | pyinotify.IN_MOVED_FROM | pyinotify.IN_MOVED_TO
 		notifier 			= pyinotify.ThreadedNotifier(watchmanager, pyinotifyhandler)
 		notifier.start()
 
@@ -90,11 +83,9 @@ class Metadata:
 
 		def localfile_CHANGE(localpath):
 			libpath = self.userconf['librarypath']
-			cherrypy.log('\nlocalpath: %s\n' % localpath)
 			if localpath.startswith(libpath):
 				path = localpath[len(libpath)+1:]
 				trail = tuple(path.split('/'))
-				cherrypy.log('\ntrail: %s' % repr(trail))
 				self.events.trigger('file.CHANGE', trail)
 					
 		def folder_CHANGE(trail):
