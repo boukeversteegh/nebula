@@ -18,19 +18,7 @@ class Files:
 		self.events = settings['events']
 			
 	def GET(self, *trail):
-		localpath = os.path.join(self.userconf['librarypath'], *trail)
-		if not os.path.exists(localpath):
-			return False
-		else:
-			
-			if os.path.isfile(localpath):
-				return cherrypy.lib.static.serve_file(localpath)
-			else:
-				response = {
-					"success":	False,
-					"error":	"This path is a directory"
-				}
-				return json.dumps(response)
+		raise cherrypy.HTTPRedirect('/get/' + '/'.join(trail))
 
 	# SEE
 	# http://docs.cherrypy.org/dev/refman/_cpreqbody.html

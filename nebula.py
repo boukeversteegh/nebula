@@ -46,6 +46,10 @@ if __name__ == '__main__':
 		'/www': {
 			'tools.staticdir.on': True,
 			'tools.staticdir.dir': os.path.join(os.getcwd(), 'www')
+		},
+		'/get': {
+			'tools.staticdir.on': True,
+			'tools.staticdir.dir': librarypath
 		}
     }
     # EventHandler is used to allow plugins to communicate indirectly
