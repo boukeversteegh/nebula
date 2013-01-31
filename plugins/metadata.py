@@ -71,7 +71,7 @@ class Metadata:
 			
 			# Make sure notifier thread is killed on exiting Nebula
 			cherrypy.engine.subscribe('exit', lambda: notifier.stop())
-		except InotifyBindingNotFoundError:
+		except pyinotify.InotifyBindingNotFoundError:
 			# Inotify not supported (Windows, Mac)
 			pass
 
