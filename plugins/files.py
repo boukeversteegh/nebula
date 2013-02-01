@@ -18,7 +18,9 @@ class Files:
 		self.events = settings['events']
 			
 	def GET(self, *trail):
-		raise cherrypy.HTTPRedirect('/get/' + '/'.join(trail))
+		url = '/get/' + '/'.join(trail)
+		url = url.replace('#', '%23')
+		raise cherrypy.HTTPRedirect(url)
 
 	# SEE
 	# http://docs.cherrypy.org/dev/refman/_cpreqbody.html
