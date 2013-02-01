@@ -20,16 +20,7 @@ function Uploader() {
 		console.log(" " + targetpath);
 		
 		
-		//var targetpath = '/files' + path + '/' + file.name;
 		xhr.open('PUT', targetpath);
-		
-		/*xhr.onuploadprogress = function (event) {
-			if (event.lengthComputable) {
-				this._upload.progress = (event.loaded / event.total * 100 | 0);
-				this._upload.loaded = event.loaded;
-			}
-			window.uploader.refresh();
-		}*/
 
 		xhr.upload.onprogress = function(event) {
 			if (event.lengthComputable) {
@@ -112,7 +103,8 @@ function Uploader() {
 			var upload = this.uploads[i];
 			var tupload = {
 				/*   /files/pathabc/file.mp3 --> /pathabc */
-				path:		'/'+upload.targetpath.split('/').slice(2, -1).join('/'),
+				path:		upload.targetpath,
+				parent:		'/'+upload.targetpath.split('/').slice(2, -1).join('/'), 
 				file:		upload.file.name,
 				size:		upload.file.size,
 				hsize:		this.getHumanSize(upload.file.size),

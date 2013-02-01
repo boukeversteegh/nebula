@@ -2,9 +2,9 @@
 	{{#uploads.0}}
 	<table width="100%">
 		{{#uploads}}
-		<tr id="upload:{{index}}" class="upload" data-path="{{path}}/{{file}}">
-			<td width="50"><a class="inline uploader-showfolder showview" href="/view/files{{path}}">{{path}}</a></td>
-			<td width="20"><button onclick="player.playFile(uploader.get({{index}}))" disabled>Play</button>
+		<tr id="upload:{{index}}" class="upload" data-path="{{path}}">
+			<td width="50"><a class="inline uploader-showfolder showview" href="/view/files{{parent}}">{{parent}}</a></td>
+			<td width="20"><button onclick="player.playFile(uploader.get({{index}}))" disable>Play</button>
 			<td>{{file}}</td>
 			<td>{{hsize}}</td>
 			<td><div class="progress ui-state-default"></div></td>
