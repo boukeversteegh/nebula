@@ -19,6 +19,9 @@ function PlayerView(player) {
 		$('#player-next').button({
 			icons: {primary: "ui-icon-seek-next"}, text: false
 		});
+		$('#playlist-shuffle').empty().button({
+			icons: {primary: "ui-icon-shuffle"}, text: false
+		});
 
 		$('#player-prevplaypausenext').buttonset();
 

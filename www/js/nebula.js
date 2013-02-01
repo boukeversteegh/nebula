@@ -34,6 +34,11 @@ function Nebula() {
 		$('#player-open-folder').click(function(){
 			self.view.show('/view/files' + self.player.current.parent, true);
 		});
+
+		$('#playlist-shuffle').click(function() {
+			var shuffle = $('#playlist-shuffle').prop('checked');
+			self.shuffle = shuffle;
+		});
 	}
 
 	this.clickPrevious = function() {

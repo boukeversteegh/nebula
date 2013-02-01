@@ -52,17 +52,33 @@ function Playlist(player, name) {
 		}
 	}
 	
+	// Advance the playlist to the next song.
+	// Also starts playing if a song was being played before.
+	// Next will always advance, and will cycle at the end of a list.
+	// Non play-list repeat is achieved by not calling next() at list end.
 	this.next = function() {
 		if( this.current === null ) {
 			return false;
 		}
 		
-		if( this.isLast(this.current) ) {
-			// Repeat list if next song is requested.
-			// For non-playlist repeat, don't call .next().
-			var next = 0;
+		if( nebula.shuffle ) {
+			// Get a random next song
+			var next = Math.floor(Math.random()*this.items.length);
+
+			// Make sure we don't repeat the previous song.
+			// But only care if we actually have 2 or more songs in the list.
+			while( this.items.length > 1 && next == this.current ) {
+				var next = Math.floor(Math.random()*this.items.length);
+			}
+			
 		} else {
-			var next = this.current + 1;
+			if( this.isLast(this.current) ) {
+				// Repeat list if next song is requested.
+				// For non-playlist repeat, don't call .next().
+				var next = 0;
+			} else {
+				var next = this.current + 1;
+			}
 		}
 		
 		
