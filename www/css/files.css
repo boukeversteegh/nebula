@@ -14,3 +14,7 @@
 	float: right;
 	margin-left: 1em;
 }
+
+#uploads .ui-button {
+	text-align: left;
+}

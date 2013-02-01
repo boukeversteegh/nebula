@@ -188,17 +188,20 @@ class Metadata:
 						id3[tagname] = tagvalue
 			
 			#tag['release_date'] = audiofile.tag.best_release_date
-			m, s = divmod(audiofile.info.time_secs, 60)
-			h, m = divmod(m, 60)
-			if h > 0:
-				durationstr = "%d:%02d:%02d" % (h, m, s)
+			if audiofile.info is None:
+				info = None
 			else:
-				durationstr = "%2d:%02d" % (m, s)
-				
-			info = {
-				"duration":		audiofile.info.time_secs,
-				"durationstr" : durationstr
-			}
+				m, s = divmod(audiofile.info.time_secs, 60)
+				h, m = divmod(m, 60)
+				if h > 0:
+					durationstr = "%d:%02d:%02d" % (h, m, s)
+				else:
+					durationstr = "%2d:%02d" % (m, s)
+					
+				info = {
+					"duration":		audiofile.info.time_secs,
+					"durationstr" : durationstr
+				}
 			mimetype = 'audio/mpeg';
 		else:
 			id3		= None

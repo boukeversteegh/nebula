@@ -12,20 +12,20 @@ function Uploader() {
 		
 		if( typeof fullpath == "undefined" ) {
 			var filepath = '/' + file.name;
+			var parent = path;
 		} else {
+			var parent = path + fullpath.split('/').slice(0,-1).join('/');
 			var filepath = fullpath;
 		}
 		
 		var targetpath = '/files' + path + filepath;
-		console.log(" " + targetpath);
-		
 		
 		xhr.open('PUT', targetpath);
 
 		xhr.upload.onprogress = function(event) {
 			if (event.lengthComputable) {
-				this._upload.progress = (event.loaded / event.total * 100 | 0);
-				this._upload.loaded = event.loaded;
+				this._upload.uploaddata.progress = (event.loaded / event.total * 100 | 0);
+				this._upload.uploaddata.loaded = event.loaded;
 			}
 			window.uploader.refresh(false);
 		}
@@ -35,16 +35,21 @@ function Uploader() {
 		}
 		
 		var upload = {
-			"file": 			file,
-			"path": 			path,
-			"targetpath":		targetpath,
-			"xhr":				xhr,
-			"started":			false,
-			"timestarted":		null,
-			"timecompleted":	null,
-			"completed":		false,
-			"progress":			0,
-			"loaded":			0
+			// Same fields as normal File.
+			"file": 	file.name,
+			"size":		file.size, 
+			"path": 	path + filepath,
+			"parent":	parent,
+			"uploaddata":	{
+				"filehandle":		file,
+				"xhr":				xhr,
+				"started":			false,
+				"timestarted":		null,
+				"timecompleted":	null,
+				"completed":		false,
+				"progress":			0,
+				"loaded":			0
+			}
 		}
 		xhr._upload = upload;
 		xhr.upload._upload = upload;
@@ -65,15 +70,15 @@ function Uploader() {
 		window.uploader.refresh();
 		// Start uploads
 		while( this.active.length < this.maxconnections && this.queue.length > 0 ) {
-			var upload = this.queue.shift();2
-			this.active.push(upload);
+			var item = this.queue.shift();2
+			this.active.push(item);
 			
 			var formData = new FormData();
-			formData.append('file', upload.file);
-			formData.append('path', upload.path);
-			upload.started = true;
-			upload.timestarted = (new Date().getTime() / 1000);
-			upload.xhr.send(formData);
+			formData.append('file', item.uploaddata.filehandle);
+			formData.append('path', item.parent);
+			item.uploaddata.started = true;
+			item.uploaddata.timestarted = (new Date().getTime() / 1000);
+			item.uploaddata.xhr.send(formData);
 		}
 	}
 	
@@ -93,31 +98,38 @@ function Uploader() {
 		if( typeof fullrefresh == 'undefined' ) {
 			fullrefresh = true;
 		}
-		var container = $('#uploads_progress');
-		var htmlprogress = '';
-		var tuploads = [];
-		var tdata = {'data':{'uploads':[]}};
+		var container		= $('#uploads_progress');
+		var htmlprogress	= '';
+		var tuploads		= [];
+		// Template Data
+		var tdata			= {
+			'data':	{
+				'uploads': tuploads
+			}
+		};
 		
-		var tuploads = tdata.data.uploads;
 		for( var i=0; i<this.uploads.length; i++) {
 			var upload = this.uploads[i];
 			var tupload = {
-				/*   /files/pathabc/file.mp3 --> /pathabc */
-				path:		upload.targetpath,
-				parent:		'/'+upload.targetpath.split('/').slice(2, -1).join('/'), 
-				file:		upload.file.name,
-				size:		upload.file.size,
-				hsize:		this.getHumanSize(upload.file.size),
-				completed:	upload.completed,
-				progress:	upload.progress,
-				started:	upload.started,
-				index:		i
+				path:			upload.path,
+				parent:			upload.parent,
+				file:			upload.file,
+				size:			upload.size,
+				hsize:			this.getHumanSize(upload.size),
+				uploadindex:	i,
+				uploaddata:		{
+					index:		i,
+					completed:	upload.uploaddata.completed,
+					progress:	upload.uploaddata.progress,
+					started:	upload.uploaddata.started,
+					loaded:		upload.uploaddata.loaded
+				}
 			};
 			
 			tuploads.push(tupload);
 
 			if( !fullrefresh) {
-				container.find('.upload').eq(i).find('.progress').progressbar('option', {'value': tupload.progress});
+				container.find('.upload').eq(i).find('.progress').progressbar('option', {'value': tupload.uploaddata.progress});
 			}
 		}
 		if( fullrefresh ) {
@@ -125,12 +137,16 @@ function Uploader() {
 				function() {
 					$(container).find('.progress').each(function(index) {
 						$(this)
-							.progressbar({'max': 100, 'value': self.get(index).progress})
+							.progressbar({'max': 100, 'value': self.get(index).uploaddata.progress})
 								.css({'height': '1em', 'min-width': '50px'})
 							.find('.ui-progressbar-value')
 								.addClass('ui-state-hover');
 					});
 					$(container).find('.uploader-showfolder').button({icons:{primary:'ui-icon-folder-collapsed'}});
+					$(container).find('.uploader-play').button({
+						icons: {primary: 'ui-icon-play'},
+						text: false
+					})
 				}
 			);
 			view.rebind(container);
@@ -141,14 +157,13 @@ function Uploader() {
 		return this.uploads[index];
 	}
 	
-	this.oncomplete = function(upload) {
-		upload.completed = true;
-		upload.progress = 100;
-		upload.timecompleted = (new Date().getTime() / 1000);
+	this.oncomplete = function(item) {
+		item.uploaddata.completed = true;
+		item.uploaddata.progress = 100;
+		item.uploaddata.timecompleted = (new Date().getTime() / 1000);
 		window.uploader.refresh(false);
 		window.uploader.processQueue();
-		console.log(upload);
-		if( upload.path == window.files.path ) {
+		if( item.parent == window.files.path ) {
 			view.show(view.path, false, true);
 		}
 	}
@@ -156,9 +171,32 @@ function Uploader() {
 	this.test = function() {
 		this.uploads = [
 			{
-				file: { name: "foobar.mp3", size: 123234 },
-				targetpath: '/files/Test/foobar.mp3',
-				progress: 30
+				file:	"foobar.mp3",
+				path:	"/Test/foobar.mp3",
+				parent: "/Test",
+				size: 123234,
+				uploaddata:	{
+					file: {
+						name: "foobar.mp3",
+						size: 123234
+					},
+					progress: 100,
+					completed: true
+				}
+			},
+			{
+				file:	"foobar2.mp3",
+				path:	"/Test/sub/foobar2.mp3",
+				parent: "/Test/sub",
+				size: 1453421,
+				uploaddata:	{
+					file: {
+						name: "foobar2.mp3",
+						size: 1453421
+					},
+					progress: 30,
+					completed:false
+				}
 			}
 		];
 		this.refresh();
