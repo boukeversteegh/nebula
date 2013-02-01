@@ -3,6 +3,7 @@ function Nebula() {
 	this.player		= null;
 	this.files		= null;
 	this.playlist	= null;
+	this.view		= null;
 
 	this.init = function() {
 		$('#player-prev').click(function() {
@@ -15,6 +16,10 @@ function Nebula() {
 		
 		$('#playlist-add-all').click(function() {
 			self.playlist.loadPlaylist(self.files.playlist);
+		});
+
+		$('#player-open-folder').click(function(){
+			self.view.show('/view/files' + self.player.current.parent, true);
 		});
 	}
 

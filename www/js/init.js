@@ -9,7 +9,8 @@ function init() {
 	
 	window.player = new Player();
 	window.playerview = new PlayerView(window.player);
-	
+	window.playerview.init();
+
 	window.files = new Files(window.player);
 	window.player.init('#player', '#jplayer');
 	
@@ -24,6 +25,7 @@ function init() {
 	nebula.playlist = window.files.playlist;
 	nebula.userplaylist = userplaylist;
 	nebula.files = window.files;
+	nebula.view = window.view;
 	nebula.init();
 	
 
