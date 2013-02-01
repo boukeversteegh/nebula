@@ -16,7 +16,6 @@ function init() {
 	
 	var userplaylist = new Playlist(window.player, 'user:default');
 	var playlistview = new PlaylistView(userplaylist, '#playlist');
-	
 	playlistview.refresh();
 	
 	window.uploader.refresh();
