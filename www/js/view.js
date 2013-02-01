@@ -27,6 +27,11 @@ function View() {
 							playlistindex++;
 						}
 					}
+
+
+					if( playlistindex > 0 ) {
+						this.data.hasPlayableFiles = true;
+					}
 					window.files.loadView(JSON.parse(JSON.stringify(this.response)));
 					nebula.showTab('files');
 				},
