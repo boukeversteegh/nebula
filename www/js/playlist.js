@@ -1,7 +1,7 @@
-function Playlist(player) {
+function Playlist(player, name) {
 	var self		= this;
-	
 	this.player		= player;
+	this.name		= name;
 	this.items		= [];
 	this.current	= 0;
 	this.type		= "playlist";
@@ -105,6 +105,15 @@ function Playlist(player) {
 			this._rebuild_indexes();
 			this._refresh_views();
 		}
+	}
+
+	this.addItems = function(items) {
+		for( var i=0; i < items.length; i++ ) {
+			var item = items[i];
+			this._add(item);
+		}
+		this._rebuild_indexes();
+		this._refresh_views();
 	}
 	
 	this._remove = function(index) {

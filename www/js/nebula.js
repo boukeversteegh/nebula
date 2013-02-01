@@ -4,6 +4,19 @@ function Nebula() {
 	this.files		= null;
 	this.playlist	= null;
 	this.view		= null;
+	this.playlists	= {};
+
+	this.addPlaylist = function(playlist) {
+		this.playlists[playlist.name] = playlist;
+	}
+
+	this.setPlaylist = function(name) {
+		this.playlist = this.getPlaylist(name);
+	}
+
+	this.getPlaylist = function(name) {
+		return this.playlists[name];
+	}
 
 	this.init = function() {
 		$('#player-prev').click(function() {

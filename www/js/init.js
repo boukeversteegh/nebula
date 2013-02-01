@@ -14,7 +14,7 @@ function init() {
 	window.files = new Files(window.player);
 	window.player.init('#player', '#jplayer');
 	
-	var userplaylist = new Playlist(window.player);
+	var userplaylist = new Playlist(window.player, 'user:default');
 	var playlistview = new PlaylistView(userplaylist, '#playlist');
 	playlistview.refresh();
 	
@@ -22,7 +22,9 @@ function init() {
 
 	window.nebula = new Nebula();
 	nebula.player = window.player;
-	nebula.playlist = window.files.playlist;
+
+	nebula.addPlaylist(userplaylist);
+
 	nebula.userplaylist = userplaylist;
 	nebula.files = window.files;
 	nebula.view = window.view;

@@ -5,32 +5,32 @@ function Files(player) {
 	this.player		= player;
 	this.folders	= [];
 	this.files		= [];
-	
-	this.playlists	= {};
+
 	this.playlist	= null;
 	
 	this.loadView = function(response) {
 		this.folders	= response.data.folders;
 		this.path		= response.data.path;
 		
+			
+		var files = [];
+		for( var i=0; i < response.data.files.length; i++ ) {
+			var file = response.data.files[i];
+
+			file.path	= this.path + '/' + file.file;
+			file.parent	= this.path;
+			files.push(file);
+		}
+		this.files = files;
+		
 		// Store a separate playlist for every path.
 		// This allows continous playing of a folder while browsing.
-		if( !this.playlists[this.path] || !response.cached ) {
-			var playlist = new Playlist(this.player);
-			
-			this.playlists[this.path] = playlist;
-			
-			var files = [];
-			for( var i=0; i < response.data.files.length; i++ ) {
-				var file = response.data.files[i];
-				file.path = this.path + '/' + file.file;
-				file.parent = this.path;
-				playlist._add(file);
-				files.push(file);
-			}
-			this.files = files;
-		} else {
-			var playlist = this.playlists[this.path];
+
+		var playlist = nebula.getPlaylist('files:' + this.path);
+		if( !playlist || !response.cached ) {
+			var playlist = new Playlist(this.player, 'files:' + this.path);
+			nebula.addPlaylist(playlist);
+			playlist.addItems(files);
 		}
 		this.playlist = playlist;
 	}
