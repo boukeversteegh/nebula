@@ -30,3 +30,8 @@ Optional
 * Python Modules
   * [simplejson](https://github.com/simplejson/simplejson): Faster JSON module than built-in
   * [eyed3](http://eyed3.nicfit.net/): Module for reading ID3-tags from MP3 files (Now built-in. Delete lib/eyed3 to use system module instead.)
+
+Pivotal Tracker
+===============
+
+For issues and features, please see: https://www.pivotaltracker.com/projects/744593
