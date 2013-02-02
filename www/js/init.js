@@ -53,12 +53,17 @@ function init() {
 	
 	window.view.show(window.location.pathname, true);
 	
+	$(window).scroll(function() {
+		var currentstate = window.history.state;
+		currentstate.scrollY = window.scrollY;
+		currentstate.scrollX = window.scrollX;
+		window.history.replaceState(currentstate);
+	});
+
 	$(window).bind('popstate', function(event) {
-		// if the event has our history data on it, load the page fragment with AJAX
-		var state = event.originalEvent.state;
 		if (event.originalEvent.state) {
 			var state = event.originalEvent.state;
-		    window.view.show(state.path, false);
+		    window.view.show(state.path, false, {state:state});
 		}
 	});
 	

@@ -116,6 +116,9 @@ function View() {
 	this.views['/'] = this.views['/view/files*'];
 	
 	this.show = function(path, pushstate, options) {
+		if( !options ) {
+			options = {};
+		}
 		var nocache = options.nocache;
 		var state = options.state;
 
@@ -152,12 +155,12 @@ function View() {
 		for( var i=0; i<view.length; i++) {
 			if( pushstate && view[i].history ) {
 				if( window.history.pushState ) {
-					var state = {
-						"path": path,
-						"scrollX" = window.scrollX,
-						"scrollY" = window.scrollY
+					var tstate = {
+						"path":		path,
+						"scrollX":	window.scrollX,
+						"scrollY":	window.scrollY
 					}
-					window.history.pushState(state, null, path);
+					window.history.pushState(tstate, null, path);
 				}
 				this.path = path;
 			}
