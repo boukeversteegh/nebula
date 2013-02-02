@@ -34,8 +34,10 @@ function View() {
 					}
 					window.files.loadView(JSON.parse(JSON.stringify(this.response)));
 					nebula.showTab('files');
-					if( this.newstate ) {
+					if( !this.state ) {
 						window.scrollTo(0,0);
+					} else {
+						window.scrollTo(this.state.scrollX, this.state.scrollY);
 					}
 				},
 				"onload": 	function() {
@@ -113,7 +115,10 @@ function View() {
 	
 	this.views['/'] = this.views['/view/files*'];
 	
-	this.show = function(path, pushstate, nocache) {
+	this.show = function(path, pushstate, options) {
+		var nocache = options.nocache;
+		var state = options.state;
+
 		var view = null;
 		var viewname = null;
 		var trail = null;
@@ -147,7 +152,12 @@ function View() {
 		for( var i=0; i<view.length; i++) {
 			if( pushstate && view[i].history ) {
 				if( window.history.pushState ) {
-					window.history.pushState({"path": path}, null, path);
+					var state = {
+						"path": path,
+						"scrollX" = window.scrollX,
+						"scrollY" = window.scrollY
+					}
+					window.history.pushState(state, null, path);
 				}
 				this.path = path;
 			}
@@ -161,7 +171,7 @@ function View() {
 				"onstart":		view[i].onstart,
 				"onload":		view[i].onload,
 				"onrender":		view[i].onrender,
-				"newstate":		pushstate
+				"state":		state
 			}
 			if( typeof cview.dataurl === 'function' ) {
 				cview.dataurl = cview.dataurl.call(cview);

@@ -57,7 +57,8 @@ function init() {
 		// if the event has our history data on it, load the page fragment with AJAX
 		var state = event.originalEvent.state;
 		if (event.originalEvent.state) {
-		    window.view.show(event.originalEvent.state.path, false);
+			var state = event.originalEvent.state;
+		    window.view.show(state.path, false);
 		}
 	});
 	
