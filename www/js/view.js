@@ -34,7 +34,9 @@ function View() {
 					}
 					window.files.loadView(JSON.parse(JSON.stringify(this.response)));
 					nebula.showTab('files');
-					window.scrollTo(0,0);
+					if( this.newstate ) {
+						window.scrollTo(0,0);
+					}
 				},
 				"onload": 	function() {
 					dragdrop_init();
@@ -158,7 +160,8 @@ function View() {
 				"target":		view[i].target,
 				"onstart":		view[i].onstart,
 				"onload":		view[i].onload,
-				"onrender":		view[i].onrender
+				"onrender":		view[i].onrender,
+				"newstate":		pushstate
 			}
 			if( typeof cview.dataurl === 'function' ) {
 				cview.dataurl = cview.dataurl.call(cview);
