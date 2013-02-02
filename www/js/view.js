@@ -34,11 +34,6 @@ function View() {
 					}
 					window.files.loadView(JSON.parse(JSON.stringify(this.response)));
 					nebula.showTab('files');
-					if( !this.state ) {
-						window.scrollTo(0,0);
-					} else {
-						window.scrollTo(this.state.scrollX, this.state.scrollY);
-					}
 				},
 				"onload": 	function() {
 					dragdrop_init();
@@ -91,6 +86,12 @@ function View() {
 						icons: {primary: 'ui-icon-play'},
 						text: false
 					});
+					
+					if( !this.state ) {
+						window.scrollTo(0,0);
+					} else {
+						window.scrollTo(this.state.scrollX, this.state.scrollY);
+					}
 				}
 			}
 		],
