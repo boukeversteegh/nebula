@@ -41,6 +41,30 @@ function PlayerView(player) {
 
 	this.onStarted = function(file) {
 		window.view.render('/www/tpl/play.html', {data:file}, '#player-metadata');
+
+		if( window.webkitNotifications.checkPermission() == 0 ) { // 0 is PERMISSION_ALLOWED
+			var n_title = '';
+			var n_content = '';
+
+			if( file.id3.title && file.id3.artist ) {
+				n_title		= file.id3.title;
+				n_content	= file.id3.artist;
+			} else {
+				n_title		= file.file;
+			}
+			notification = window.webkitNotifications
+				.createNotification('', n_title, n_content);
+			notification.show();
+			setTimeout(
+				(function(notification) {
+					return function() {
+						notification.cancel();
+					};
+				})(notification)
+			, 7000);
+			//notification.ondisplay = function() { console.log('ondisplay') };
+			//notification.onclose = function() { console.log('onclose') };
+		  }
 		this.refresh();
 	}
 	

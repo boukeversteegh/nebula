@@ -216,6 +216,7 @@ function Playlist(player, name) {
 		this.player.playFile(this.items[index]);
 		this.playing = true;
 		this.paused = false;
+		window.webkitNotifications.requestPermission();
 		window.nebula.playlist = this;
 	}
 	
