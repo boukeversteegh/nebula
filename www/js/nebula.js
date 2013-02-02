@@ -6,6 +6,9 @@ function Nebula() {
 	this.view		= null;
 	this.playlists	= {};
 
+	// Current Tab
+	this.tab = null;
+
 	this.addPlaylist = function(playlist) {
 		this.playlists[playlist.name] = playlist;
 	}

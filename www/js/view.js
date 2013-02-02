@@ -34,6 +34,7 @@ function View() {
 					}
 					window.files.loadView(JSON.parse(JSON.stringify(this.response)));
 					nebula.showTab('files');
+					window.scrollTo(0,0);
 				},
 				"onload": 	function() {
 					dragdrop_init();

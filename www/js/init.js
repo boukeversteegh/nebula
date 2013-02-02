@@ -37,12 +37,12 @@ function init() {
 		$(this).click( function() {
 			var tabname = $(this).val();
 			var tabdomid = '#tab_' + tabname;
-			
-			$('#tabs label').removeClass('ui-state-active');
-			$('[role=tab]').hide();
+			nebula.tab = tabname;
+			this.checked = true;
+    		$(this).button("refresh");
+			$('[role=tab]').not(tabdomid).hide();
 			$(tabdomid).show();
 			
-			$('#tabs [for=tab-btn-' + tabname + ']').addClass('ui-state-active');
 			return false;
 		});
 	});
