@@ -22,6 +22,9 @@ function PlayerView(player) {
 		$('#playlist-shuffle').empty().button({
 			icons: {primary: "ui-icon-shuffle"}, text: false
 		});
+		$('#playlist-repeat').empty().button({
+			icons: {primary: "ui-icon-arrowrefresh-1-e"}, text: false
+		});
 
 		$('#player-prevplaypausenext').buttonset();
 

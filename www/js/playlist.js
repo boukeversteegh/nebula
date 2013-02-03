@@ -8,8 +8,6 @@ function Playlist(player, name) {
 	this.playing	= false; // A song is loaded and playback has been started
 	this.paused		= false; // Player is paused at the moment
 	
-	this.repeat		= 'playlist';
-	
 	this.view		= null;
 	
 	this.player.events.bind('ENDED', function(e) {
@@ -27,6 +25,7 @@ function Playlist(player, name) {
 	this.player.events.bind('PLAY', function(e) {
 		if( self.isActivePlaylist() ) {
 			self.paused = false;
+			self.playing = true;
 		}
 	});
 
@@ -43,11 +42,10 @@ function Playlist(player, name) {
 	}
 	
 	this.onPlaylistEnded = function() {
-		if( this.repeat === 'playlist' ) {
+		if( nebula.repeat === 'playlist' ) {
 			this.next();
 		} else {
 			this.playing = false;
-			this.current = null;
 			this._refresh_views();
 		}
 	}
