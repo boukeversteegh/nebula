@@ -40,6 +40,7 @@ function Uploader() {
 			"size":		file.size, 
 			"path": 	path + filepath,
 			"parent":	parent,
+			"section":	path,
 			"uploaddata":	{
 				"filehandle":		file,
 				"xhr":				xhr,
@@ -75,7 +76,7 @@ function Uploader() {
 			
 			var formData = new FormData();
 			formData.append('file', item.uploaddata.filehandle);
-			formData.append('path', item.parent);
+			formData.append('path', item.section);
 			item.uploaddata.started = true;
 			item.uploaddata.timestarted = (new Date().getTime() / 1000);
 			item.uploaddata.xhr.send(formData);
