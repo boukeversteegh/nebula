@@ -9,7 +9,7 @@ function PlayerView(player) {
 			icons: {primary: "ui-icon-stop"}, text: false
 		});
 		$('#player-play').button({
-			icons: {primary: "ui-icon-play"}, text: false
+			icons: {primary: "ui-icon-play"}, text: false, disabled: true
 		});
 		$('#player-pause').button({
 			icons: {primary: "ui-icon-pause"}, text: false
@@ -46,6 +46,7 @@ function PlayerView(player) {
 	this.onLoaded = function(file) {
 		window.view.render('/www/tpl/play.html', {data:file}, '#player-metadata');
 		this.refresh();
+		$('#player-play').button('option', {'disabled':false});
 	}
 
 	this.onStarted = function(file) {
