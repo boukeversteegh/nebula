@@ -72,6 +72,12 @@ a {
 #player-controls {
 }
 
+#player #player-play,
+#player #player-pause {
+	padding: 0.25em 1.5em;
+	border-radius: 0.5em;
+}
+
 #player button {
 	padding: 0 1.5em;
 }
