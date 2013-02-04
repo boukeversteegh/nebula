@@ -9,8 +9,6 @@ function Nebula() {
 	// Current Tab
 	this.tab = null;
 
-	this.shuffle	= false;
-	this.repeat		= 'playlist';
 
 	this.addPlaylist = function(playlist) {
 		this.playlists[playlist.name] = playlist;
@@ -48,7 +46,7 @@ function Nebula() {
 
 		$('#playlist-repeat').click(function() {
 			var repeat = $('#playlist-repeat').prop('checked');
-			self.repeat = ( repeat ? 'playlist' : false );
+			self.player.repeat = ( repeat ? 'playlist' : false );
 		});
 	}
 

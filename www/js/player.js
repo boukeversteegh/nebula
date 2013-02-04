@@ -5,6 +5,10 @@ function Player() {
 	this.filesroot	= '/files';
 	this.events		= new EventHandler();
 	this.paused		= false;
+
+	this.shuffle	= false;
+	this.repeat		= 'playlist';
+
 	this.init = function(playerid, jplayerid) {
 		this.playerid	= playerid;
 		this.jplayerid	= jplayerid;
@@ -58,8 +62,8 @@ function Player() {
 				// For player.js, pause means when the user requested pause.
 				if( !e.jPlayer.status.ended ) {
 					self.events.trigger('PAUSE');
+					self.paused = true;
 				}
-				self.paused = true;
 			},
 			play: function() {
 				if( self.playing && self.paused ) {

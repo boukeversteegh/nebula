@@ -34,7 +34,7 @@ function Playlist(player, name) {
 	}
 	
 	this.onPlaylistEnded = function() {
-		if( nebula.repeat === 'playlist' ) {
+		if( this.player.repeat === 'playlist' ) {
 			this.next();
 		} else {
 			this.playing = false;
@@ -51,7 +51,7 @@ function Playlist(player, name) {
 			return false;
 		}
 		
-		if( nebula.shuffle ) {
+		if( this.player.shuffle ) {
 			// Get a random next song
 			var next = Math.floor(Math.random()*this.items.length);
 
@@ -214,7 +214,7 @@ function Playlist(player, name) {
 		this.player.playFile(this.items[index]);
 		this.playing = true;
 		window.webkitNotifications.requestPermission();
-		window.nebula.playlist = this;
+		nebula.playlist = this;
 	}
 	
 }
