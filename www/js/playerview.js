@@ -2,7 +2,8 @@ function PlayerView(player) {
 	var self = this;
 	this.player = player;
 	this.player.events.bind('STARTED', function(file) { self.onStarted(file)} );
-	
+	this.player.events.bind('LOADED', function(file) { self.onLoaded(file)} );
+
 	this.init = function() {
 		$('#player-stop').button({
 			icons: {primary: "ui-icon-stop"}, text: false
@@ -42,9 +43,17 @@ function PlayerView(player) {
 		);
 	}
 
-	this.onStarted = function(file) {
+	this.onLoaded = function(file) {
 		window.view.render('/www/tpl/play.html', {data:file}, '#player-metadata');
+		this.refresh();
+	}
 
+	this.onStarted = function(file) {
+		this.announceSong(file);
+	}
+
+	this.announceSong = function(file) {
+		// Show Notification
 		if( window.webkitNotifications.checkPermission() == 0 ) { // 0 is PERMISSION_ALLOWED
 			var n_title = '';
 			var n_content = '';
@@ -68,7 +77,6 @@ function PlayerView(player) {
 			//notification.ondisplay = function() { console.log('ondisplay') };
 			//notification.onclose = function() { console.log('onclose') };
 		  }
-		this.refresh();
 	}
 	
 	this.refresh = function() {

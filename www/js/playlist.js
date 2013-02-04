@@ -6,7 +6,6 @@ function Playlist(player, name) {
 	this.current	= 0;
 	this.type		= "playlist";
 	this.playing	= false; // A song is loaded and playback has been started
-	this.paused		= false; // Player is paused at the moment
 	
 	this.view		= null;
 	
@@ -15,16 +14,9 @@ function Playlist(player, name) {
 			self.onSongEnded();
 		}
 	});
-	
-	this.player.events.bind('PAUSE', function(e) {
-		if( self.isActivePlaylist() ) {
-			self.paused = true;
-		}
-	});
-	
+
 	this.player.events.bind('PLAY', function(e) {
 		if( self.isActivePlaylist() ) {
-			self.paused = false;
 			self.playing = true;
 		}
 	});
@@ -81,9 +73,14 @@ function Playlist(player, name) {
 		
 		
 		if( this.setCurrent(next) ) {
-			if( this.playing && !this.paused ) {
-				this.playing = false;
+			// If a song is loaded in the player
+			if( this.playing && !nebula.player.paused ) {
+				// If not paused, play next song
 				this.play();
+			} else {
+				// If paused, stop current song and load next
+				this.player.stop();
+				this.load(null, false);
 			}
 		} else {
 			this.playing = false;
@@ -198,8 +195,11 @@ function Playlist(player, name) {
 		this._refresh_views();
 	}
 	
-	this.load = function(index) {
-		this.player.loadFile(this.items[index]);
+	this.load = function(index, prebuffer) {
+		if( typeof index == "undefined" || index === null ) {
+			index = this.current;
+		}
+		this.player.loadFile(this.items[index], prebuffer);
 	}
 	
 	this.play = function(index) {
@@ -213,7 +213,6 @@ function Playlist(player, name) {
 		
 		this.player.playFile(this.items[index]);
 		this.playing = true;
-		this.paused = false;
 		window.webkitNotifications.requestPermission();
 		window.nebula.playlist = this;
 	}

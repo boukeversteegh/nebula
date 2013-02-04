@@ -4,7 +4,7 @@ function Player() {
 	this.current	= null;
 	this.filesroot	= '/files';
 	this.events		= new EventHandler();
-	
+	this.paused		= false;
 	this.init = function(playerid, jplayerid) {
 		this.playerid	= playerid;
 		this.jplayerid	= jplayerid;
@@ -51,6 +51,7 @@ function Player() {
 			//ready: function() {},
 			ended: function() {
 				self.events.trigger('ENDED');
+				self.playing = false;
 			},
 			pause: function(e) {
 				// Don't trigger Pause event when the song ended.
@@ -58,9 +59,16 @@ function Player() {
 				if( !e.jPlayer.status.ended ) {
 					self.events.trigger('PAUSE');
 				}
+				self.paused = true;
 			},
 			play: function() {
-				self.events.trigger('PLAY');
+				if( self.playing && self.paused ) {
+					self.events.trigger('PLAY', [self.current]);
+				} else {
+					self.events.trigger('STARTED', [self.current]);
+				}
+				self.paused = false;
+				self.playing = true;
 			},
 			errorAlerts: true,
 			warningAlerts: false
@@ -74,17 +82,30 @@ function Player() {
 		return this.jplayer;
 	}
 	
-	this.loadFile = function(file) {
+	this.loadFile = function(file, prebuffer /* =true */) {
+		if( typeof prebuffer == "undefined") {
+			prebuffer = true;
+		}
 		var url = this.filesroot + file.path;
 		url = url.replace('#', '%23');
+		/*
+			TODO:
+			Make jPlayer prebuffer. Something like:
+			this.jp().jPlayer('preload', prebuffer)
+		*/
 		this.jp().jPlayer("setMedia", {mp3: url});
 		this.current = file;
+		this.events.trigger('LOADED', [file]);
 	}
 	
 	this.playFile = function(file) {
 		this.loadFile(file);
 		this.jp().jPlayer('play');
-		this.events.trigger('STARTED', [file]);
+	}
+
+	this.stop = function() {
+		this.jp().jPlayer('stop');
+		this.playing = false;
 	}
 	
 	this.seek = function(position) {
