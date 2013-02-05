@@ -41,7 +41,7 @@ function Nebula() {
 
 		$('#playlist-shuffle').click(function() {
 			var shuffle = $('#playlist-shuffle').prop('checked');
-			self.shuffle = shuffle;
+			self.player.shuffle = shuffle;
 		});
 
 		$('#playlist-repeat').click(function() {

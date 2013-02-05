@@ -8,7 +8,9 @@ function Playlist(player, name) {
 	this.playing	= false; // A song is loaded and playback has been started
 	
 	this.view		= null;
-	
+
+	this.history	= [];	// Keeps played files. Used for <previous> button.
+
 	this.player.events.bind('ENDED', function(e) {
 		if( self.isActivePlaylist() && self.playing ) {
 			self.onSongEnded();
@@ -88,7 +90,15 @@ function Playlist(player, name) {
 	}
 	
 	this.previous = function() {
-		var hasprev = this.setCurrent(this.current-1);
+		var previous = this.history.pop();
+		if( previous === this.current ) {
+			previous = this.history.pop();
+		}
+		if( nebula.player.shuffle && previous ) {
+			var hasprev = this.setCurrent(previous.index);
+		} else {
+			var hasprev = this.setCurrent(this.current-1);
+		}
 		if( hasprev ) {
 			if( this.playing ) {
 				this.playing = false;
@@ -206,15 +216,21 @@ function Playlist(player, name) {
 		if( typeof index == "undefined" ) {
 			index = this.current;
 		}
+
 		if( !this.setCurrent(index) ){ 
 			this.onPlaylistEnded();
 			return;
 		}
-		
-		this.player.playFile(this.items[index]);
+		var file = this.items[index];
+
+		if( this.player.shuffle && this.current !== null) {
+			this.history.push(file);
+		}
+		this.player.playFile(file);
 		this.playing = true;
 		window.webkitNotifications.requestPermission();
 		nebula.playlist = this;
+		return file;
 	}
 	
 }

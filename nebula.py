@@ -15,6 +15,7 @@ if cmd_folder not in sys.path:
 import plugins.metadata
 import plugins.files
 import plugins.lyrics
+import plugins.search
 
 class Nebula:
 	pass
@@ -60,11 +61,13 @@ if __name__ == '__main__':
 		"cherrypy":	cherrypy,
 		"userconf":	userconf,
 		"conf":		conf,
-		"events":	events
+		"events":	events,
+		"nebula":	nebula
 	}
-	nebula.files = plugins.files.Files(settings)
-	nebula.metadata = plugins.metadata.Metadata(settings)
-	nebula.lyrics = plugins.lyrics.Lyrics(settings)
+	nebula.search	= plugins.search.Search(settings)
+	nebula.files	= plugins.files.Files(settings)
+	nebula.metadata	= plugins.metadata.Metadata(settings)
+	nebula.lyrics	= plugins.lyrics.Lyrics(settings)
 	
 	cherrypy.config.update({
 		'server.socket_host': '0.0.0.0', 

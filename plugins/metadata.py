@@ -51,7 +51,8 @@ class Metadata:
 	
 	def __init__(self, settings):
 		global cherrypy
-
+		global nebula
+		nebula			= settings['nebula']
 		cherrypy		= settings['cherrypy'];
 		self.userconf	= settings['userconf']
 		self.events		= settings['events']
@@ -99,6 +100,8 @@ class Metadata:
 		self.events.bind('file.CHANGE', file_CHANGE)
 		self.events.bind('folder.CHANGE', folder_CHANGE)
 		self.events.bind('localfile.CHANGE', localfile_CHANGE)
+		nebula.search.add(**{"path":u"/test.mp3", "title":u"test","artist":u"test"})
+		nebula.search.commit()
 	
 	def default(self, *trail):
 		cherrypy.response.headers['Content-Type'] = "application/json"
@@ -117,21 +120,23 @@ class Metadata:
 				else:
 					metadata = self._getFileMetadata(trail)
 					self.cache[trail] = metadata
+					
 				metadata["parent"] = "/" + "/".join(trail[0:-1])
 				metadata["path"] = os.path.join("/", *trail)
 				response['data'] = metadata
-			
+				self.addToIndex(metadata)
+
 			# DIRECTORY
 			if os.path.isdir(localpath):
 				if cacheDirs and trail in self.cache:
 					response = self.cache[trail]
 					response['cached'] = True
 				else:
-					files = []
-					folders = []
+					files	= []
+					folders	= []
 					for item in os.listdir(localpath):
-						item = os.path.join(localpath, item)
-						basename = os.path.basename(item)
+						item		= os.path.join(localpath, item)
+						basename	= os.path.basename(item)
 						if os.path.isdir(item):
 							folders.append(basename)
 						else:
@@ -142,6 +147,9 @@ class Metadata:
 							else:
 								filemetadata = self._getFileMetadata(trail+tuple([basename]))
 								self.cache[cacheid] = filemetadata
+								_indexfile = filemetadata.copy()
+								_indexfile['path'] = "/".join(trail) + "/" + basename
+								self.addToIndex(_indexfile)
 							files.append(filemetadata)
 					files.sort()
 					folders.sort()
@@ -155,6 +163,7 @@ class Metadata:
 						"parent":	"/" + "/".join(trail[0:-1])
 					}
 					self.cache[trail] = response
+					self.commitToIndex()
 			
 		else:
 			response['success'] = False
@@ -215,3 +224,13 @@ class Metadata:
 			"mimetype":	mimetype
 		}
 		return metadata
+
+	def addToIndex(self, metadata):
+		document = {}
+		document["title"]	= unicode(metadata["id3"]["title"])
+		document["artist"]	= unicode(metadata["id3"]["artist"])
+		document["album"]	= unicode(metadata["id3"]["album"])
+		nebula.search.add(**document)
+
+	def commitToIndex(self):
+		nebula.search.commit()
