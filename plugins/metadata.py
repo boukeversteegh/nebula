@@ -227,6 +227,7 @@ class Metadata:
 
 	def addToIndex(self, metadata):
 		document = {}
+		document["path"]	= unicode(metadata["path"])
 		document["title"]	= unicode(metadata["id3"]["title"])
 		document["artist"]	= unicode(metadata["id3"]["artist"])
 		document["album"]	= unicode(metadata["id3"]["album"])
