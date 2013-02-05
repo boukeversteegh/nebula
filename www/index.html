@@ -23,6 +23,8 @@
 		<script src="/www/js/files.js"></script>
 		<script src="/www/js/playlist.js"></script>
 		<script src="/www/js/playlistview.js"></script>
+		<script src="/www/js/search.js"></script>
+		<script src="/www/js/searchview.js"></script>
 		<script src="/www/js/nebula.js"></script>
 		<script src="/www/js/init.js"></script>
 		
@@ -78,6 +80,9 @@
 						<input name="tabs" type="radio" value="files" id="tab-btn-files"/>
 						<label for="tab-btn-files">Files</label>
 						
+						<input name="tabs" type="radio" value="search" id="tab-btn-search"/>
+						<label for="tab-btn-search">Search</label>
+
 						<input name="tabs" type="radio" value="playlist" id="tab-btn-playlist"/>
 						<label for="tab-btn-playlist">Playlist</label>
 						
@@ -97,6 +102,13 @@
 				<div role="tab" id="tab_albums"></div>
 				<div role="tab" id="tab_playlist">
 					<div id="playlist" class="playlist"></div>
+				</div>
+				<div role="tab" id="tab_search">
+					<div class="text-input-container ui-corner-all ui-state-active">
+						<span class="ui-button-icon-secondary ui-icon ui-icon-search"></span>
+						<input id="search-query" type="text" class="text-input"/>
+					</div>
+					<button id="button-search" class="inline">Search</button>
 				</div>
 				<div id="changelog" style="float: right; position: absolute; top: 0;right: 0"><a href="/www/log.txt" target="_blank">Change log</a></div>
 			</div>

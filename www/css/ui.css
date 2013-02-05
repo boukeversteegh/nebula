@@ -20,3 +20,28 @@
 	background:		#CCC;
 	min-height:		100%;
 }
+
+.text-input-container {
+	display: inline-block;
+	padding-right: 16px;
+	position:relative;
+}
+
+.text-input-container .ui-icon {
+	position: absolute;
+	right: 2px;
+	top: 2px;
+	opacity: 0.5;
+}
+
+.text-input-container input {
+	border:		0;
+	background: transparent;
+}
+
+/*input.text-input {
+	height:	2em;
+	font-weight: normal;
+	padding: 0 0.5em;
+	background-image: url();
+}*/

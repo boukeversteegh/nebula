@@ -1,4 +1,8 @@
-import simplejson as json
+try:
+	import simplejson as json
+except ImportError:
+	import json
+
 import tempfile
 
 import whoosh
@@ -38,13 +42,18 @@ class Search:
 		with self.index.searcher() as searcher:
 			query	= QueryParser(field, self.index.schema).parse(query)
 			results	= searcher.search(query)
-			json = []
+			files = []
 			for result in results:
 				jresult = {}
 				for key in result:
 					jresult[key] = result[key]
-				json.append(jresult)
-			return repr(json)
+				files.append(jresult)
+		response = {
+			"data": files,
+			"success": True
+		}
+		return json.dumps(response)
+
 	default.exposed = True
 
 	def add(self, **fields):

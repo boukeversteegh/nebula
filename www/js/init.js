@@ -17,6 +17,10 @@ function init() {
 	var userplaylist = new Playlist(window.player, 'user:default');
 	var playlistview = new PlaylistView(userplaylist, '#playlist');
 	playlistview.refresh();
+
+	var search = new Search()
+	var searchview = new SearchView(search);
+	searchview.init();
 	
 	window.uploader.refresh();
 
@@ -25,9 +29,10 @@ function init() {
 
 	nebula.addPlaylist(userplaylist);
 
-	nebula.userplaylist = userplaylist;
-	nebula.files = window.files;
-	nebula.view = window.view;
+	nebula.userplaylist	= userplaylist;
+	nebula.files		= window.files;
+	nebula.view			= window.view;
+	nebula.search		= search;
 	nebula.init();
 	
 
@@ -46,10 +51,13 @@ function init() {
 			return false;
 		});
 	});
+	$('#tab-btn-search').click(function(){
+		$('#search-query').focus();
+	})
 	
 	//$('[for=tab-btn-files]').addClass('ui-state-active');
 	$('#tab-btn-files').trigger('click');
-	$('#tabs input').filter(':eq(2), :eq(3)').button('option', 'disabled', true);//.addClass('ui-state-disabled');
+	$('#tabs input').filter(':eq(3), :eq(4), :eq(5)').button('option', 'disabled', true);//.addClass('ui-state-disabled');
 	
 	window.view.show(window.location.pathname, true);
 	
