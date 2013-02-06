@@ -25,9 +25,10 @@ class Search:
 
 		schema = Schema(
 			path	= ID(stored=True),
-			artist	= TEXT(stored=True),
-			title	= TEXT(stored=True),
-			album	= TEXT(stored=True)
+			artist	= TEXT,
+			title	= TEXT,
+			album	= TEXT,
+			id3		= STORED
 		)
 
 		index = whoosh.index.create_in(indexdir, schema)

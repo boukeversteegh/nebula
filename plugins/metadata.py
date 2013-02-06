@@ -231,6 +231,7 @@ class Metadata:
 		document["title"]	= unicode(metadata["id3"]["title"])
 		document["artist"]	= unicode(metadata["id3"]["artist"])
 		document["album"]	= unicode(metadata["id3"]["album"])
+		document["id3"]		= metadata["id3"]
 		nebula.search.add(**document)
 
 	def commitToIndex(self):

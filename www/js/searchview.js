@@ -1,8 +1,9 @@
-function SearchView(search) {
-	this.search = search;
+function SearchView(search, playlist) {
+	this.search		= search;
+	this.playlist	= playlist;
 
 	search.events.bind('RESPONSE', function(data) {
-		$('#tab_search').append(JSON.stringify(data));
+		view.render('/www/tpl/playlist.html', {data: this.playlist, playlist: this.playlist.name}, '#search-playlist');
 	});
 
 	this.init = function() {

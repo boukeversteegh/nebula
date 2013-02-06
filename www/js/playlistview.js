@@ -7,7 +7,13 @@ function PlaylistView(playlist, target) {
 	
 	this.refresh = function() {
 		var self = this;
-		view.render('/www/tpl/playlist.html', {data: this.playlist}, this.target).then(function() {
+		var data = {
+			data:		{
+				files: this.playlist.items
+			},
+			playlist: this.playlist.name
+		};
+		view.render('/www/tpl/playlist.html', data, this.target).then(function() {
 			var targetdomobject = $(self.target);
 			targetdomobject.find('.playlist-play').empty().button({text:false, icons: {primary: 'ui-icon-play'}});
 			targetdomobject.find('.playlist-remove').empty().button({text:false, icons: {primary: 'ui-icon-close'}});

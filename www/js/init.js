@@ -18,8 +18,9 @@ function init() {
 	var playlistview = new PlaylistView(userplaylist, '#playlist');
 	playlistview.refresh();
 
-	var search = new Search()
-	var searchview = new SearchView(search);
+	var searchplaylist = new Playlist(window.player, 'search:default');
+	var search = new Search();
+	var searchview = new SearchView(search, searchplaylist);
 	searchview.init();
 	
 	window.uploader.refresh();

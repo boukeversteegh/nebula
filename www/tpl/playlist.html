@@ -1,11 +1,11 @@
 {{#data}}
 
 
-{{#items.0}}
+{{#files.0}}
 <table class="pane" width="100%">
-{{#items}}
+{{#files}}
 	<tr data-path="{{path}}">
-		<td><button onclick="nebula.userplaylist.play({{index}})" class="playlist-play green">play</button></td>
+		<td><button onclick="nebula.getPlaylist('{{playlist}}').play({{index}})" class="playlist-play green">play</button></td>
 		<td align="right" width="40" class="extra">
 			{{id3.track_num.0}}
 		</td>
@@ -42,13 +42,13 @@
 			{{info.durationstr}}
 		</td>
 		<td width="20">
-			<button onclick="nebula.userplaylist.remove({{index}})" class="playlist-remove red">Remove</button>
+			<button onclick="nebula.getPlaylist('{{playlist}}').remove({{index}})" class="playlist-remove red">Remove</button>
 		</td>
 	</tr>
-{{/items}}
+{{/files}}
 </table>
-{{/items.0}}
-{{^items}}
+{{/files.0}}
+{{^files}}
 <div class="pane"><i>Playlist is empty</i></div>
-{{/items}}
+{{/files}}
 {{/data}}
