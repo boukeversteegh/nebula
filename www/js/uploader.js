@@ -63,7 +63,7 @@ function Uploader() {
 		// Remove completed uploads from active
 		for( var i=0; i<this.active.length; i++) {
 			var activeupload = this.active[i];
-			if( activeupload.completed ) {
+			if( activeupload.uploaddata.completed ) {
 				this.active.splice(i, 1);
 				i--;
 			}
@@ -164,7 +164,7 @@ function Uploader() {
 		item.uploaddata.timecompleted = (new Date().getTime() / 1000);
 		window.uploader.refresh(false);
 		window.uploader.processQueue();
-		if( item.parent == window.files.path ) {
+		if( item.parent == window.files.path || item.section == window.files.path ) {
 			view.show(view.path, false, true);
 		}
 	}
