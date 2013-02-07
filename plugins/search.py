@@ -25,6 +25,7 @@ class Search:
 
 		schema = Schema(
 			path	= ID(stored=True),
+			mimetype= STORED,
 			artist	= TEXT,
 			title	= TEXT,
 			album	= TEXT,
@@ -50,8 +51,10 @@ class Search:
 					jresult[key] = result[key]
 				files.append(jresult)
 		response = {
-			"data": files,
-			"success": True
+			"data":		{
+				"files":	files
+			},
+			"success":	True
 		}
 		return json.dumps(response)
 

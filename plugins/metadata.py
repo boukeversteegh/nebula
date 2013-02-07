@@ -100,7 +100,7 @@ class Metadata:
 		self.events.bind('file.CHANGE', file_CHANGE)
 		self.events.bind('folder.CHANGE', folder_CHANGE)
 		self.events.bind('localfile.CHANGE', localfile_CHANGE)
-		nebula.search.add(**{"path":u"/test.mp3", "title":u"test","artist":u"test"})
+		nebula.search.add(**{"path":u"/test.mp3", "title":u"test","artist":u"test","mimetype":u"audio/mpeg"})
 		nebula.search.commit()
 	
 	def default(self, *trail):
@@ -227,12 +227,14 @@ class Metadata:
 
 	def addToIndex(self, metadata):
 		document = {}
-		document["path"]	= unicode(metadata["path"])
+		document["path"]		= unicode(metadata["path"])
+		document["mimetype"]	= metadata["mimetype"]
 		if metadata["id3"]:
-			document["title"]	= unicode(metadata["id3"]["title"])
-			document["artist"]	= unicode(metadata["id3"]["artist"])
-			document["album"]	= unicode(metadata["id3"]["album"])
 			document["id3"]		= metadata["id3"]
+			# Add indexes
+			for tag in ["title", "artist", "album"]:
+				if tag in metadata["id3"]:
+					document[tag] = unicode(metadata["id3"][tag])
 		nebula.search.add(**document)
 
 	def commitToIndex(self):

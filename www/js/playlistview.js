@@ -1,9 +1,18 @@
 function PlaylistView(playlist, target) {
-	this.playlist = playlist;
-	this.target = target;
+	this.playlist	= playlist;
+	this.target		= target;
 	
 	this.playlist.view = this;
-
+	
+	this.connect = function(playlist, target) {
+		this.playlist.view = null;
+		this.playlist = playlist;
+		this.playlist.view = this;
+		if( target ) {
+			this.target = target;
+		}
+		console.log("CONNECTED");
+	}
 	
 	this.refresh = function() {
 		var self = this;

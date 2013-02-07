@@ -20,7 +20,9 @@ function init() {
 
 	var searchplaylist = new Playlist(window.player, 'search:default');
 	var search = new Search();
-	var searchview = new SearchView(search, searchplaylist);
+	var searchplaylistview = new PlaylistView(searchplaylist, '#search-playlist');
+	var searchview = new SearchView(search, searchplaylistview);
+	
 	searchview.init();
 	
 	window.uploader.refresh();
@@ -35,6 +37,12 @@ function init() {
 	nebula.view			= window.view;
 	nebula.search		= search;
 	nebula.init();
+	
+	window.debug = {
+		searchplaylistview: searchplaylistview,
+		search: search,
+		searchplaylist: searchplaylist
+	}
 	
 
 	$('#main').css('margin-top', $('#top').height());

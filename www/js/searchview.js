@@ -1,11 +1,16 @@
-function SearchView(search, playlist) {
-	this.search		= search;
-	this.playlist	= playlist;
+function SearchView(search, playlistview) {
+	var self = this;
+	this.search			= search;
+	this.playlistview	= playlistview;
 
-	search.events.bind('RESPONSE', function(data) {
-		view.render('/www/tpl/playlist.html', {data: this.playlist, playlist: this.playlist.name}, '#search-playlist');
+	/*search.events.bind('RESPONSE', function(data) {
+		data.playlist = this.playlist.name;
+		//view.render('/www/tpl/playlist.html', data, '#search-playlist');
+	});*/
+
+	search.events.bind('NEWPLAYLIST', function(playlist) {
+		self.playlistview.connect(playlist, '#search-playlist');
 	});
-
 	this.init = function() {
 		$('#button-search').button();
 

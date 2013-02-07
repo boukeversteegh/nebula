@@ -1,5 +1,7 @@
 function Playlist(player, name) {
 	var self		= this;
+	this.debug		= true;
+
 	this.player		= player;
 	this.name		= name;
 	this.items		= [];
@@ -10,6 +12,7 @@ function Playlist(player, name) {
 	this.view		= null;
 
 	this.history	= [];	// Keeps played files. Used for <previous> button.
+
 
 	this.player.events.bind('ENDED', function(e) {
 		if( self.isActivePlaylist() && self.playing ) {
@@ -22,6 +25,12 @@ function Playlist(player, name) {
 			self.playing = true;
 		}
 	});
+	
+	this.log = function(string) {
+		if( this.debug ) {
+			console.log(string);
+		}
+	}
 
 	this.isActivePlaylist = function() {
 		return (nebula.playlist === this);
@@ -117,6 +126,8 @@ function Playlist(player, name) {
 				this.items.push(item);
 			}
 			return true;
+		} else {
+			this.log("Not a valid Mimetype");
 		}
 		return false;
 	}
