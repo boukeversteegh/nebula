@@ -14,8 +14,13 @@ function SearchView(search, playlistview) {
 	this.init = function() {
 		$('#button-search').button();
 
+		$('#search-query').keypress(function(e) {
+			if( e.which == 13 ) {
+				nebula.search.search('all', $('#search-query').val())
+			}
+		});
 		$('#button-search').click(function() {
-			nebula.search.search('title', $('#search-query').val())
+			nebula.search.search('all', $('#search-query').val())
 		});
 	}
 }

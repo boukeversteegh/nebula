@@ -8,7 +8,7 @@ import tempfile
 import whoosh
 import whoosh.index
 from whoosh.fields import *
-from whoosh.qparser import QueryParser
+from whoosh.qparser import QueryParser, MultifieldParser
 from whoosh.writing import BufferedWriter
 
 class Search:
@@ -38,11 +38,16 @@ class Search:
 		self.index = index
 
 
-	def default(self, field, query):
-		field = field
-		query = unicode(query)
+	def default(self, field, querystring):
+		querystring = unicode(querystring)
 		with self.index.searcher() as searcher:
-			query	= QueryParser(field, self.index.schema).parse(query)
+		
+			if field == "all":
+				qparser = MultifieldParser(["artist", "title", "album"], self.index.schema)
+			else:
+				qparser	= QueryParser(field, self.index.schema)
+				
+			query = qparser.parse(querystring)
 			results	= searcher.search(query)
 			files = []
 			for result in results:
