@@ -79,13 +79,11 @@ class Metadata:
 
 		def file_CHANGE(trail):
 			# Delete file metadata from cache
-			if trail in self.cache:
-				del self.cache[trail]
+			self.deleteCache(*trail)
 				
 			# Delete parent directory from cache
 			parentdir = trail[:-1]
-			if parentdir in self.cache:
-				del self.cache[parentdir]
+			self.deleteCache(*parentdir)
 
 		def localfile_CHANGE(localpath):
 			libpath = self.userconf['librarypath']
@@ -95,14 +93,17 @@ class Metadata:
 				self.events.trigger('file.CHANGE', trail)
 					
 		def folder_CHANGE(trail):
-			if trail in self.cache:
-				del self.cache[trail]
+			self.deleteCache(*trail)
 			
 		self.events.bind('file.CHANGE', file_CHANGE)
 		self.events.bind('folder.CHANGE', folder_CHANGE)
 		self.events.bind('localfile.CHANGE', localfile_CHANGE)
 		nebula.search.add(**{"path":u"/test.mp3", "title":u"test","artist":u"test","mimetype":u"audio/mpeg"})
 		nebula.search.commit()
+	
+	def deleteCache(self, *trail):
+		if trail in self.cache:
+			del self.cache[trail]
 	
 	def default(self, *trail):
 		cherrypy.response.headers['Content-Type'] = "application/json"
