@@ -25,11 +25,11 @@ class Search:
 
 		schema = Schema(
 			path	= ID(stored=True),
-			mimetype= STORED,
+			file	= TEXT,
 			artist	= TEXT,
 			title	= TEXT,
 			album	= TEXT,
-			id3		= STORED
+			metadata= STORED
 		)
 
 		index = whoosh.index.create_in(indexdir, schema)
@@ -43,7 +43,7 @@ class Search:
 		with self.index.searcher() as searcher:
 		
 			if field == "all":
-				qparser = MultifieldParser(["artist", "title", "album"], self.index.schema)
+				qparser = MultifieldParser(["artist", "title", "album", "file"], self.index.schema)
 			else:
 				qparser	= QueryParser(field, self.index.schema)
 				
@@ -51,10 +51,8 @@ class Search:
 			results	= searcher.search(query)
 			files = []
 			for result in results:
-				jresult = {}
-				for key in result:
-					jresult[key] = result[key]
-				files.append(jresult)
+				file = result['metadata']
+				files.append(file)
 		response = {
 			"data":		{
 				"files":	files

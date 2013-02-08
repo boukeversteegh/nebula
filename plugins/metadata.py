@@ -5,6 +5,7 @@ import eyed3.mp3
 import pyinotify
 import asyncore
 import eventhandler
+from threading import Thread
 
 try:
 	import simplejson as json
@@ -28,6 +29,31 @@ class PyInotifyHandler(pyinotify.ProcessEvent):
 
 	def process_IN_MOVED_TO(self, event):
 		self.events.trigger('localfile.CHANGE', event.pathname)
+
+class MetadataIndexer(Thread):
+	def __init__(self, metadata, librarypath):
+		self.metadata		= metadata
+		self.librarypath	= librarypath
+		Thread.__init__(self)
+		
+	def run(self):
+		for (path, dirs, files) in os.walk(self.librarypath):
+			if path == self.librarypath:
+				parent = ""
+				parenttrail = []
+			else:
+				parent = os.path.relpath(path, self.librarypath)
+				parenttrail = parent.split("/")
+				
+			for filename in files:
+				trail = parenttrail + [filename]
+				print repr(trail)
+				#try:
+				self.metadata.default(*trail)
+				#except UnicodeDecodeError:
+				#	print repr(trail)
+				#	pass
+		
 
 class Metadata:
 	id3tags = [
@@ -98,14 +124,19 @@ class Metadata:
 		self.events.bind('file.CHANGE', file_CHANGE)
 		self.events.bind('folder.CHANGE', folder_CHANGE)
 		self.events.bind('localfile.CHANGE', localfile_CHANGE)
-		nebula.search.add(**{"path":u"/test.mp3", "title":u"test","artist":u"test","mimetype":u"audio/mpeg"})
+		nebula.search.add(**{"path":u"/test.mp3", "title":u"test","artist":u"test", "metadata": {"file": "test.mp3", "path":"/", "id3": {"title":"Test"}}})
 		nebula.search.commit()
+		self.startIndexer()
+	
+	def startIndexer(self):
+		indexer = MetadataIndexer(self, self.userconf['librarypath'])
+		indexer.start()
 	
 	def deleteCache(self, *trail):
 		if trail in self.cache:
 			del self.cache[trail]
 		self.deleteFromIndex(*trail)
-	
+		
 	def default(self, *trail):
 		cherrypy.response.headers['Content-Type'] = "application/json"
 		localpath = os.path.join(self.userconf['librarypath'], *trail)
@@ -236,10 +267,10 @@ class Metadata:
 
 	def addToIndex(self, metadata):
 		document = {}
-		document["path"]		= unicode(metadata["path"])
-		document["mimetype"]	= metadata["mimetype"]
+		document["file"]		= unicode(metadata["file"], errors='ignore')
+		document["path"]		= unicode(metadata["path"], errors='ignore')
+		document["metadata"]	= metadata
 		if metadata["id3"]:
-			document["id3"]		= metadata["id3"]
 			# Add indexes
 			for tag in ["title", "artist", "album"]:
 				if tag in metadata["id3"]:
