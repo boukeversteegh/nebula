@@ -228,34 +228,37 @@ class Metadata:
 	def _getFileMetadata(self, trail):
 		localpath = os.path.join(self.userconf['librarypath'], *trail)
 		if eyed3.mp3.isMp3File(localpath):
-			audiofile = eyed3.load(localpath)
-			id3 = {}
-			if audiofile.tag:
-				for tagname in Metadata.id3tags:
-					tagvalue = getattr(audiofile.tag, tagname)
-					if tagvalue:
-						id3[tagname] = tagvalue
+			try:
+				id3 = {}
+				audiofile = eyed3.load(localpath)
+				if audiofile.tag:
+					for tagname in Metadata.id3tags:
+						tagvalue = getattr(audiofile.tag, tagname)
+						if tagvalue:
+							id3[tagname] = tagvalue
+				if audiofile.info is None:
+					info = None
+				else:
+					m, s = divmod(audiofile.info.time_secs, 60)
+					h, m = divmod(m, 60)
+					if h > 0:
+						durationstr = "%d:%02d:%02d" % (h, m, s)
+					else:
+						durationstr = "%2d:%02d" % (m, s)
+					
+					info = {
+						"duration":		audiofile.info.time_secs,
+						"durationstr" : durationstr
+					}
+			except NotImplementedError:
+				id3 = None
 			
 			#tag['release_date'] = audiofile.tag.best_release_date
-			if audiofile.info is None:
-				info = None
-			else:
-				m, s = divmod(audiofile.info.time_secs, 60)
-				h, m = divmod(m, 60)
-				if h > 0:
-					durationstr = "%d:%02d:%02d" % (h, m, s)
-				else:
-					durationstr = "%2d:%02d" % (m, s)
-					
-				info = {
-					"duration":		audiofile.info.time_secs,
-					"durationstr" : durationstr
-				}
 			mimetype = 'audio/mpeg';
 		else:
-			id3		= None
-			info	= None
-			mimetype = None
+			id3			= None
+			info		= None
+			mimetype	= None
 		
 		metadata = {
 			"id3":		id3,
