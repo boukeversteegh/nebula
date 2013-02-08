@@ -1,3 +1,4 @@
+import os
 import os.path
 import eyed3
 import eyed3.mp3
@@ -114,6 +115,9 @@ class Metadata:
 			doCache = self._doCache()
 			# FILE
 			if os.path.isfile(localpath):
+				# Only add item to index if not cached yet (first time found)
+				doindex = trail not in self.cache
+				
 				if trail in self.cache and doCache:
 					metadata = self.cache[trail]
 					response['cached'] = True
@@ -124,7 +128,10 @@ class Metadata:
 				metadata["parent"] = "/" + "/".join(trail[0:-1])
 				metadata["path"] = os.path.join("/", *trail)
 				response['data'] = metadata
-				self.addToIndex(metadata)
+				
+				if doindex:
+					self.addToIndex(metadata)
+					self.commitToIndex()
 
 			# DIRECTORY
 			if os.path.isdir(localpath):
