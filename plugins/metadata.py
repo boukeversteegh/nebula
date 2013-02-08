@@ -148,7 +148,7 @@ class Metadata:
 								filemetadata = self._getFileMetadata(trail+tuple([basename]))
 								self.cache[cacheid] = filemetadata
 								_indexfile = filemetadata.copy()
-								_indexfile['path'] = "/".join(trail) + "/" + basename
+								_indexfile['path'] = "/" + "/".join(trail) + "/" + basename
 								self.addToIndex(_indexfile)
 							files.append(filemetadata)
 					files.sort()
