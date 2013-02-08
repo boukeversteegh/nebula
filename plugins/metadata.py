@@ -104,6 +104,7 @@ class Metadata:
 	def deleteCache(self, *trail):
 		if trail in self.cache:
 			del self.cache[trail]
+		self.deleteFromIndex(*trail)
 	
 	def default(self, *trail):
 		cherrypy.response.headers['Content-Type'] = "application/json"
@@ -244,6 +245,9 @@ class Metadata:
 				if tag in metadata["id3"]:
 					document[tag] = unicode(metadata["id3"][tag])
 		nebula.search.add(**document)
-
+	
+	def deleteFromIndex(self, *trail):
+		nebula.search.delete('path', unicode("/" + "/".join(trail)))
+	
 	def commitToIndex(self):
 		nebula.search.commit()

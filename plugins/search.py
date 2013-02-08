@@ -67,6 +67,9 @@ class Search:
 
 	def add(self, **fields):
 		self.writer.add_document(**fields)
+		
+	def delete(self, field, value):
+		self.writer.delete_by_term(field, value)
 
 	def commit(self):
 		self.writer.commit()
