@@ -126,7 +126,6 @@ class Metadata:
 		self.events.bind('localfile.CHANGE', localfile_CHANGE)
 		nebula.search.add(**{"path":u"/test.mp3", "title":u"test","artist":u"test", "metadata": {"file": "test.mp3", "path":"/", "id3": {"title":"Test"}}})
 		nebula.search.commit()
-		self.startIndexer()
 	
 	def startIndexer(self):
 		indexer = MetadataIndexer(self, self.userconf['librarypath'])

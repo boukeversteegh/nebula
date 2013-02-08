@@ -74,4 +74,6 @@ if __name__ == '__main__':
 		'server.socket_port': int(sys.argv[2])
 	})
 	
+	cherrypy.engine.subscribe('start', lambda: nebula.metadata.startIndexer())
+	
 	cherrypy.quickstart(nebula, '/', conf)
