@@ -37,7 +37,7 @@ class MetadataIndexer(Thread):
 		Thread.__init__(self)
 		
 	def run(self):
-		for (path, dirs, files) in os.walk(self.librarypath):
+		for (path, dirs, files) in os.walk(self.librarypath, followlinks=True):
 			if path == self.librarypath:
 				parent = ""
 				parenttrail = []
