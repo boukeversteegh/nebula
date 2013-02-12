@@ -25,9 +25,10 @@ function init() {
 
 	nebula.addPlaylist(userplaylist);
 
-	nebula.userplaylist = userplaylist;
-	nebula.files = window.files;
-	nebula.view = window.view;
+	nebula.userplaylist	= userplaylist;
+	nebula.files		= window.files;
+	nebula.view			= window.view;
+	nebula.uploader		= window.uploader;
 	nebula.init();
 	
 
