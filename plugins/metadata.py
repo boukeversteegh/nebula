@@ -38,6 +38,7 @@ class MetadataIndexer(Thread):
 		
 	def run(self):
 		for (path, dirs, files) in os.walk(self.librarypath, followlinks=True):
+			files.sort()
 			if path == self.librarypath:
 				parent = ""
 				parenttrail = []
@@ -234,6 +235,8 @@ class Metadata:
 					for tagname in Metadata.id3tags:
 						tagvalue = getattr(audiofile.tag, tagname)
 						if tagvalue:
+							if isinstance(tagvalue, str):
+								tagvalue = unicode(str)
 							id3[tagname] = tagvalue
 				if audiofile.info is None:
 					info = None
