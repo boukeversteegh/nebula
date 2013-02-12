@@ -34,10 +34,13 @@ class MetadataIndexer(Thread):
 	def __init__(self, metadata, librarypath):
 		self.metadata		= metadata
 		self.librarypath	= librarypath
+		self._stop			= False
 		Thread.__init__(self)
 		
 	def run(self):
 		for (path, dirs, files) in os.walk(self.librarypath, followlinks=True):
+			if self._stop:
+					return
 			files.sort()
 			if path == self.librarypath:
 				parent = ""
@@ -47,6 +50,8 @@ class MetadataIndexer(Thread):
 				parenttrail = parent.split("/")
 				
 			for filename in files:
+				if self._stop:
+					return
 				trail = parenttrail + [filename]
 				print repr(trail)
 				#try:
@@ -54,6 +59,9 @@ class MetadataIndexer(Thread):
 				#except UnicodeDecodeError:
 				#	print repr(trail)
 				#	pass
+	
+	def stop(self):
+		self._stop = True
 		
 
 class Metadata:
@@ -127,10 +135,17 @@ class Metadata:
 		self.events.bind('localfile.CHANGE', localfile_CHANGE)
 		nebula.search.add(**{"path":u"/test.mp3", "title":u"test","artist":u"test", "metadata": {"file": "test.mp3", "path":"/", "id3": {"title":"Test"}}})
 		nebula.search.commit()
+		
+		
+		cherrypy.engine.subscribe('start', lambda: self.startIndexer())
+		cherrypy.engine.subscribe('exit', lambda: self.stopIndexer())
 	
 	def startIndexer(self):
-		indexer = MetadataIndexer(self, self.userconf['librarypath'])
-		indexer.start()
+		self.indexer = MetadataIndexer(self, self.userconf['librarypath'])
+		self.indexer.start()
+	
+	def stopIndexer(self):
+		self.indexer.stop()
 	
 	def deleteCache(self, *trail):
 		if trail in self.cache:
