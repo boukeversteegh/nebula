@@ -168,6 +168,22 @@ function Uploader() {
 			view.show(view.path, false, true);
 		}
 	}
+
+	this.clear = function() {
+		if( this.uploads.length == 0 ) {
+			return;
+		}
+
+		var newuploads = [];
+		for( var i=0; i < this.uploads.length; i++ ) {
+			var upload = this.uploads[i];
+			if( upload.uploaddata.completed == false ) {
+				newuploads.push(upload);
+			}
+		}
+		this.uploads = newuploads;
+		this.refresh();
+	}
 	
 	this.test = function() {
 		this.uploads = [
