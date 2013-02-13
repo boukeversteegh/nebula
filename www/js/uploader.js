@@ -1,7 +1,7 @@
 function Uploader() {
 	this.active = [];
 	this.queue = [];
-	this.maxconnections = 2;
+	this.maxconnections = 1;
 	this.uploads = [];
 	
 	this.upload = function (file, path, fullpath) {
@@ -24,7 +24,11 @@ function Uploader() {
 
 		xhr.upload.onprogress = function(event) {
 			if (event.lengthComputable) {
-				this._upload.uploaddata.progress = (event.loaded / event.total * 100 | 0);
+				var progress = (event.loaded / event.total * 100 | 0);
+				if( progress < 100 && progress - this._upload.uploaddata.progress < 10 ) {
+					return;
+				}
+				this._upload.uploaddata.progress = progress
 				this._upload.uploaddata.loaded = event.loaded;
 			}
 			window.uploader.refresh(false);
@@ -68,7 +72,7 @@ function Uploader() {
 				i--;
 			}
 		}
-		window.uploader.refresh();
+		window.uploader.refresh(false);
 		// Start uploads
 		while( this.active.length < this.maxconnections && this.queue.length > 0 ) {
 			var item = this.queue.shift();2
@@ -162,7 +166,6 @@ function Uploader() {
 		item.uploaddata.completed = true;
 		item.uploaddata.progress = 100;
 		item.uploaddata.timecompleted = (new Date().getTime() / 1000);
-		window.uploader.refresh(false);
 		window.uploader.processQueue();
 		if( item.parent == window.files.path || item.section == window.files.path ) {
 			view.show(view.path, false, true);
