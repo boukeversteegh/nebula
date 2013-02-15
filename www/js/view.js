@@ -74,7 +74,7 @@ function View() {
 					$('#rmdir').button();
 					$('#folders .folder a').button({icons: {primary: 'ui-icon-folder-collapsed'}});
  					
-					window.uploader.refresh();
+					window.nebula.uploader.refresh();
 					window.playerview.refresh();
 					
 					$('#files').find('.playlist-add').empty().button({
@@ -85,6 +85,10 @@ function View() {
 					$('#files').find('.playlist-play').empty().button({
 						icons: {primary: 'ui-icon-play'},
 						text: false
+					});
+
+					$('#uploads-clear-completed').button().click(function(){
+						window.nebula.uploader.clear();
 					});
 					
 					if( !this.state ) {

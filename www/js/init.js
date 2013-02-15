@@ -36,6 +36,7 @@ function init() {
 	nebula.files		= window.files;
 	nebula.view			= window.view;
 	nebula.search		= search;
+	nebula.uploader		= window.uploader;
 	nebula.init();
 	
 	window.debug = {

@@ -18,3 +18,7 @@
 #uploads .ui-button {
 	text-align: left;
 }
+
+#uploads-clear-completed {
+	float: right;
+}
