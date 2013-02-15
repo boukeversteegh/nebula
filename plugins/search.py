@@ -39,7 +39,7 @@ class Search:
 
 
 	def default(self, field, querystring):
-		querystring = unicode(querystring)
+		querystring = querystring.decode('UTF-8')
 		with self.index.searcher() as searcher:
 		
 			if field == "all":
