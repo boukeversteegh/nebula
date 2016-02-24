@@ -3,7 +3,7 @@ Nebula
 
 Social music server
 
-![files](http://github.com/boukeversteegh/nebula/raw/master/docs/screenshots/files.png "Files view")
+![files](https://github.com/boukeversteegh/nebula/raw/master/docs/screenshots/files.png "Files view")
 
 How to run
 ==========
